@@ -31,7 +31,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Mapathon</h1>
+        <h1>Mapathon Loris Clivaz</h1>
         <br />
         <a className="App-link" href="#" onClick={handlePOIsClick}>
           Get POIs
