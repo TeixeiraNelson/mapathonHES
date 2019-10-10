@@ -18,6 +18,9 @@ var myIcon = L.icon({
   popupAnchor: [-10, -90]
 });
 
+/*
+Creates the markers on the map, after getting them from the database
+ */
 const createMarkers = pois => {
   return (
     <ul>
