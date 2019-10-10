@@ -88,6 +88,7 @@ class MapComponent extends React.Component {
                 <Form onChange={fields=> this.onChange(fields)}/>
                 <p>
                     {JSON.stringify(this.state.fields,null,2)}
+
                 </p>
             </div>
         </div>

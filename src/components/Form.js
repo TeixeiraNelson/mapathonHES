@@ -1,19 +1,29 @@
 import React from 'react';
+import {Formik} from "formik";
+
+
+const acceptedFileTypes = 'image/x-png, image/png ,image/jpg, image/jpeg , image/gif';
 
 export default class Form extends React.Component
 {
+
+
     state = {
         title:'',
         description:'',
         address:'',
         isVerify:'',
+
+
     }
 
     change = (e) =>{
         this.props.onChange({[e.target.name]: e.target.value})
         this.setState({
             [e.target.name]: e.target.value
+       
         })
+
     };
 
     onSubmit = e =>{
@@ -25,16 +35,23 @@ export default class Form extends React.Component
             address:'',
             isVerify:'',
         })
+
         this.props.onChange({
             title:'',
             description:'',
             address:'',
             isVerify:'',
+
         })
+
+
     }
+
+
 
     render() {
        return(
+           <Formik>
            <form className={Form}>
                <label title={'title'}>title</label>
                <input
@@ -58,8 +75,11 @@ export default class Form extends React.Component
                    value={this.state.address}
                    onChange={e => this.change(e)}               />
                <br/>
+
                <button onClick={e => this.onSubmit(e)}>Submit</button>
+
            </form>
+           </Formik>
        )
     }
 }
