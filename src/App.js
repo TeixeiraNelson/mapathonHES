@@ -9,6 +9,7 @@ import POI from "./components/POI";
 /* React Leaflet*/
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
+import { marker } from "leaflet/dist/leaflet-src.esm";
 
 var myIcon = L.icon({
   iconUrl:
@@ -18,31 +19,62 @@ var myIcon = L.icon({
   popupAnchor: [-10, -90]
 });
 
-/*
-Creates the markers on the map, after getting them from the database
- */
-const createMarkers = pois => {
-  return (
-    <ul>
-      {pois.map(poi => (
-        <Marker icon={myIcon} position={[poi.lat, poi.lng]}>
-          <Popup>
-            <h1>{poi.name}</h1>
-            <img src={poi.image} />
-            <p>{poi.description}</p>
-          </Popup>
-        </Marker>
-      ))}
-    </ul>
-  );
+let geolocalizeUser = map => {
+  console.log(this.map && this.map.leafletElement);
 };
+
+class MapComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      markers: props.pois,
+      addMarkerEnabled: false
+    };
+  }
+
+  addMarker = e => {
+    if (true === true) {
+      const { markers } = this.state;
+      markers.push(e.latlng);
+      this.setState({ markers });
+
+      /*
+      TODO: PUSH TO THE DATABASE THE NEW MARKER
+       */
+    }
+  };
+
+  render() {
+    return (
+      <Map
+        className="mapClass"
+        center={[46.292, 7.534]}
+        onClick={this.addMarker}
+        zoom={13}
+      >
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+        />
+        {this.state.markers.map(position => (
+          <Marker icon={myIcon} position={position}>
+            <Popup>
+              <h1>{position.name}</h1>
+              <img src={position.image} />
+              <p>{position.description}</p>
+            </Popup>
+          </Marker>
+        ))}
+      </Map>
+    );
+  }
+}
 
 function App() {
   let [pois, setPois] = useState([]);
   let { loading, loginWithRedirect, getTokenSilently } = useAuth0();
 
-  let handlePOIsClick = async e => {
-    e.preventDefault();
+  let getPOIs = async e => {
     let pois = await request(
       `${process.env.REACT_APP_SERVER_URL}${endpoints.pois}`,
       getTokenSilently,
@@ -71,26 +103,10 @@ function App() {
       <header className="App-header">
         <h1>Mapathon</h1>
         <br />
-        <a className="App-link" href="#" onClick={handlePOIsClick}>
-          Get POIs
-        </a>
-        {pois && pois.length > 0 && (
-          <Map
-            className="mapClass"
-            center={position}
-            zoom={state.zoom}
-            ref={ref => {
-              this.map = ref;
-            }}
-          >
-            <TileLayer
-              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-
-            {createMarkers(pois)}
-          </Map>
-        )}
+        <button id="Start-button" onClick={getPOIs}>
+          Load information
+        </button>
+        {pois && pois.length > 0 && <MapComponent pois={pois} />}
       </header>
     </div>
   );
