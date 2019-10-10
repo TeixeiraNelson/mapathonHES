@@ -18,6 +18,9 @@ var myIcon = L.icon({
   popupAnchor: [-10, -90]
 });
 
+/*
+Creates the markers on the map, after getting them from the database
+ */
 const createMarkers = pois => {
   return (
     <ul>
@@ -72,7 +75,14 @@ function App() {
           Get POIs
         </a>
         {pois && pois.length > 0 && (
-          <Map className="mapClass" center={position} zoom={state.zoom}>
+          <Map
+            className="mapClass"
+            center={position}
+            zoom={state.zoom}
+            ref={ref => {
+              this.map = ref;
+            }}
+          >
             <TileLayer
               attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
