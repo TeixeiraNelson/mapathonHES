@@ -18,6 +18,22 @@ var myIcon = L.icon({
   popupAnchor: [-10, -90]
 });
 
+const createMarkers = pois => {
+  return (
+    <ul>
+      {pois.map(poi => (
+        <Marker icon={myIcon} position={[poi.lat, poi.lng]}>
+          <Popup>
+            <h1>{poi.name}</h1>
+            <img src={poi.image} />
+            <p>{poi.description}</p>
+          </Popup>
+        </Marker>
+      ))}
+    </ul>
+  );
+};
+
 function App() {
   let [pois, setPois] = useState([]);
   let { loading, loginWithRedirect, getTokenSilently } = useAuth0();
@@ -61,11 +77,8 @@ function App() {
               attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker icon={myIcon} position={position}>
-              <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-              </Popup>
-            </Marker>
+
+            {createMarkers(pois)}
           </Map>
         )}
       </header>
