@@ -33,7 +33,7 @@ class MapComponent extends React.Component {
   }
 
   addMarker = e => {
-    if (true === true) {
+    if (this.state.addMarkerEnabled === true) {
       const { markers } = this.state;
       markers.push(e.latlng);
       this.setState({ markers });
@@ -87,6 +87,8 @@ function App() {
     }
   };
 
+  let localiseUser = () => {};
+
   let state = {
     lat: 46.283,
     lng: 7.536,
@@ -105,6 +107,9 @@ function App() {
         <br />
         <button id="Start-button" onClick={getPOIs}>
           Load information
+        </button>
+        <button id="localisation-button" onClick={localiseUser}>
+          Where am I ?
         </button>
         {pois && pois.length > 0 && <MapComponent pois={pois} />}
       </header>
