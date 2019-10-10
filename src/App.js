@@ -4,12 +4,14 @@ import { useAuth0 } from "./react-auth0-spa";
 import request from "./utils/request";
 import endpoints from "./endpoints";
 import Loading from "./components/Loading";
+import Form from "./components/Form";
+
 import POI from "./components/POI";
 
 /* React Leaflet*/
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
-import { marker } from "leaflet/dist/leaflet-src.esm";
+
 
 var myIcon = L.icon({
   iconUrl:
@@ -44,8 +46,23 @@ class MapComponent extends React.Component {
     }
   };
 
+  state = {
+      fields:{}
+};
+
+  onChange = updateValue => {
+      this.setState({fields:
+              {
+                  ...this.state.fields,
+                  ...updateValue
+              }
+      });
+
+  }
+
   render() {
     return (
+        <div>
       <Map
         className="mapClass"
         center={[46.292, 7.534]}
@@ -65,10 +82,25 @@ class MapComponent extends React.Component {
             </Popup>
           </Marker>
         ))}
+
       </Map>
+            <div className={Form}>
+                <Form onChange={fields=> this.onChange(fields)}/>
+                <p>
+                    {JSON.stringify(this.state.fields,null,2)}
+                </p>
+            </div>
+        </div>
+
+
+
+
+
     );
   }
 }
+
+
 
 function App() {
   let [pois, setPois] = useState([]);
@@ -85,6 +117,8 @@ function App() {
       console.log(pois);
       setPois(pois);
     }
+
+
   };
 
   let localiseUser = () => {};
@@ -112,7 +146,10 @@ function App() {
           Where am I ?
         </button>
         {pois && pois.length > 0 && <MapComponent pois={pois} />}
+
+
       </header>
+
     </div>
   );
 }
