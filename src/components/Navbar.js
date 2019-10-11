@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth0 } from "../react-auth0-spa";
 
 import {
   MDBNavbar,
@@ -28,6 +29,7 @@ class FixedNavbar extends React.Component {
   render() {
     const bgPink = { backgroundColor: "#34eb5b" };
     const container = { height: 1300 };
+
     return (
       <div>
         <header>
@@ -53,6 +55,11 @@ class FixedNavbar extends React.Component {
               </MDBNavbarNav>
               <MDBNavbarNav right>
                 <MDBNavItem>
+                  <MDBNavLink to="/user">
+                    <GetUser />
+                  </MDBNavLink>
+                </MDBNavItem>
+                <MDBNavItem>
                   <MDBNavLink to="/login">Logout</MDBNavLink>
                 </MDBNavItem>
               </MDBNavbarNav>
@@ -61,6 +68,13 @@ class FixedNavbar extends React.Component {
         </header>
       </div>
     );
+  }
+}
+
+function GetUser() {
+  let usr = useAuth0();
+  if (usr.isAuthenticated) {
+    return usr.user.name;
   }
 }
 

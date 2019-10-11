@@ -10,7 +10,6 @@ import Footer from "./components/Footer";
 import Help from "./components/Help";
 import Edit from "./components/Edit";
 import Logout from "./components/Logout";
-
 //app component main
 function App() {
   let { loading } = useAuth0();
