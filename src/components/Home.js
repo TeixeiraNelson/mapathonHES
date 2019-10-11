@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "../App.css";
-import request from "../utils/request";
 import requestPOI from "../utils/requestPOI";
 import { useAuth0 } from "../react-auth0-spa";
 
@@ -13,13 +12,18 @@ function App() {
     description: "Description of ABC",
     lat: 46.1234567,
     lng: 7.1234567,
-    group: 0
+    group: 1
   };
-  /*setPois([
-    ...pois,
-    requestPOI.setPOI(data, getTokenSilently, loginWithRedirect)
-  ]);*/
+  console.log(requestPOI.getPOI(1, getTokenSilently, loginWithRedirect));
   console.log(requestPOI.setPOI(data, getTokenSilently, loginWithRedirect));
+  console.log(
+    requestPOI.updatePOI(
+      1,
+      { name: "adfhjkhafjdhdfjk" },
+      getTokenSilently,
+      loginWithRedirect
+    )
+  );
 
   return <Home />;
 }
