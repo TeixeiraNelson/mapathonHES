@@ -4,12 +4,14 @@ import { useAuth0 } from "./react-auth0-spa";
 import request from "./utils/request";
 import endpoints from "./endpoints";
 import Loading from "./components/Loading";
+import Form from "./components/Form";
+
 import POI from "./components/POI";
 
 /* React Leaflet*/
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
-import { marker } from "leaflet/dist/leaflet-src.esm";
+
 
 let myMarkers = [];
 
@@ -115,8 +117,23 @@ class MapComponent extends React.Component {
     }
   };
 
+  state = {
+      fields:{}
+};
+
+  onChange = updateValue => {
+      this.setState({fields:
+              {
+                  ...this.state.fields,
+                  ...updateValue
+              }
+      });
+
+  }
+
   render() {
     return (
+
       <div>
         <Map
           className="mapClass"
@@ -154,10 +171,19 @@ class MapComponent extends React.Component {
         <button id="localisation-button" onClick={this.localiseUser}>
           Where am I ?
         </button>
+ <div className={Form}>
+                <Form onChange={fields=> this.onChange(fields)}/>
+                <p>
+                    {JSON.stringify(this.state.fields,null,2)}
+
+                </p>
+            </div>
       </div>
-    );
+ );
   }
 }
+
+
 
 function App() {
   let [pois, setPois] = useState([]);
@@ -174,6 +200,8 @@ function App() {
       console.log(pois);
       setPois(pois);
     }
+
+
   };
 
   if (loading) {
@@ -182,15 +210,21 @@ function App() {
 
   return (
     <div className="App">
+
       <header className="App-header" id="AppHead">
         <h1>Mapathon</h1>
+
+      
         <br />
         <button id="Start-button" onClick={getPOIs}>
           Load information
         </button>
 
         {pois && pois.length > 0 && <MapComponent pois={pois} />}
+
+
       </header>
+
     </div>
   );
 }
