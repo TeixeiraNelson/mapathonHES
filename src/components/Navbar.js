@@ -1,16 +1,13 @@
 import React from "react";
 import {
-  MDBContainer,
   MDBNavbar,
   MDBNavbarBrand,
   MDBNavbarNav,
   MDBNavbarToggler,
   MDBCollapse,
   MDBNavItem,
-  MDBNavLink,
-  MDBIcon
+  MDBNavLink
 } from "mdbreact";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class FixedNavbar extends React.Component {
   constructor(props) {
