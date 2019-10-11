@@ -9,6 +9,7 @@ import Home from "./components/Home";
 import Footer from "./components/Footer";
 import Help from "./components/Help";
 import Edit from "./components/Edit";
+import Logout from "./components/Logout";
 
 //app component main
 function App() {
@@ -24,7 +25,7 @@ function App() {
         <FixedNavbar />
         <Switch>
           <Route path="/edit">
-            <Edit />
+            <Authentication />
           </Route>
           <Route path="/help">
             <Help />
@@ -35,10 +36,23 @@ function App() {
           <Route path="/">
             <Home />
           </Route>
+          <Route path="/login">
+            <Logout />
+          </Route>
         </Switch>
       </div>
       <Footer />
     </Router>
   );
 }
+
+//Check if loggedIn and only then redirect to edit
+function Authentication() {
+  if (useAuth0().isAuthenticated) {
+    return <Edit />;
+  } else {
+    return <Home />;
+  }
+}
+
 export default App;

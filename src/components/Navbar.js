@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   MDBNavbar,
   MDBNavbarBrand,
@@ -52,7 +53,7 @@ class FixedNavbar extends React.Component {
               </MDBNavbarNav>
               <MDBNavbarNav right>
                 <MDBNavItem>
-                  <MDBNavLink to="/login">Login</MDBNavLink>
+                  <MDBNavLink to="/login">Logout</MDBNavLink>
                 </MDBNavItem>
               </MDBNavbarNav>
             </MDBCollapse>
@@ -62,4 +63,5 @@ class FixedNavbar extends React.Component {
     );
   }
 }
+
 export default FixedNavbar;
