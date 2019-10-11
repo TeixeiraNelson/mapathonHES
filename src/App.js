@@ -21,26 +21,24 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
-        <FixedNavbar />
-        <Switch>
-          <Route path="/edit">
-            <Authentication />
-          </Route>
-          <Route path="/help">
-            <Help />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-          <Route path="/login">
-            <Logout />
-          </Route>
-        </Switch>
-      </div>
+      <FixedNavbar />
+      <Switch>
+        <Route path="/edit">
+          <Authentication />
+        </Route>
+        <Route path="/help">
+          <Help />
+        </Route>
+        <Route path="/about">
+          <About />
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+        <Route path="/login">
+          <Logout />
+        </Route>
+      </Switch>
       <Footer />
     </Router>
   );
