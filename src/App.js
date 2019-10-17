@@ -14,7 +14,11 @@ import L from "leaflet";
 import requestPOI from "./components/RequestPoi";
 
 
+
 let myMarkers = [];
+
+
+
 
 var myIcon = L.icon({
   iconUrl:
@@ -46,6 +50,8 @@ class MapComponent extends React.Component {
       addMarkerEnabled: false
     };
   }
+
+
 
   localiseUser = () => {
     const { markers } = this.state;
@@ -132,6 +138,8 @@ class MapComponent extends React.Component {
 
   }
 
+
+
   render() {
     return (
 
@@ -180,6 +188,9 @@ class MapComponent extends React.Component {
 
                 </p>
             </div>
+
+
+
       </div>
  );
   }
