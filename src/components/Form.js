@@ -28,21 +28,11 @@ export default class Form extends React.Component
 
     onSubmit = e =>{
         e.preventDefault();
-       // this.props.onSubmit(this.state);
-        this.setState({
-            title:'',
-            description:'',
-            address:'',
-            isVerify:'',
-        })
 
-        this.props.onChange({
-            title:'',
-            description:'',
-            address:'',
-            isVerify:'',
-
-        })
+        console.log(this.state.description)
+        console.log(this.state.title)
+        console.log(this.state.address)
+        console.log(this.state.isVerify)
 
 
     }

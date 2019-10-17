@@ -11,6 +11,7 @@ import POI from "./components/POI";
 /* React Leaflet*/
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
+import requestPOI from "./components/RequestPoi";
 
 
 let myMarkers = [];
@@ -136,6 +137,7 @@ class MapComponent extends React.Component {
 
       <div>
         <Map
+
           className="mapClass"
           center={this.state.latlng}
           onClick={this.addMarker}
