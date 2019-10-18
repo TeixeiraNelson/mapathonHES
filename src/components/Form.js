@@ -1,8 +1,15 @@
 import React from 'react';
 import {Formik} from "formik";
+import {useAuth0} from '../react-auth0-spa';
+import { useState } from "react";
+import requestPOI from "./RequestPoi";
+
+
 
 
 const acceptedFileTypes = 'image/x-png, image/png ,image/jpg, image/jpeg , image/gif';
+
+
 
 var POI = function(name, description, lat, lng, image, url, group){
     this.name = name;
@@ -22,18 +29,31 @@ export default class Form extends React.Component
 
 
 
+    constructor(props){
+        super(props);
+        this.lat = props.lat;
+        this.lng = props.lng;
+    }
+
+    state = {
+        selectedFiles: null
+    }
+
 
     state = {
         name:'',
         description:'',
-        lat:'',
-        lng:'',
+        lat: this.props.lat,
+        lng: this.props.lng,
         image:'',
         url:'',
         group:''
 
 
     }
+
+
+
 
     change = (e) =>{
         this.props.onChange({[e.target.name]: e.target.value})
@@ -47,11 +67,17 @@ export default class Form extends React.Component
     onSubmit = e =>{
         e.preventDefault();
 
+        let [pois, setPois] = useState([]);
+        let { loading, loginWithRedirect, getTokenSilently } = useAuth0();
+
+
         var newPOI = new POI(this.state.name, this.state.description, this.state.lat, this.state.lng, this.state.image, this.state.url, this.state.group);
 
-        console.log(newPOI.name, newPOI.description);
-    }
+        console.log(newPOI.name, newPOI.description, newPOI.image, newPOI.url, newPOI.group);
 
+        requestPOI.setPOI(newPOI,getTokenSilently,loginWithRedirect);
+
+    }
 
 
     render() {
@@ -77,25 +103,27 @@ export default class Form extends React.Component
                <input
                    name='lat'
                    placeholder='lat'
-                   value={this.state.lat}
+                   value={this.props.lat}
                    onChange={e => this.change(e)}               />
                <br/>
 
                <label lng={'lng'}>Lng : </label>
                <input
-                   name='lng'
-                   placeholder='lng'
-                   value={this.state.lng}
+                   name={this.props.lng}
+                   placeholder={this.props.lng}
+                   value={this.props.lng}
                    onChange={e => this.change(e)}               />
                <br/>
 
                <label image={'image'}>Image : </label>
                <input
+
                    name='image'
                    placeholder='image'
                    value={this.state.image}
                    onChange={e => this.change(e)}               />
                <br/>
+
 
                <label url={'url'}>Url : </label>
                <input
