@@ -16,6 +16,7 @@ export class requestPOI {
                 }
             });
 
+            console.log("INSERTING POI");
             let data = await response.json();
             return data;
         } catch (e) {
@@ -68,6 +69,27 @@ export class requestPOI {
             await loginWithRedirect();
         }
     }
+
+    static async getGPXFiles(getTokenSilently, loginWithRedirect) {
+        try {
+            let token = await getTokenSilently();
+            let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/gpx-file`, {
+                method: "GET",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            let data = await response.json();
+            return data;
+        } catch (e) {
+            console.error(e);
+            await loginWithRedirect();
+        }
+    }
+
+
     //Get some Information from a POI with the Id as paratmeter
     static async getPOI(id, getTokenSilently, loginWithRedirect) {
         try {
