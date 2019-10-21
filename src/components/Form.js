@@ -1,17 +1,10 @@
 import React from 'react';
 import {Formik} from "formik";
-import {useAuth0} from '../react-auth0-spa';
-import { useState } from "react";
-import requestPOI from "./RequestPoi";
+import {MapComponent} from "react-leaflet";
+import App from "../App";
 
 
-
-
-const acceptedFileTypes = 'image/x-png, image/png ,image/jpg, image/jpeg , image/gif';
-
-
-
-var POI = function(name, description, lat, lng, image, url, group){
+let POI = function(name, description, lat, lng, image, url, group){
     this.name = name;
     this.description = description;
     this.lat = lat;
@@ -23,17 +16,18 @@ var POI = function(name, description, lat, lng, image, url, group){
 
 
 
-export default class Form extends React.Component
-{
+class Form extends React.Component {
 
 
-
-
-    constructor(props){
+    constructor(props) {
         super(props);
         this.lat = props.lat;
         this.lng = props.lng;
+        this.newPoi = props.newPoi;
+
+
     }
+
 
     state = {
         selectedFiles: null
@@ -41,46 +35,48 @@ export default class Form extends React.Component
 
 
     state = {
-        name:'',
-        description:'',
+        name: '',
+        description: '',
         lat: this.props.lat,
         lng: this.props.lng,
-        image:'',
-        url:'',
-        group:''
+        image: '',
+        url: '',
+        group: ''
 
 
     }
 
 
 
-
-    change = (e) =>{
+    change = (e) => {
         this.props.onChange({[e.target.name]: e.target.value})
         this.setState({
             [e.target.name]: e.target.value
-       
+
         })
 
     };
 
-    onSubmit = e =>{
+
+    onIsabelle = (e) => {
         e.preventDefault();
 
-        let [pois, setPois] = useState([]);
-        let { loading, loginWithRedirect, getTokenSilently } = useAuth0();
+        this.newPoi = new POI(this.state.name, this.state.description, this.state.lat, this.state.lng, this.state.image, this.state.url, this.state.group);
 
 
-        var newPOI = new POI(this.state.name, this.state.description, this.state.lat, this.state.lng, this.state.image, this.state.url, this.state.group);
+        console.log(this.newPoi);
 
-        console.log(newPOI.name, newPOI.description, newPOI.image, newPOI.url, newPOI.group);
-
-        requestPOI.setPOI(newPOI,getTokenSilently,loginWithRedirect);
 
     }
 
 
+
+
+   // this.props.requestFuncfromApp(POI)
+
     render() {
+
+
        return(
            <Formik>
            <form className={Form}>
@@ -140,10 +136,19 @@ export default class Form extends React.Component
                    onChange={e => this.change(e)}               />
                <br/>
 
-               <button onClick={e => this.onSubmit(e)}>Submit</button>
+               <button onClick={this.onIsabelle}>Submit</button>
 
            </form>
            </Formik>
        )
+
     }
+
+
+
 }
+
+
+
+
+export default Form;

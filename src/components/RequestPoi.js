@@ -1,8 +1,10 @@
 export class requestPOI {
     //Create a new POI in the Database
     static async setPOI(newPOI, getTokenSilently, loginWithRedirect) {
+
         try {
             let token = await getTokenSilently();
+            console.log(newPOI);
             console.log(JSON.stringify(newPOI));
             let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi`, {
                 method: "POST",
