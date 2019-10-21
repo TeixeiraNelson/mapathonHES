@@ -24,7 +24,7 @@ class Form extends React.Component {
         this.lat = props.lat;
         this.lng = props.lng;
         this.newPoi = props.newPoi;
-
+        this.InsertPoi=props.InsertPoi;
 
     }
 
@@ -66,6 +66,7 @@ class Form extends React.Component {
 
         console.log(this.newPoi);
 
+        this.InsertPoi(this.newPoi);
 
     }
 

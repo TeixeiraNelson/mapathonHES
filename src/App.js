@@ -6,12 +6,10 @@ import endpoints from "./endpoints";
 import Loading from "./components/Loading";
 import RequestPoi from "../src/components/RequestPoi"
 
-import POI from "./components/POI";
 
 /* React Leaflet*/
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
-import requestPOI from "./components/RequestPoi";
 import {Formik} from "formik";
 
 
@@ -116,8 +114,6 @@ class Form extends React.Component {
 
 
 
-  // this.props.requestFuncfromApp(POI)
-
   render() {
 
 
@@ -175,7 +171,7 @@ class Form extends React.Component {
             <label group={'group'}>Group : </label>
             <input
                 name='group'
-                placeholder='group'
+                placeholder={this.state.group}
                 value={this.state.group}
                 onChange={e => this.change(e)}
             />
@@ -197,6 +193,7 @@ class Form extends React.Component {
 class MapComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.nbClicks = 0;
     this.props = props;
     this.mapRef = React.createRef();
     this.actualPointLat = 0;
@@ -210,13 +207,35 @@ class MapComponent extends React.Component {
       addMarkerEnabled: false
     };
 
-    this.InsertPoi = props.InsertPoi;
+    this.insertPoi = props.InsertPoi;
+    this.DeletePoi = props.deletePoi;
   }
 
 
   addPoi = () => {
     this.state.addMarkerEnabled = !this.state.addMarkerEnabled
 
+  }
+
+  deletePoi = (pos) => {
+    let data = this.DeletePoi(pos.id,this.updateMap,pos);
+
+
+
+
+  }
+
+  updateMap = (data) => {
+    let { markers } = this.state;
+
+     for( var i = 0; i < markers.length; i++){
+       if ( markers[i].id === data.id) {
+         markers.splice(i, 1);
+         i--;
+       }
+     }
+
+     this.setState({ markers });
   }
 
 
@@ -243,26 +262,12 @@ class MapComponent extends React.Component {
         marker.lng = position.coords.longitude;
         marker.id = 0;
         markers.push(marker);
-        this.setState({
-          latlng: {
-            lat: [marker.lat],
-            lng: [marker.lng]
-          },
-          latlngCurr: {
-            lat: [marker.lat + 0.0015],
-            lng: [marker.lng - 0.0005]
-          }
-        });
-        console.log(this.props);
-        this.setState({ markers });
-        this.mapRef.leafletElement.flyTo(this.state.latlng, 16);
-
         console.log(myMarkers);
       }
     });
 
     if (alreadyPositioned === true) {
-      this.mapRef.leafletElement.flyTo(this.state.latlng, 16);
+      this.mapRef.leafletElement.flyTo(this.state.latlng, 18);
     }
   };
   handleLocationFound = (e: Object) => {
@@ -273,21 +278,48 @@ class MapComponent extends React.Component {
 
   addMarker = e => {
     if (this.state.addMarkerEnabled === true) {
-      const { markers } = this.state;
-      markers.push(e.latlng);
-
+      console.log(this.state);
+      this.nbClicks++;
+      let { markers } = this.state;
       this.actualPointLat = e.latlng.lat;
       this.actualPointLng = e.latlng.lng;
+      this.mapRef.leafletElement.flyTo(e.latlng, 15);
+
+      if(this.nbClicks<=1){
+        markers.push(e.latlng);
+      } else {
+
+        console.log("MARKER VALUE "  + markers[markers.length-1].name);
+
+        if(markers[markers.length-1].name === "" || markers[markers.length-1].name == null){
+          markers.pop();
+        }
+
+
+        markers.push(e.latlng);
+      }
+
+
+
+
 
 
 
       this.setState({ markers });
+      console.log(this.state);
 
-      /*
-            TODO: PUSH TO THE DATABASE THE NEW MARKER
-             */
     }
   };
+
+  InsertPoi = (poi) => {
+    this.insertPoi(poi);
+    let { markers } = this.state;
+    markers.pop();
+    markers.push(poi);
+    this.setState({ markers });
+  }
+
+
 
   state = {
     fields:{}
@@ -339,6 +371,7 @@ class MapComponent extends React.Component {
                     <h1>{position.name}</h1>
                     <img src={position.image} />
                     <p>{position.description}</p>
+                    <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
                   </Popup>
                 </Marker>
             ))}
@@ -362,11 +395,6 @@ class MapComponent extends React.Component {
   generateForm() {
     if(this.state.addMarkerEnabled === true) { return <div className={Form}>
       <Form onChange={fields=> this.onChange(fields)} InsertPoi={this.InsertPoi} lat={this.actualPointLat} lng={this.actualPointLng}/>
-
-      <p>
-        {JSON.stringify(this.state.fields,null,2)}
-
-      </p>
     </div>};
   }
 
@@ -396,7 +424,7 @@ function App() {
     }
 
 
-
+    getGPX();
 
 
   };
@@ -421,7 +449,7 @@ function App() {
             Load information
           </button>
 
-          {pois && pois.length > 0 && <MapComponent pois={pois} InsertPoi = {InsertPoi}/>}
+          {pois && pois.length > 0 && <MapComponent pois={pois} InsertPoi = {InsertPoi} deletePoi={deletePoi} />}
 
 
         </header>
@@ -433,8 +461,43 @@ function App() {
     let data ;
     data = await  RequestPoi.setPOI(newPoi, getTokenSilently, loginWithRedirect);
 
+    console.log(data);
+
+  }
+
+  async function deletePoi(poi,updateMap,pos){
+
+    console.log("DELETEING POI " + poi);
+
+
+    let data;
+    data = await RequestPoi.deletePOI(poi, getTokenSilently, loginWithRedirect)
 
     console.log(data);
+
+    if(data.error!=null){
+      if(data.error.status===403){
+        console.log("TG")
+        console.log(pos);
+      }
+    } else {
+      updateMap(pos);
+      console.log("UPDATING MAP");
+    }
+
+    return data;
+
+  }
+
+  async function getGPX(){
+
+
+
+    let data;
+    data = await RequestPoi.getGPXFiles(getTokenSilently, loginWithRedirect)
+
+    console.log("GPX " + data);
+
   }
 }
 
