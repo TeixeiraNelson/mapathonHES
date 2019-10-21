@@ -263,6 +263,16 @@ class MapComponent extends React.Component {
         marker.id = 0;
         markers.push(marker);
         console.log(myMarkers);
+
+        this.setState({
+          latlng: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          }
+        });
+
+        this.setState({markers});
+        this.mapRef.leafletElement.flyTo(this.state.latlng, 18);
       }
     });
 
