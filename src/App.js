@@ -4,7 +4,7 @@ import { useAuth0 } from "./react-auth0-spa";
 import request from "./utils/request";
 import endpoints from "./endpoints";
 import Loading from "./components/Loading";
-import Form from "./components/Form";
+import RequestPoi from "../src/components/RequestPoi"
 
 import POI from "./components/POI";
 
@@ -12,11 +12,11 @@ import POI from "./components/POI";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import requestPOI from "./components/RequestPoi";
+import {Formik} from "formik";
 
 
 
 let myMarkers = [];
-
 
 
 
@@ -38,6 +38,156 @@ var posIcon = L.icon({
   popupAnchor: [-10, -90]
 });
 
+
+class Form extends React.Component {
+
+
+  constructor(props) {
+    super(props);
+    this.props=props;
+    this.lat = props.lat;
+    this.lng = props.lng;
+    this.newPoi = props.newPoi;
+    this.requestToken = props.requestToken;
+    this.useAuth = props.useAuth;
+    this.InsertPoi = props.InsertPoi;
+
+  }
+
+
+  state = {
+    selectedFiles: null
+  }
+
+
+  state = {
+
+      name: '',
+      description: '',
+      lat: this.props.lat,
+      lng: this.props.lng,
+      image: '',
+      url: '',
+      group: '',
+
+    poi:{
+      name: '',
+      description: '',
+      lat: this.props.lat,
+      lng: this.props.lng,
+      image: '',
+      url: '',
+      group: ''}
+
+
+  }
+
+
+
+  change = (e) => {
+    this.props.onChange({[e.target.name]: e.target.value})
+
+    this.setState({
+      [e.target.name]: e.target.value,
+      poi:{
+        name: this.state.name,
+        description: this.state.description,
+        lat: this.props.lat,
+        lng: this.props.lng,
+        image: this.state.image,
+        url: this.state.url,
+        group: this.state.group}
+    })
+
+  };
+
+    setSubmit = (e) => {
+      e.preventDefault();
+
+    this.InsertPoi(this.state.poi);
+  }
+
+
+
+
+
+  // this.props.requestFuncfromApp(POI)
+
+  render() {
+
+
+    return(
+        <Formik>
+          <form className={Form}>
+            <label name={'name'}>Name : </label>
+            <input
+                name='name'
+                placeholder='name'
+                value={this.state.name}
+                onChange={e => this.change(e)}
+            />
+            <br/>
+            <label description={'description'}>description</label>
+            <input
+                name='description'
+                placeholder='Description'
+                value={this.state.description}
+                onChange={e => this.change(e)}               />
+            <br/>
+            <label lat={'lat'}>Lat : </label>
+            <input
+                name='lat'
+                placeholder='lat'
+                value={this.props.lat}
+                onChange={e => this.change(e)}               />
+            <br/>
+
+            <label lng={'lng'}>Lng : </label>
+            <input
+                name={this.props.lng}
+                placeholder={this.props.lng}
+                value={this.props.lng}
+                onChange={e => this.change(e)}               />
+            <br/>
+
+            <label image={'image'}>Image : </label>
+            <input
+
+                name='image'
+                placeholder='image'
+                value={this.state.image}
+                onChange={e => this.change(e)}               />
+            <br/>
+
+
+            <label url={'url'}>Url : </label>
+            <input
+                name='url'
+                placeholder='url'
+                value={this.state.url}
+                onChange={e => this.change(e)}               />
+            <br/>
+            <label group={'group'}>Group : </label>
+            <input
+                name='group'
+                placeholder='group'
+                value={this.state.group}
+                onChange={e => this.change(e)}               />
+            <br/>
+
+            <button value={this.state.poi} onClick={this.setSubmit}>Submit</button>
+
+          </form>
+        </Formik>
+    )
+
+  }
+
+
+
+}
+
+
 class MapComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -53,6 +203,8 @@ class MapComponent extends React.Component {
       markers: this.props.pois,
       addMarkerEnabled: false
     };
+
+    this.InsertPoi = props.InsertPoi;
   }
 
 
@@ -207,20 +359,29 @@ class MapComponent extends React.Component {
  );
   }
 
+
+
   generateForm() {
     if(this.state.addMarkerEnabled === true) { return <div className={Form}>
-      <Form onChange={fields=> this.onChange(fields)} lat={this.actualPointLat} lng={this.actualPointLng}/>
+      <Form onChange={fields=> this.onChange(fields)} InsertPoi={this.InsertPoi} lat={this.actualPointLat} lng={this.actualPointLng}/>
+
       <p>
         {JSON.stringify(this.state.fields,null,2)}
 
       </p>
     </div>};
   }
+
+
 }
 
 
 
+
+
+
 function App() {
+
   let [pois, setPois] = useState([]);
   let { loading, loginWithRedirect, getTokenSilently } = useAuth0();
 
@@ -237,11 +398,17 @@ function App() {
     }
 
 
+
+
+
   };
+
 
   if (loading) {
     return <Loading />;
   }
+
+
 
   return (
     <div className="App">
@@ -249,19 +416,31 @@ function App() {
       <header className="App-header" id="AppHead">
         <h1>Mapathon</h1>
 
+
       
         <br />
         <button id="Start-button" onClick={getPOIs}>
           Load information
         </button>
 
-        {pois && pois.length > 0 && <MapComponent pois={pois} />}
+        {pois && pois.length > 0 && <MapComponent pois={pois} InsertPoi = {InsertPoi}/>}
 
 
       </header>
 
     </div>
   );
+
+  async function InsertPoi(newPoi) {
+    let data ;
+ data = await  RequestPoi.setPOI(newPoi, getTokenSilently, loginWithRedirect);
+
+
+ console.log(data);
+  }
 }
+
+
+
 
 export default App;
