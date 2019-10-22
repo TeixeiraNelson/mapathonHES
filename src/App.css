@@ -23,6 +23,10 @@
   margin: 5px;
 }
 
+.hidden {
+  display: none;
+}
+
 .button span {
   cursor: pointer;
   display: inline-block;
@@ -43,16 +47,21 @@
   transition: 0.5s;
 }
 
+#Start-button{
+  height: 100px;
+  width: 200px;
+  position: absolute;
+  left: 50%;
+  margin-left: -100px;
+  top: 50%;
+  margin-top: -50px;
+}
+
 
 
 .button:hover span:after {
   opacity: 1;
   right: 0;
-}
-
-.hesImage1{
-  text-align: left;
-  border: azure;
 }
 
 
@@ -73,19 +82,32 @@
 
 
 .App-header {
-  background-color: #282c34;
+  background-color: #333333;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 1vmin);
   color: white;
 }
 
+.MainTitle{
+  text-align: left;
+  color: #ffffff;
+  width: 100vw;
+  padding-left: 1vh;
+  padding-top: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.topDiv{
+  border-radius: 0px;
+  border-bottom: solid 1px white;
+  height: 8vh;
+  display: block;
+}
+
 .mapClass{
-  height:450px;
-  width: 1500px;
+  height:70vh;
+  width: 100vw;
   text-align: left;
 }
 
