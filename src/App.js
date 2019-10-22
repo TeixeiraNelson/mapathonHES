@@ -17,7 +17,7 @@ import {Formik} from "formik";
 
 
 let myMarkers = [];
-
+let loadApp = false;
 
 
 
@@ -393,10 +393,10 @@ class MapComponent extends React.Component {
           </Map>
 
           <button class={"button"} id="localisation-button" onClick={this.localiseUser}>
-            My Point
+            My localisation
           </button>
           <button class={"button"} id="add-poi-button" onClick={this.addPoi}>
-            Add POI
+            Add Point of Interest
           </button>
 
             {this.generateForm()}
@@ -432,6 +432,7 @@ function App() {
   let { loading, loginWithRedirect, getTokenSilently } = useAuth0();
 
   let getPOIs = async e => {
+    loadApp = true;
     let pois = await request(
         `${process.env.REACT_APP_SERVER_URL}${endpoints.pois}`,
         getTokenSilently,
@@ -462,14 +463,16 @@ function App() {
         <header className="App-header" id="AppHead">
 
 
-
+          <div className={loadApp?"topDiv":"hidden"}>
+            <h2 className={loadApp?"MainTitle":"hidden"}> Mapathon - Group 1</h2>
+          </div>
 
 
           {pois && pois.length > 0 && <MapComponent pois={pois} InsertPoi = {InsertPoi} deletePoi={deletePoi} />}
 
             <br />
-            <button class={"button"} id="Start-button" onClick={getPOIs}>
-                Load information
+            <button class={loadApp?"hidden":"button"} id="Start-button" onClick={getPOIs}>
+                Run the application
             </button>
         </header>
 
