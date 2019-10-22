@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import "./App.css";
+import css from "./App.css";
 import { useAuth0 } from "./react-auth0-spa";
 import request from "./utils/request";
 import endpoints from "./endpoints";
 import Loading from "./components/Loading";
 import RequestPoi from "../src/components/RequestPoi"
+import SlideMenu from 'react-slide-menu'
+import hesImg from "./Images/HES-SO_Valais-Wallis.png"
 
 
 /* React Leaflet*/
@@ -15,6 +17,7 @@ import {Formik} from "formik";
 
 
 let myMarkers = [];
+
 
 
 
@@ -118,7 +121,8 @@ class Form extends React.Component {
 
 
     return(
-        <Formik>
+
+        <Formik >
           <form className={Form}>
             <label name={'name'}>Name : </label>
             <input
@@ -177,10 +181,11 @@ class Form extends React.Component {
             />
             <br/>
 
-            <button value={this.state.poi} onClick={this.setSubmit}>Submit</button>
+            <button  value={this.state.poi} onClick={this.setSubmit}>Submit</button>
 
           </form>
         </Formik>
+
     )
 
   }
@@ -386,13 +391,15 @@ class MapComponent extends React.Component {
                 </Marker>
             ))}
           </Map>
-          <button id="localisation-button" onClick={this.localiseUser}>
-            Where am I ?
+
+          <button class={"button"} id="localisation-button" onClick={this.localiseUser}>
+            My Point
           </button>
-          <button id="add-poi-button" onClick={this.addPoi}>
+          <button class={"button"} id="add-poi-button" onClick={this.addPoi}>
             Add POI
           </button>
-          {this.generateForm()}
+
+            {this.generateForm()}
 
 
 
@@ -403,9 +410,12 @@ class MapComponent extends React.Component {
 
 
   generateForm() {
+
     if(this.state.addMarkerEnabled === true) { return <div className={Form}>
       <Form onChange={fields=> this.onChange(fields)} InsertPoi={this.InsertPoi} lat={this.actualPointLat} lng={this.actualPointLng}/>
     </div>};
+
+
   }
 
 
@@ -450,19 +460,20 @@ function App() {
       <div className="App">
 
         <header className="App-header" id="AppHead">
-          <h1>Mapathon</h1>
 
 
 
-          <br />
-          <button id="Start-button" onClick={getPOIs}>
-            Load information
-          </button>
+
 
           {pois && pois.length > 0 && <MapComponent pois={pois} InsertPoi = {InsertPoi} deletePoi={deletePoi} />}
 
-
+            <br />
+            <button class={"button"} id="Start-button" onClick={getPOIs}>
+                Load information
+            </button>
         </header>
+
+
 
       </div>
   );
