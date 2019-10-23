@@ -9,14 +9,15 @@ import Sidebar from "react-sidebar";
 
 
 /* React Leaflet*/
-import { Map, TileLayer, Marker, Popup } from "react-leaflet";
+import { Map, TileLayer, Marker, Popup, LayersControl,LayerGroup } from "react-leaflet";
 import L from "leaflet";
 import {Formik} from "formik";
 
 
-
+const { BaseLayer, Overlay } = LayersControl;
 let myMarkers = [];
 let loadApp = false;
+let currentUser;
 
 
 
@@ -205,6 +206,7 @@ class MapComponent extends React.Component {
     this.mapRef = React.createRef();
     this.actualPointLat = 0;
     this.actualPointLng = 0;
+    this.logout = props.logout;
     this.state = {
       latlng: {
         lat: 46.283,
@@ -225,7 +227,7 @@ class MapComponent extends React.Component {
   }
 
   addPoi = () => {
-    if(this.state.addMarkerEnabled==false)
+    if(this.state.addMarkerEnabled===false)
       this.state.addMarkerEnabled = true
 
     this.onSetSidebarOpen(false);
@@ -363,11 +365,15 @@ class MapComponent extends React.Component {
 
 
   render() {
+
+
+
     return (
 
         <div>
           <div className={loadApp?"topDiv":"hidden"}>
-            <h2 className={loadApp?"MainTitle":"hidden"}> Mapathon - Group 1</h2>
+
+
             <Sidebar
                 sidebar={<div>
                   <button className={"button"} id="localisation-button" onClick={this.closeButtonAction}>
@@ -432,9 +438,16 @@ class MapComponent extends React.Component {
                   }
                 }}
             >
-              <button onClick={() => this.onSetSidebarOpen(true)}>
-                Open sidebar
-              </button>
+
+              <div className={"topDivContainer"}>
+                <h2 className={loadApp?"MainTitle":"hidden"}> Mapathon - Group 1</h2>
+                <button onClick={() => this.onSetSidebarOpen(true)}>Open sidebar</button>
+                <div>
+                  <img height={50} width={50} src={currentUser.picture}></img>
+                  <p>{currentUser.nickname}</p>
+                </div>
+                <button onClick={this.logout}>logout</button>
+              </div>
             </Sidebar>
           </div>
           <Map
@@ -447,30 +460,70 @@ class MapComponent extends React.Component {
               ref={m => (this.mapRef = m)}
               onLocationfound={this.handleLocationFound}
           >
-            <TileLayer
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-            />
-            {this.state.markers.map(position => (
-                <Marker
-                    icon={position.name === "Your position" ? posIcon : myIcon}
-                    position={position}
-                    ref={n => myMarkers.push(n)}
-                >
-                  <Popup
-                      ref={n =>
-                          position.name === "Your position"
-                              ? (this.popupRef = n)
-                              : (this.popupRef = null)
-                      }
-                  >
-                    <h1>{position.name}</h1>
-                    <img src={position.image} />
-                    <p>{position.description}</p>
-                    <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
-                  </Popup>
-                </Marker>
-            ))}
+            <LayersControl>
+
+              <BaseLayer checked name="OpenToMap">
+              <TileLayer
+                  attribution='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+                  url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+              />
+            </BaseLayer>
+              <BaseLayer checked name="OpenStreetMap">
+                <TileLayer
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                />
+              </BaseLayer>
+              <Overlay name="All Markers">
+                <LayerGroup>
+                  {this.state.markers.map(position => (
+                      <Marker
+                          icon={position.name === "Your position" ? posIcon : myIcon}
+                          position={position}
+                          ref={n => myMarkers.push(n)}
+                      >
+                        <Popup
+                            ref={n =>
+                                position.name === "Your position"
+                                    ? (this.popupRef = n)
+                                    : (this.popupRef = null)
+                            }
+                        >
+                          <h1>{position.name}</h1>
+                          <img src={position.image} />
+                          <p>{position.description}</p>
+                          <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
+                        </Popup>
+                      </Marker>
+                  ))}
+                </LayerGroup>
+              </Overlay>
+              <Overlay name="Group 1 Markers">
+                <LayerGroup>
+                  {this.generateGroupMarkers(1)}
+                </LayerGroup>
+              </Overlay>
+              <Overlay name="Group 2 Markers">
+                <LayerGroup>
+                  {this.generateGroupMarkers(2)}
+                </LayerGroup>
+              </Overlay>
+              <Overlay name="Group 3 Markers">
+                <LayerGroup>
+                  {this.generateGroupMarkers(3)}
+                </LayerGroup>
+              </Overlay>
+              <Overlay name="Group 4 Markers">
+                <LayerGroup>
+                  {this.generateGroupMarkers(4)}
+                </LayerGroup>
+              </Overlay>
+              <Overlay name={"My points"}>
+                <LayerGroup>
+                  {this.generateUserSearch()}
+                </LayerGroup>
+              </Overlay>
+          </LayersControl>
           </Map>
 
 
@@ -481,6 +534,35 @@ class MapComponent extends React.Component {
 
         </div>
     );
+  }
+
+  generateGroupMarkers(number) {
+
+    return <div>
+      {this.state.markers.map(position => (
+          position.Creator.group===number?
+        <Marker
+            icon={position.name === "Your position" ? posIcon : myIcon}
+            position={position}
+            ref={n => myMarkers.push(n)}
+        >
+          <Popup
+              ref={n =>
+                  position.name === "Your position"
+                      ? (this.popupRef = n)
+                      : (this.popupRef = null)
+              }
+          >
+            <h1>{position.name}</h1>
+            <img src={position.image} />
+            <p>{position.description}</p>
+            <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
+          </Popup>
+        </Marker>:<div></div>
+    ))}
+    </div>
+
+
   }
 
 
@@ -501,7 +583,7 @@ class MapComponent extends React.Component {
 
     let markers = this.state.markers;
 
-    if(this.state.addMarkerEnabled==true){
+    if(this.state.addMarkerEnabled===true){
       this.state.addMarkerEnabled=false;
       if(markers[markers.length-1].name === "" || markers[markers.length-1].name == null){
         markers.pop();
@@ -510,8 +592,33 @@ class MapComponent extends React.Component {
     }
 
   }
-}
 
+  generateUserSearch() {
+    return <div>
+      {this.state.markers.map(position => (
+          position.Creator.id===currentUser.sub?
+              <Marker
+                  icon={position.name === "Your position" ? posIcon : myIcon}
+                  position={position}
+                  ref={n => myMarkers.push(n)}
+              >
+                <Popup
+                    ref={n =>
+                        position.name === "Your position"
+                            ? (this.popupRef = n)
+                            : (this.popupRef = null)
+                    }
+                >
+                  <h1>{position.name}</h1>
+                  <img src={position.image} />
+                  <p>{position.description}</p>
+                  <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
+                </Popup>
+              </Marker>:<div></div>
+      ))}
+    </div>
+  }
+}
 
 
 
@@ -520,9 +627,9 @@ class MapComponent extends React.Component {
 function App() {
 
   let [pois, setPois] = useState([]);
-  let { loading, loginWithRedirect, getTokenSilently } = useAuth0();
+  let { loading, loginWithRedirect, getTokenSilently ,user, logout} = useAuth0();
 
-  let getPOIs = async e => {
+  let loadApplication = async e => {
     loadApp = true;
     let pois = await request(
         `${process.env.REACT_APP_SERVER_URL}${endpoints.pois}`,
@@ -530,6 +637,8 @@ function App() {
         loginWithRedirect
     );
 
+    currentUser = user;
+    console.log(currentUser);
     if (pois && pois.length > 0) {
       console.log(pois);
       setPois(pois);
@@ -557,10 +666,10 @@ function App() {
 
 
 
-          {pois && pois.length > 0 && <MapComponent pois={pois} InsertPoi = {InsertPoi} deletePoi={deletePoi} />}
+          {pois && pois.length > 0 && <MapComponent pois={pois} InsertPoi = {InsertPoi} deletePoi={deletePoi} logout={logout} />}
 
           <br />
-          <button class={loadApp?"hidden":"button"} id="Start-button" onClick={getPOIs}>
+          <button class={loadApp?"hidden":"button"} id="Start-button" onClick={loadApplication}>
             Run the application
           </button>
         </header>
@@ -590,8 +699,7 @@ function App() {
 
     if(data.error!=null){
       if(data.error.status===403){
-        console.log("TG")
-        console.log(pos);
+        alert("You cannot delete someone else's P.O.I");
       }
     } else {
       updateMap(pos);
@@ -603,8 +711,6 @@ function App() {
   }
 
   async function getGPX(){
-
-
 
     let data;
     data = await RequestPoi.getGPXFiles(getTokenSilently, loginWithRedirect)

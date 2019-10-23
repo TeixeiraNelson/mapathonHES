@@ -67,8 +67,7 @@
 
 
 .Form{
-  text-align: right;
-  background: aquamarine;
+  text-align: left;
 }
 
 .Modal {
@@ -93,7 +92,6 @@
   padding-left: 1vw;
   color: #ffffff;
   width: 15vw;
-  display: block;
 }
 
 .topDiv{
@@ -112,6 +110,11 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.topDivContainer{
+  width: 100vw;
+  height: 50px;
 }
 
 @keyframes App-logo-spin {
