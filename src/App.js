@@ -463,19 +463,21 @@ class MapComponent extends React.Component {
             <LayersControl>
 
               <BaseLayer checked name="OpenToMap">
-              <TileLayer
-                  attribution='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-                  url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
-              />
-            </BaseLayer>
+                <TileLayer
+                    attribution='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+                    url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+                />
+              </BaseLayer>
               <BaseLayer checked name="OpenStreetMap">
                 <TileLayer
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
               </BaseLayer>
+
               <Overlay name="All Markers">
                 <LayerGroup>
+
                   {this.state.markers.map(position => (
                       <Marker
                           icon={position.name === "Your position" ? posIcon : myIcon}
@@ -492,10 +494,11 @@ class MapComponent extends React.Component {
                           <h1>{position.name}</h1>
                           <img src={position.image} />
                           <p>{position.description}</p>
-                          <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
+                          {position.name === "Your position" ? <div></div> : <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>}
                         </Popup>
                       </Marker>
                   ))}
+
                 </LayerGroup>
               </Overlay>
               <Overlay name="Group 1 Markers">
@@ -523,7 +526,7 @@ class MapComponent extends React.Component {
                   {this.generateUserSearch()}
                 </LayerGroup>
               </Overlay>
-          </LayersControl>
+            </LayersControl>
           </Map>
 
 
@@ -540,26 +543,26 @@ class MapComponent extends React.Component {
 
     return <div>
       {this.state.markers.map(position => (
-          position.Creator.group===number?
-        <Marker
-            icon={position.name === "Your position" ? posIcon : myIcon}
-            position={position}
-            ref={n => myMarkers.push(n)}
-        >
-          <Popup
-              ref={n =>
-                  position.name === "Your position"
-                      ? (this.popupRef = n)
-                      : (this.popupRef = null)
-              }
-          >
-            <h1>{position.name}</h1>
-            <img src={position.image} />
-            <p>{position.description}</p>
-            <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
-          </Popup>
-        </Marker>:<div></div>
-    ))}
+          (typeof position.Creator !== 'undefined' && position.Creator.group===number)?
+              <Marker
+                  icon={position.name === "Your position" ? posIcon : myIcon}
+                  position={position}
+                  ref={n => myMarkers.push(n)}
+              >
+                <Popup
+                    ref={n =>
+                        position.name === "Your position"
+                            ? (this.popupRef = n)
+                            : (this.popupRef = null)
+                    }
+                >
+                  <h1>{position.name}</h1>
+                  <img src={position.image} />
+                  <p>{position.description}</p>
+                  <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
+                </Popup>
+              </Marker>:<div></div>
+      ))}
     </div>
 
 
@@ -596,7 +599,7 @@ class MapComponent extends React.Component {
   generateUserSearch() {
     return <div>
       {this.state.markers.map(position => (
-          position.Creator.id===currentUser.sub?
+          (typeof position.Creator !== 'undefined' && position.Creator.id===currentUser.sub)?
               <Marker
                   icon={position.name === "Your position" ? posIcon : myIcon}
                   position={position}
