@@ -5,8 +5,7 @@ import request from "./utils/request";
 import endpoints from "./endpoints";
 import Loading from "./components/Loading";
 import RequestPoi from "../src/components/RequestPoi"
-import SlideMenu from 'react-slide-menu'
-import hesImg from "./Images/HES-SO_Valais-Wallis.png"
+import Sidebar from "react-sidebar";
 
 
 /* React Leaflet*/
@@ -124,7 +123,7 @@ class Form extends React.Component {
 
         <Formik >
           <form className={Form}>
-            <label name={'name'}>Name : </label>
+            <label className={"labelForm"} name={'name'}>Name : </label>
             <input
                 name='name'
                 placeholder='name'
@@ -132,30 +131,32 @@ class Form extends React.Component {
                 onChange={e => this.change(e)}
             />
             <br/>
-            <label description={'description'}>description</label>
+            <label className={"labelForm"} description={'description'}>Description : </label>
             <input
                 name='description'
                 placeholder='Description'
                 value={this.state.description}
                 onChange={e => this.change(e)}               />
             <br/>
-            <label lat={'lat'}>Lat : </label>
+            <label className={"labelForm"} lat={'lat'}>Lat : </label>
             <input
+                disabled
                 name='lat'
                 placeholder='lat'
                 value={this.props.lat}
                 onChange={e => this.change(e)}               />
             <br/>
 
-            <label lng={'lng'}>Lng : </label>
+            <label className={"labelForm"} lng={'lng'}>Lng : </label>
             <input
+                disabled
                 name={this.props.lng}
                 placeholder={this.props.lng}
                 value={this.props.lng}
                 onChange={e => this.change(e)}               />
             <br/>
 
-            <label image={'image'}>Image : </label>
+            <label className={"labelForm"} image={'image'}>Image : </label>
             <input
 
                 name='image'
@@ -165,23 +166,24 @@ class Form extends React.Component {
             <br/>
 
 
-            <label url={'url'}>Url : </label>
+            <label className={"labelForm"} url={'url'}>Url : </label>
             <input
                 name='url'
                 placeholder='url'
                 value={this.state.url}
                 onChange={e => this.change(e)}               />
             <br/>
-            <label group={'group'}>Group : </label>
+            <label className={"labelForm"} group={'group'}>Group : </label>
             <input
+                disabled
                 name='group'
-                placeholder={this.state.group}
-                value={this.state.group}
+                placeholder={1}
+                value={1}
                 onChange={e => this.change(e)}
             />
             <br/>
 
-            <button  value={this.state.poi} onClick={this.setSubmit}>Submit</button>
+            <button className="button" id="submitButton" value={this.state.poi} onClick={this.setSubmit}>Submit</button>
 
           </form>
         </Formik>
@@ -209,16 +211,24 @@ class MapComponent extends React.Component {
         lng: 7.536
       },
       markers: this.props.pois,
-      addMarkerEnabled: false
+      addMarkerEnabled: false,
+      sidebarOpen: false
     };
 
     this.insertPoi = props.InsertPoi;
+    this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
     this.DeletePoi = props.deletePoi;
   }
 
+  onSetSidebarOpen(open) {
+    this.setState({ sidebarOpen: open });
+  }
 
   addPoi = () => {
-    this.state.addMarkerEnabled = !this.state.addMarkerEnabled
+    if(this.state.addMarkerEnabled==false)
+      this.state.addMarkerEnabled = true
+
+    this.onSetSidebarOpen(false);
 
   }
 
@@ -233,21 +243,21 @@ class MapComponent extends React.Component {
   updateMap = (data) => {
     let { markers } = this.state;
 
-     for( var i = 0; i < markers.length; i++){
-       if ( markers[i].id === data.id) {
-         markers.splice(i, 1);
-         i--;
-       }
-     }
+    for( var i = 0; i < markers.length; i++){
+      if ( markers[i].id === data.id) {
+        markers.splice(i, 1);
+        i--;
+      }
+    }
 
-     this.setState({ markers });
+    this.setState({ markers });
   }
 
 
   localiseUser = () => {
     const { markers } = this.state;
     let alreadyPositioned = false;
-
+    this.onSetSidebarOpen(false);
     markers.map(marker =>
         marker.name === "Your position"
             ? (alreadyPositioned = true)
@@ -298,7 +308,7 @@ class MapComponent extends React.Component {
       let { markers } = this.state;
       this.actualPointLat = e.latlng.lat;
       this.actualPointLng = e.latlng.lng;
-      this.mapRef.leafletElement.flyTo(e.latlng, 15);
+      this.mapRef.leafletElement.flyTo(e.latlng, 18);
 
       if(this.nbClicks<=1){
         markers.push(e.latlng);
@@ -322,7 +332,7 @@ class MapComponent extends React.Component {
 
       this.setState({ markers });
       console.log(this.state);
-
+      this.onSetSidebarOpen(true);
     }
   };
 
@@ -356,6 +366,77 @@ class MapComponent extends React.Component {
     return (
 
         <div>
+          <div className={loadApp?"topDiv":"hidden"}>
+            <h2 className={loadApp?"MainTitle":"hidden"}> Mapathon - Group 1</h2>
+            <Sidebar
+                sidebar={<div>
+                  <button className={"button"} id="localisation-button" onClick={this.closeButtonAction}>
+                    Close
+                  </button>
+                  <button className={"button"} id="localisation-button" onClick={this.localiseUser}>
+                    My localisation
+                  </button>
+                  <button className={"button"} id="add-poi-button" onClick={this.addPoi}>
+                    Add Point of Interest
+                  </button>
+                  {this.generateForm()}
+                </div>}
+                open={this.state.sidebarOpen}
+                styles={{
+                  root: {
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    overflow: "hidden"
+                  },
+                  sidebar: {
+                    maxWidth: 400,
+                    zIndex: 4,
+                    position: "absolute",
+                    top: 0,
+                    bottom: 0,
+                    transition: "transform .3s ease-out",
+                    WebkitTransition: "-webkit-transform .3s ease-out",
+                    willChange: "transform",
+                    overflowY: "auto"
+                  },
+                  content: {
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    overflowY: "auto",
+                    WebkitOverflowScrolling: "touch",
+                    transition: "left .3s ease-out, right .3s ease-out"
+                  },
+                  overlay: {
+                    zIndex: 3,
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    opacity: 0,
+                    visibility: "hidden",
+                    transition: "opacity .3s ease-out, visibility .3s ease-out",
+                    backgroundColor: "rgba(0,0,0,.5)"
+                  },
+                  dragHandle: {
+                    zIndex: 1,
+                    position: "fixed",
+                    top: 0,
+                    bottom: 0
+                  }
+                }}
+            >
+              <button onClick={() => this.onSetSidebarOpen(true)}>
+                Open sidebar
+              </button>
+            </Sidebar>
+          </div>
           <Map
 
               className="mapClass"
@@ -392,14 +473,9 @@ class MapComponent extends React.Component {
             ))}
           </Map>
 
-          <button class={"button"} id="localisation-button" onClick={this.localiseUser}>
-            My localisation
-          </button>
-          <button class={"button"} id="add-poi-button" onClick={this.addPoi}>
-            Add Point of Interest
-          </button>
 
-            {this.generateForm()}
+
+
 
 
 
@@ -419,6 +495,21 @@ class MapComponent extends React.Component {
   }
 
 
+  closeButtonAction = (e) => {
+    e.preventDefault();
+    this.onSetSidebarOpen(false);
+
+    let markers = this.state.markers;
+
+    if(this.state.addMarkerEnabled==true){
+      this.state.addMarkerEnabled=false;
+      if(markers[markers.length-1].name === "" || markers[markers.length-1].name == null){
+        markers.pop();
+      }
+      this.setState({ markers });
+    }
+
+  }
 }
 
 
@@ -463,17 +554,15 @@ function App() {
         <header className="App-header" id="AppHead">
 
 
-          <div className={loadApp?"topDiv":"hidden"}>
-            <h2 className={loadApp?"MainTitle":"hidden"}> Mapathon - Group 1</h2>
-          </div>
+
 
 
           {pois && pois.length > 0 && <MapComponent pois={pois} InsertPoi = {InsertPoi} deletePoi={deletePoi} />}
 
-            <br />
-            <button class={loadApp?"hidden":"button"} id="Start-button" onClick={getPOIs}>
-                Run the application
-            </button>
+          <br />
+          <button class={loadApp?"hidden":"button"} id="Start-button" onClick={getPOIs}>
+            Run the application
+          </button>
         </header>
 
 
