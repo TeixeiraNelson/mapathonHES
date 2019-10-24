@@ -572,8 +572,6 @@ class MapComponent extends React.Component {
 
                         <button onClick={this.likeFunction}>Like/Dislike</button>
 
-
-                        {position.Creator}
                         {position.name === "Your position" ? <div></div> : <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>}
                     </Popup>
                 </Marker>
@@ -657,7 +655,7 @@ class MapComponent extends React.Component {
                     ))}
                 </div>);
         }
-        return <div></div>
+        return <div>Tags : No Tags.</div>
     }
 
 
