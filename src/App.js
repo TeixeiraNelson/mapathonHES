@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import css from "./App.css";
 import { useAuth0 } from "./react-auth0-spa";
 import request from "./utils/request";
 import endpoints from "./endpoints";
 import Loading from "./components/Loading";
 import RequestPoi from "../src/components/RequestPoi"
 import Sidebar from "react-sidebar";
+import css from "./App.css";
 
 
 /* React Leaflet*/
@@ -18,6 +18,8 @@ const { BaseLayer, Overlay } = LayersControl;
 let myMarkers = [];
 let loadApp = false;
 let currentUser;
+
+
 
 
 
@@ -440,13 +442,21 @@ class MapComponent extends React.Component {
             >
 
               <div className={"topDivContainer"}>
-                <h2 className={loadApp?"MainTitle":"hidden"}> Mapathon - Group 1</h2>
-                <button onClick={() => this.onSetSidebarOpen(true)}>Open sidebar</button>
-                <div>
-                  <img height={50} width={50} src={currentUser.picture}></img>
+                <h2  className={loadApp?"MainTitle":"hidden"}> Mapathon - Group 1</h2>
+                  <div style={{float:'right', margin:'100px'}}>
+                <divc >
+                  <img height={100} width={100} src={currentUser.picture}></img>
                   <p>{currentUser.nickname}</p>
-                </div>
-                <button onClick={this.logout}>logout</button>
+                </divc>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <button className={"button2"} onClick={this.logout}>logout</button>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <button  className={"button2"} onClick={() => this.onSetSidebarOpen(true)}>Open sidebar</button>
+                  </div>
               </div>
             </Sidebar>
           </div>
@@ -661,7 +671,7 @@ function App() {
 
 
   return (
-      <div className="App">
+      <div  className="App">
 
         <header className="App-header" id="AppHead">
 
