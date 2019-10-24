@@ -11,7 +11,7 @@
 .button {
   display: inline-block;
   border-radius: 4px;
-  background-color: #f4511e;
+  background-color: dimgray;
   border: none;
   color: #FFFFFF;
   text-align: center;
@@ -24,6 +24,21 @@
   z-index: 5;
 }
 
+.button2 {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #f4511e;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 28px;
+  padding: 20px;
+  width: 150px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+  z-index: 5;
+}
 .hidden {
   display: none;
 }
@@ -94,16 +109,20 @@
   width: 15vw;
 }
 
-.topDiv{
+.topDiv {
   border-radius: 0px;
   border-bottom: solid 1px white;
   height: 8vh;
   display: block;
 }
 
+
 .mapClass{
-  height:70vh;
-  width: 100vw;
+  float: left;
+  bottom: 0;
+  position:absolute;
+  height:90vh;
+  width: 80vw;
   text-align: left;
   z-index: 1;
 }
