@@ -56,7 +56,11 @@ class Form extends React.Component {
         this.requestToken = props.requestToken;
         this.useAuth = props.useAuth;
         this.InsertPoi = props.InsertPoi;
-
+        this.Allcategories = props.categories;
+        this.state = {
+            categories: []
+        }
+        console.log(this.categories);
     }
 
 
@@ -117,7 +121,20 @@ class Form extends React.Component {
         this.InsertPoi(this.state.poi);
     }
 
+    selectChangement= (event) => {
+        let id = event.target.value;
+        this.Allcategories.map(cat => {
+            if(cat.id==id){
+                console.log(cat)
+                this.setState(prevState => ({
+                    categories: [...prevState.categories, cat]
+                }))
+            }
+            }
+        );
 
+
+    }
 
 
 
@@ -192,6 +209,11 @@ class Form extends React.Component {
                         value={1}
                         onChange={e => this.change(e)}
                     />
+                    <select id='testSelect1' value={this.state.catValue} onChange={this.selectChangement} multiple>
+                        {this.Allcategories.map(cat =>(
+                            <option value={cat.id}>{cat.name}</option>
+                        ))}
+                    </select>
                     <br/>
 
 
@@ -203,8 +225,6 @@ class Form extends React.Component {
         )
 
     }
-
-
 
 }
 
@@ -225,12 +245,15 @@ class MapComponent extends React.Component {
             },
             markers: this.props.pois,
             addMarkerEnabled: false,
-            sidebarOpen: false
+            sidebarOpen: false,
+            categories: this.props.categories
         };
 
         this.insertPoi = props.InsertPoi;
         this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
         this.DeletePoi = props.deletePoi;
+
+        console.log("Map Component : " + this.state.categories);
     }
 
     onSetSidebarOpen(open) {
@@ -397,6 +420,7 @@ class MapComponent extends React.Component {
                                 Add Point of Interest
                             </button>
                             {this.generateForm()}
+
                         </div>}
                         open={this.state.sidebarOpen}
                         styles={{
@@ -481,7 +505,7 @@ class MapComponent extends React.Component {
                 >
                     <LayersControl>
 
-                        <BaseLayer checked name="OpenToMap">
+                        <BaseLayer name="OpenToMap">
                             <TileLayer
                                 attribution='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
                                 url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
@@ -494,7 +518,7 @@ class MapComponent extends React.Component {
                             />
                         </BaseLayer>
 
-                        <Overlay name="All Markers">
+                        <Overlay name="All Markers" checked>
                             <LayerGroup>
 
                                 {this.generateGroupMarkers(0)}
@@ -542,7 +566,7 @@ class MapComponent extends React.Component {
     displayCategories(position) {
         if(typeof position.Categories !== 'undefined' && position.Categories.length !== 0){
             return(
-                <div>
+                <div><p>Categories :</p>
                     {position.Categories.map(categorie =>(
 
                         <p>{categorie.name}</p>
@@ -575,14 +599,10 @@ class MapComponent extends React.Component {
                         <p>By group : {typeof position.Creator !== 'undefined' ? position.Creator.group:'none'}</p>
                         <img src={position.image} />
                         <p>{position.description}</p>
-
+                        {(typeof position.Categories !== 'undefined' && position.Categories!== null)? this.displayCategories(position):<div></div>}
                         {this.generateTags(position)}
-                        {(typeof position.Status !== 'undefined' && position.Status!== null)? this.displayCategories(position):<div></div>}
-
                         <button onClick={this.likeFunction}>Like/Dislike</button>
 
-
-                        {position.Creator}
                         {position.name === "Your position" ? <div></div> : <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>}
                     </Popup>
                 </Marker>
@@ -669,7 +689,7 @@ class MapComponent extends React.Component {
                     ))}
                 </div>);
         }
-        return <div></div>
+        return <div>Tags : No Tags.</div>
     }
 
 
@@ -677,7 +697,7 @@ class MapComponent extends React.Component {
     generateForm() {
 
         if(this.state.addMarkerEnabled === true) { return <div className={Form}>
-            <Form onChange={fields=> this.onChange(fields)} InsertPoi={this.InsertPoi} lat={this.actualPointLat} lng={this.actualPointLng}/>
+            <Form onChange={fields=> this.onChange(fields)} InsertPoi={this.InsertPoi} lat={this.actualPointLat} lng={this.actualPointLng} categories={this.state.categories}/>
         </div>};
 
 
@@ -708,7 +728,8 @@ class MapComponent extends React.Component {
 function App() {
 
     let [pois, setPois] = useState([]);
-    let { loading, loginWithRedirect, getTokenSilently ,user, logout} = useAuth0();
+    let [categories, setCategories] = useState([]);
+    let {loading, loginWithRedirect, getTokenSilently ,user, logout} = useAuth0();
 
     let loadApplication = async e => {
         loadApp = true;
@@ -726,8 +747,21 @@ function App() {
         }
 
 
-        getGPX();
+        await getGPX();
 
+
+        let cats = await request(
+            `${process.env.REACT_APP_SERVER_URL}/category`,
+            getTokenSilently,
+            loginWithRedirect
+        );
+
+        if (cats && cats.length > 0) {
+            console.log("cats");
+            console.log(cats);
+            setCategories(cats);
+            console.log(categories);
+        }
 
     };
 
@@ -740,23 +774,13 @@ function App() {
 
     return (
         <div  className="App">
-
             <header className="App-header" id="AppHead">
-
-
-
-
-
-                {pois && pois.length > 0 && <MapComponent pois={pois} InsertPoi = {InsertPoi} deletePoi={deletePoi} logout={logout} />}
-
+                {(pois && pois.length > 0 && categories && categories.length > 0)&& <MapComponent pois={pois} InsertPoi = {InsertPoi} deletePoi={deletePoi} logout={logout} categories={categories}/>}
                 <br />
                 <button class={loadApp?"hidden":"button"} id="Start-button" onClick={loadApplication}>
                     Run the application
                 </button>
             </header>
-
-
-
         </div>
     );
 
@@ -798,6 +822,14 @@ function App() {
 
         console.log("GPX " + data);
 
+    }
+
+    async function getCategories(){
+        let data;
+        data = await RequestPoi.getAllCategories(getTokenSilently,loginWithRedirect);
+
+        setCategories(data);
+        return data;
     }
 }
 

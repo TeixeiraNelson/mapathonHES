@@ -191,6 +191,7 @@ html{
     width: 50px;
 }
 
+
 .form{
   width: 200px;
   font-size: 16px;
@@ -269,4 +270,5 @@ html{
 .form[type=button]:hover{
   background: #394D61;
 }
+
 
