@@ -5,6 +5,7 @@ import endpoints from "./endpoints";
 import Loading from "./components/Loading";
 import RequestPoi from "../src/components/RequestPoi"
 import Sidebar from "react-sidebar";
+
 import css from "./App.css";
 
 
@@ -40,6 +41,7 @@ var posIcon = L.icon({
     iconAnchor: [22, 94],
     popupAnchor: [-10, -90]
 });
+
 
 
 class Form extends React.Component {
@@ -142,24 +144,27 @@ class Form extends React.Component {
         return(
 
             <Formik >
-                <form className={Form}>
-                    <label className={"labelForm"} name={'name'}>Name : </label>
+                <form className={"form"}>
+
                     <input
+                        type='text'
                         name='name'
                         placeholder='name'
                         value={this.state.name}
                         onChange={e => this.change(e)}
                     />
                     <br/>
-                    <label className={"labelForm"} description={'description'}>Description : </label>
+
                     <input
+                        type='text'
                         name='description'
                         placeholder='Description'
                         value={this.state.description}
                         onChange={e => this.change(e)}               />
                     <br/>
-                    <label className={"labelForm"} lat={'lat'}>Lat : </label>
+
                     <input
+                        type='text'
                         disabled
                         name='lat'
                         placeholder='lat'
@@ -167,8 +172,9 @@ class Form extends React.Component {
                         onChange={e => this.change(e)}               />
                     <br/>
 
-                    <label className={"labelForm"} lng={'lng'}>Lng : </label>
+
                     <input
+                        type='text'
                         disabled
                         name={this.props.lng}
                         placeholder={this.props.lng}
@@ -176,9 +182,9 @@ class Form extends React.Component {
                         onChange={e => this.change(e)}               />
                     <br/>
 
-                    <label className={"labelForm"} image={'image'}>Image : </label>
-                    <input
 
+                    <input
+                        type='text'
                         name='image'
                         placeholder='image'
                         value={this.state.image}
@@ -186,15 +192,17 @@ class Form extends React.Component {
                     <br/>
 
 
-                    <label className={"labelForm"} url={'url'}>Url : </label>
+
                     <input
+                        type='text'
                         name='url'
                         placeholder='url'
                         value={this.state.url}
                         onChange={e => this.change(e)}               />
                     <br/>
-                    <label className={"labelForm"} group={'group'}>Group : </label>
+
                     <input
+                        type='text'
                         disabled
                         name='group'
                         placeholder={1}
@@ -208,7 +216,8 @@ class Form extends React.Component {
                     </select>
                     <br/>
 
-                    <button className="button" id="submitButton" value={this.state.poi} onClick={this.setSubmit}>Submit</button>
+
+                    <button style={{margin_left:'20px'}} className="button" id="submitButton" value={this.state.poi} onClick={this.setSubmit}>Submit</button>
 
                 </form>
             </Formik>
@@ -475,11 +484,11 @@ class MapComponent extends React.Component {
                                 <br/>
                                 <br/>
                                 <br/>
-                                <button className={"button2"} onClick={this.logout}>logout</button>
+                                <button target ="_blank" className={"button2"} onClick={this.logout}>logout</button>
                                 <br/>
                                 <br/>
                                 <br/>
-                                <button  className={"button2"} onClick={() => this.onSetSidebarOpen(true)}>Open sidebar</button>
+                                <button  target ="_blank" className={"button2"} onClick={() => this.onSetSidebarOpen(true)}>Menu</button>
                             </div>
                         </div>
                     </Sidebar>
@@ -627,6 +636,7 @@ class MapComponent extends React.Component {
             </div>
         }
 
+
         return <div>
             {this.state.markers.map(position => (
                 (typeof position.Creator !== 'undefined' && position.Creator.group===number)?
@@ -660,6 +670,8 @@ class MapComponent extends React.Component {
 
 
     }
+
+
 
     likeFunction() {
 

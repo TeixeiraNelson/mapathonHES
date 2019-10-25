@@ -16,7 +16,7 @@
   color: #FFFFFF;
   text-align: center;
   font-size: 28px;
-  padding: 20px;
+  padding: 20px 20px 20px 20px;
   width: 350px;
   transition: all 0.5s;
   cursor: pointer;
@@ -24,21 +24,31 @@
   z-index: 5;
 }
 
+
+
 .button2 {
-  display: inline-block;
-  border-radius: 4px;
-  background-color: #f4511e;
-  border: none;
-  color: #FFFFFF;
-  text-align: center;
-  font-size: 28px;
-  padding: 20px;
-  width: 150px;
-  transition: all 0.5s;
-  cursor: pointer;
-  margin: 5px;
-  z-index: 5;
+    border: none;
+    background: #404040;
+    color: #ffffff !important;
+    font-weight: 100;
+    padding: 20px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    display: inline-block;
+    transition: all 0.3s ease 0s;
 }
+
+.button2:hover {
+    color: #404040 !important;
+    font-weight: 700 !important;
+    letter-spacing: 3px;
+    background: none;
+    -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    transition: all 0.3s ease 0s;
+}
+
+
 .hidden {
   display: none;
 }
@@ -179,5 +189,84 @@ html{
 
 .labelForm{
     width: 50px;
+}
+
+.form{
+  width: 200px;
+  font-size: 16px;
+
+  padding: 30px 50px 50px 50px;
+
+}
+.form input[type=submit],
+.form input[type=button],
+.form input[type=text],
+.form input[type=email],
+.form textarea,
+.form label
+{
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px;
+  color: #fff;
+
+}
+.form label {
+  display:block;
+  margin-bottom: 10px;
+}
+.form label > span{
+  display: inline-block;
+  float: left;
+  width: 150px;
+}
+.form input[type=text],
+.form input[type=email]
+{
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed #83A4C5;
+  width: 275px;
+  outline: none;
+  padding: 0px 0px 15px 15px;
+  font-style: italic;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: darkgray;
+  opacity: 1; /* Firefox */
+}
+.form textarea{
+  font-style: italic;
+  padding: 20px 20px 20px 20px;
+  background: transparent;
+  outline: none;
+  border: none;
+  border-bottom: 1px dashed #83A4C5;
+  width: 275px;
+  overflow: hidden;
+  resize:none;
+
+  height:20px;
+}
+
+.form textarea:focus,
+.form input[type=text]:focus,
+.form input[type=email]:focus,
+.form input[type=email] :focus
+{
+  border-bottom: 1px dashed #D9FFA9;
+}
+
+.form[type=submit],
+.form input[type=button]{
+  background: #576E86;
+  border: none;
+  padding: 8px 10px 8px 10px;
+  border-radius: 5px;
+  color: #A8BACE;
+}
+.form input[type=submit]:hover,
+.form[type=button]:hover{
+  background: #394D61;
 }
 
