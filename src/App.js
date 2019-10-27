@@ -723,6 +723,7 @@ class MapComponent extends React.Component {
 
                         <button onClick={this.likeFunction}>Like</button>
                         <button onClick={this.dislikeFunction}>Dislike</button>
+                        <button onClick={this.verifyFunction}>Verify</button>
 
                         <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
                     </Popup>
@@ -773,6 +774,7 @@ class MapComponent extends React.Component {
                                 {this.generateTags(position)}
                                 <button onClick={this.likeFunction}>Like</button>
                                 <button onClick={this.dislikeFunction}>Dislike</button>
+                                <button onClick={this.verifyFunction}>Verify</button>
 
                                 {position.name === "Your position" ? <div></div> : <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>}
                             </Popup>
@@ -809,6 +811,7 @@ class MapComponent extends React.Component {
                             {this.generateTags(position)}
                             <button onClick={this.likeFunction}>Like</button>
                             <button onClick={this.dislikeFunction}>Dislike</button>
+                            <button onClick={this.verifyFunction}>Verify</button>
 
                             {position.name === "Your position" ? <div></div> : <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>}
                         </Popup>
@@ -835,6 +838,9 @@ class MapComponent extends React.Component {
     }
     countLikeFunction(){
         return 1
+    }
+    verifyFunction(){
+
     }
 
     generateTags(position) {
