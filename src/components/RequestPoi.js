@@ -18,10 +18,57 @@ export class requestPOI {
 
             console.log("INSERTING POI");
             let data = await response.json();
-            return data;
+            console.log(data);
+
+            console.log("INSERTING POI Status");
+            console.log("Body:" + JSON.stringify(newPOI.Status))
+
+            let response2 = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${data.id}/status`, {
+                method: "PATCH",
+                body: JSON.stringify(newPOI.Status),
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+
+            let data2 = await response2.json();
+            console.log(data2);
+
+
+            let response3 = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${data.id}/category`, {
+                method: "PATCH",
+                body: JSON.stringify(newPOI.Categories),
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            console.log("INSERTING POI Categories");
+            let data3 = await response3.json();
+            console.log(data3);
+
+            let response4 = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${data.id}/tag`, {
+                method: "PATCH",
+                body: JSON.stringify(newPOI.Tags),
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            console.log("INSERTING POI Tags");
+            let data4 = await response4.json();
+            console.log(data4);
+
         } catch (e) {
             console.error(e);
-            await loginWithRedirect();
+
             return null;
         }
     }

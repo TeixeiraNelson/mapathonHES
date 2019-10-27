@@ -32,6 +32,7 @@
     color: #ffffff !important;
     font-weight: 100;
     padding: 20px;
+    width: 10vw;
     text-transform: uppercase;
     border-radius: 6px;
     display: inline-block;
@@ -184,13 +185,14 @@ html{
 }
 
 #submitButton{
-
+    width: 15vw;
+    height: 8vh;
+    background-color: darksalmon;
 }
 
 .labelForm{
     width: 50px;
 }
-
 
 .form{
   width: 200px;
@@ -270,5 +272,4 @@ html{
 .form[type=button]:hover{
   background: #394D61;
 }
-
 
