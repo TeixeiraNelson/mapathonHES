@@ -45,11 +45,10 @@ var posIcon = L.icon({
 
 
 class Form extends React.Component {
-
-
     constructor(props) {
         super(props);
         this.props=props;
+        this.closeMenu = props.closeMenu;
         this.lat = props.lat;
         this.lng = props.lng;
         this.newPoi = props.newPoi;
@@ -57,41 +56,35 @@ class Form extends React.Component {
         this.useAuth = props.useAuth;
         this.InsertPoi = props.InsertPoi;
         this.Allcategories = props.categories;
+        this.AllTags = props.tags;
         this.state = {
-            categories: []
-        }
-        console.log(this.categories);
-    }
-
-
-    state = {
-        selectedFiles: null
-    }
-
-
-    state = {
-
-        name: '',
-        description: '',
-        lat: this.props.lat,
-        lng: this.props.lng,
-        image: '',
-        url: '',
-        group: '',
-
-        poi:{
+            categories: [],
+            categoriesString: "",
+            status: props.status[1],
+            tags: [],
+            tagsString: "",
             name: '',
             description: '',
             lat: this.props.lat,
             lng: this.props.lng,
             image: '',
             url: '',
-            group: ''}
+            group: 1,
 
-
+            poi:{
+                name: '',
+                description: '',
+                lat: this.props.lat,
+                lng: this.props.lng,
+                image: '',
+                url: '',
+                group: 1,
+                Status: [],
+                Tags: [],
+                Categories:[]
+            }
+        }
     }
-
-
 
     change = (e) => {
         this.props.onChange({[e.target.name]: e.target.value})
@@ -109,7 +102,10 @@ class Form extends React.Component {
                 lng: this.props.lng,
                 image: this.state.image,
                 url: this.state.url,
-                group: this.state.group
+                group: 1,
+                Status: this.state.status,
+                Tags: this.state.tags,
+                Categories: this.state.categories
             }}
         )
 
@@ -118,23 +114,80 @@ class Form extends React.Component {
     setSubmit = (e) => {
         e.preventDefault();
 
-        this.InsertPoi(this.state.poi);
+        if(this.state.poi.name!==null && this.state.poi.name.length>1){
+            this.InsertPoi(this.state.poi);
+            this.closeMenu(false);
+        } else
+            alert("A point cannot be added without a name at least")
     }
 
     selectChangement= (event) => {
         let id = event.target.value;
+        let str = this.state.categoriesString;
         this.Allcategories.map(cat => {
-            if(cat.id==id){
-                console.log(cat)
-                this.setState(prevState => ({
-                    categories: [...prevState.categories, cat]
-                }))
-            }
+                if(cat.id==id && str.indexOf(cat.name)==-1){
+                    console.log(cat)
+                    str += cat.name + "  ";
+                    this.setState(prevState => ({
+                        categories: [...prevState.categories, cat],
+                        categoriesString: str
+                    }))
+                }
             }
         );
 
+        this.setState({
+            poi:{
+                name: this.state.name,
+                description: this.state.description,
+                lat: this.props.lat,
+                lng: this.props.lng,
+                image: this.state.image,
+                url: this.state.url,
+                group: 1,
+                Status: this.state.status,
+                Tags: this.state.tags,
+                Categories: this.state.categories
+            }}
+        )
+
 
     }
+
+    selectChangementTags =(event) => {
+        let id = event.target.value;
+        let str = this.state.tagsString;
+        this.AllTags.map(tag => {
+                if(tag.id==id && str.indexOf(tag.name)==-1){
+                    console.log(tag)
+                    str += tag.name + "  ";
+                    this.setState(prevState => ({
+                        tags: [...prevState.tags, tag],
+                        tagsString: str
+                    }))
+                    console.log(this.state.tags);
+                }
+            }
+        );
+
+        this.setState({
+            poi:{
+                name: this.state.name,
+                description: this.state.description,
+                lat: this.props.lat,
+                lng: this.props.lng,
+                image: this.state.image,
+                url: this.state.url,
+                group: 1,
+                Status: this.state.status,
+                Tags: this.state.tags,
+                Categories: this.state.categories
+            }}
+        )
+    }
+
+
+
 
 
 
@@ -148,27 +201,59 @@ class Form extends React.Component {
 
                     <input
                         type='text'
+                        disabled
+                        value={'Informations Générales'}
+                        style={{borderBottom: 0, textAlign:'center', fontWeight:'bold', fontSize: 19}}
+                    />
+                    <textarea
+                        type='text'
                         name='name'
-                        placeholder='name'
+                        placeholder='Name'
                         value={this.state.name}
                         onChange={e => this.change(e)}
+                        required={true}
                     />
                     <br/>
 
-                    <input
+                    <textarea
                         type='text'
                         name='description'
                         placeholder='Description'
                         value={this.state.description}
-                        onChange={e => this.change(e)}               />
+                        onChange={e => this.change(e)}
+                    required={true}
+                    style={{height: 80}}/>
                     <br/>
-
+                    <div style={{display: 'inline'}}>
+                    <input
+                        type='text'
+                        disabled
+                        name='status'
+                        placeholder='Status :'
+                        value={'Status : '}
+                        style={{width:80, display:'inline', borderBottom:0}}
+                    /><input
+                    type='text'
+                    disabled
+                    name='status'
+                    placeholder='Status :'
+                    value={this.state.status.name}
+                    style={{width:90, color:'yellow', display:'inline', borderBottom:0}}
+                />
+                    </div>
+                    <br/><br/>
+                    <input
+                        type='text'
+                        disabled
+                        value={'Coordonnées GPS'}
+                        style={{borderBottom: 0, textAlign:'center', fontWeight:'bold', fontSize: 19}}
+                    />
                     <input
                         type='text'
                         disabled
                         name='lat'
                         placeholder='lat'
-                        value={this.props.lat}
+                        value={'lat : ' + this.props.lat}
                         onChange={e => this.change(e)}               />
                     <br/>
 
@@ -178,7 +263,7 @@ class Form extends React.Component {
                         disabled
                         name={this.props.lng}
                         placeholder={this.props.lng}
-                        value={this.props.lng}
+                        value={'lng : ' + this.props.lng}
                         onChange={e => this.change(e)}               />
                     <br/>
 
@@ -186,7 +271,7 @@ class Form extends React.Component {
                     <input
                         type='text'
                         name='image'
-                        placeholder='image'
+                        placeholder='Image URL'
                         value={this.state.image}
                         onChange={e => this.change(e)}               />
                     <br/>
@@ -196,7 +281,7 @@ class Form extends React.Component {
                     <input
                         type='text'
                         name='url'
-                        placeholder='url'
+                        placeholder='Site Url'
                         value={this.state.url}
                         onChange={e => this.change(e)}               />
                     <br/>
@@ -206,18 +291,59 @@ class Form extends React.Component {
                         disabled
                         name='group'
                         placeholder={1}
-                        value={1}
-                        onChange={e => this.change(e)}
+                        value={'Group : 1'}
                     />
-                    <select id='testSelect1' value={this.state.catValue} onChange={this.selectChangement} multiple>
+                    <br/><br/>
+                    <input
+                        type='text'
+                        disabled
+                        value={'Catégories'}
+                        style={{borderBottom: 0, textAlign:'center', fontWeight:'bold', fontSize: 19}}
+                    />
+                    <textarea
+                        type='text'
+                        disabled
+                        name='categories'
+                        placeholder=''
+                        value={this.state.categoriesString}
+                        style={{height: 80}}
+                    />
+                    <select id='testSelect1' value={this.state.catValue} onChange={this.selectChangement}>
+                        <option>Choose categories...</option>
                         {this.Allcategories.map(cat =>(
                             <option value={cat.id}>{cat.name}</option>
                         ))}
                     </select>
+
+                    <input
+                        type='text'
+                        disabled
+                        value={'Tags'}
+                        style={{borderBottom: 0, textAlign:'center', fontWeight:'bold', fontSize: 19}}
+                    />
+
+                    <textarea
+                        type='text'
+                        disabled
+                        name='tags'
+                        placeholder=''
+                        value={this.state.tagsString}
+                        style={{height: 80}}
+                    />
+                    <select id='testSelect1' onChange={this.selectChangementTags}>
+                        <option>Choose Tags...</option>
+                        {this.AllTags.map(tag =>(
+                            <option value={tag.id}>{tag.name}</option>
+                        ))}
+                    </select>
+
+
+
+
                     <br/>
 
 
-                    <button style={{margin_left:'20px'}} className="button" id="submitButton" value={this.state.poi} onClick={this.setSubmit}>Submit</button>
+                    <button className="button" id="submitButton" value={this.state.poi} onClick={this.setSubmit}>Submit</button>
 
                 </form>
             </Formik>
@@ -225,6 +351,7 @@ class Form extends React.Component {
         )
 
     }
+
 
 }
 
@@ -246,14 +373,14 @@ class MapComponent extends React.Component {
             markers: this.props.pois,
             addMarkerEnabled: false,
             sidebarOpen: false,
-            categories: this.props.categories
+            categories: this.props.categories,
+            status: this.props.status,
+            tags: this.props.tags
         };
 
         this.insertPoi = props.InsertPoi;
         this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
         this.DeletePoi = props.deletePoi;
-
-        console.log("Map Component : " + this.state.categories);
     }
 
     onSetSidebarOpen(open) {
@@ -265,15 +392,10 @@ class MapComponent extends React.Component {
             this.state.addMarkerEnabled = true
 
         this.onSetSidebarOpen(false);
-
     }
 
     deletePoi = (pos) => {
         let data = this.DeletePoi(pos.id,this.updateMap,pos);
-
-
-
-
     }
 
     updateMap = (data) => {
@@ -312,6 +434,7 @@ class MapComponent extends React.Component {
                 marker.lat = position.coords.latitude;
                 marker.lng = position.coords.longitude;
                 marker.id = 0;
+                marker.createdAt = new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
                 markers.push(marker);
                 console.log(myMarkers);
 
@@ -399,15 +522,9 @@ class MapComponent extends React.Component {
 
 
     render() {
-
-
-
         return (
-
             <div>
                 <div className={loadApp?"topDiv":"hidden"}>
-
-
                     <Sidebar
                         sidebar={<div>
                             <button className={"button"} id="localisation-button" onClick={this.closeButtonAction}>
@@ -574,11 +691,10 @@ class MapComponent extends React.Component {
                     ))}
                 </div>);
         }
-        return <div></div>
+        return <div>Categories : No Categories.</div>
     }
 
     generateGroupMarkers(number) {
-
         if(number===0){
             return (<div>{this.state.markers.map(position => (
                 <Marker
@@ -586,6 +702,7 @@ class MapComponent extends React.Component {
                     position={position}
                     ref={n => myMarkers.push(n)}
                 >
+                    {position.name !== "Your position" ?
                     <Popup
                         ref={n =>
                             position.name === "Your position"
@@ -594,17 +711,32 @@ class MapComponent extends React.Component {
                         }
                     >
                         <h1>{position.name}</h1>
+                        <h3>Position : [{position.lat},{position.lng}]</h3>
                         <p>Status : {(typeof position.Status !== 'undefined' && position.Status!== null)?position.Status.name:'none'}</p>
-                        <p>Created at : {position.createdAt}</p>
-                        <p>By group : {typeof position.Creator !== 'undefined' ? position.Creator.group:'none'}</p>
+                        {this.dateFormatFunction(position)}
+                        <p>By group : {typeof position.Creator !== 'undefined' ? position.Creator.group : position.group}</p>
                         <img src={position.image} />
                         <p>{position.description}</p>
-                        {(typeof position.Categories !== 'undefined' && position.Categories!== null)? this.displayCategories(position):<div></div>}
+                        {(typeof position.Categories !== 'undefined' && position.Categories!== null)? this.displayCategories(position):<div>Categories : No categories.</div>}
                         {this.generateTags(position)}
-                        <button onClick={this.likeFunction}>Like/Dislike</button>
 
-                        {position.name === "Your position" ? <div></div> : <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>}
+                        <button onClick={this.likeFunction}>Like/Dislike</button>
+                        <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
                     </Popup>
+
+                    :<Popup
+                        ref={n =>
+                            position.name === "Your position"
+                                ? (this.popupRef = n)
+                                : (this.popupRef = null)
+                        }
+                    >
+                        <h1>{position.name}</h1>
+                        <h3>Position : [{position.lat},{position.lng}]</h3>
+                        <p>Position generated at : {position.createdAt}</p>
+                        <img src={position.image} />
+                        <p>{position.description}</p>
+                    </Popup>}
                 </Marker>
             ))}</div>);
         }
@@ -627,9 +759,17 @@ class MapComponent extends React.Component {
                                 }
                             >
                                 <h1>{position.name}</h1>
+                                <h3>Position : [{position.lat},{position.lng}]</h3>
+                                <p>Status : {(typeof position.Status !== 'undefined' && position.Status!== null)?position.Status.name:'none'}</p>
+                                <p>Created at : {position.createdAt}</p>
+                                <p>By group : {typeof position.Creator !== 'undefined' ? position.Creator.group : position.group}</p>
                                 <img src={position.image} />
                                 <p>{position.description}</p>
-                                <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
+                                {(typeof position.Categories !== 'undefined' && position.Categories!== null)? this.displayCategories(position):<div>Categories : No categories.</div>}
+                                {this.generateTags(position)}
+                                <button onClick={this.likeFunction}>Like/Dislike</button>
+
+                                {position.name === "Your position" ? <div></div> : <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>}
                             </Popup>
                         </Marker>:<div></div>
                 ))}
@@ -653,22 +793,29 @@ class MapComponent extends React.Component {
                             }
                         >
                             <h1>{position.name}</h1>
+                            <h3>Position : [{position.lat},{position.lng}]</h3>
                             <p>Status : {(typeof position.Status !== 'undefined' && position.Status!== null)?position.Status.name:'none'}</p>
                             <p>Created at : {position.createdAt}</p>
-                            <p>Created by group : {typeof position.Creator !== 'undefined' ? position.Creator.group:'none'}</p>
+                            <p>By group : {typeof position.Creator !== 'undefined' ? position.Creator.group : position.group}</p>
                             <img src={position.image} />
                             <p>{position.description}</p>
+                            {(typeof position.Categories !== 'undefined' && position.Categories!== null)? this.displayCategories(position):<div>Categories : No categories.</div>}
+                            {this.generateTags(position)}
+                            <button onClick={this.likeFunction}>Like/Dislike</button>
 
-
-
-                            {(typeof position.Status !== 'undefined' && position.Status!== null)? this.displayCategories(position):<div></div>}
-                            <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
+                            {position.name === "Your position" ? <div></div> : <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>}
                         </Popup>
                     </Marker>:<div></div>
             ))}
         </div>
 
 
+    }
+
+    dateFormatFunction(position) {
+       let date = new Date(Date.parse(position.createdAt)).toLocaleDateString() + " - " + new Date(Date.parse(position.createdAt)).toLocaleTimeString();
+
+           return (<p>Created at : {date}</p>);
     }
 
 
@@ -697,7 +844,7 @@ class MapComponent extends React.Component {
     generateForm() {
 
         if(this.state.addMarkerEnabled === true) { return <div className={Form}>
-            <Form onChange={fields=> this.onChange(fields)} InsertPoi={this.InsertPoi} lat={this.actualPointLat} lng={this.actualPointLng} categories={this.state.categories}/>
+            <Form onChange={fields=> this.onChange(fields)} InsertPoi={this.InsertPoi} lat={this.actualPointLat} lng={this.actualPointLng} categories={this.state.categories} status={this.state.status} tags={this.state.tags} closeMenu={this.onSetSidebarOpen}/>
         </div>};
 
 
@@ -729,6 +876,8 @@ function App() {
 
     let [pois, setPois] = useState([]);
     let [categories, setCategories] = useState([]);
+    let [status, setStatus] = useState([]);
+    let [tags, setTags] = useState([]);
     let {loading, loginWithRedirect, getTokenSilently ,user, logout} = useAuth0();
 
     let loadApplication = async e => {
@@ -756,11 +905,32 @@ function App() {
             loginWithRedirect
         );
 
+        console.log(cats)
         if (cats && cats.length > 0) {
-            console.log("cats");
-            console.log(cats);
             setCategories(cats);
-            console.log(categories);
+        }
+
+        let tags = await request(
+            `${process.env.REACT_APP_SERVER_URL}/tag`,
+            getTokenSilently,
+            loginWithRedirect
+        );
+        console.log(tags)
+
+
+        if (tags && tags.length > 0) {
+            setTags(tags);
+        }
+
+        let status = await request(
+            `${process.env.REACT_APP_SERVER_URL}/status`,
+            getTokenSilently,
+            loginWithRedirect
+        );
+        console.log(status)
+
+        if (status && status.length > 0) {
+            setStatus(status);
         }
 
     };
@@ -775,7 +945,8 @@ function App() {
     return (
         <div  className="App">
             <header className="App-header" id="AppHead">
-                {(pois && pois.length > 0 && categories && categories.length > 0)&& <MapComponent pois={pois} InsertPoi = {InsertPoi} deletePoi={deletePoi} logout={logout} categories={categories}/>}
+                {(pois && pois.length > 0 && categories && categories.length > 0 && status && status.length > 0 && tags && tags.length > 0)&&
+                <MapComponent pois={pois} InsertPoi = {InsertPoi} deletePoi={deletePoi} logout={logout} categories={categories} status={status} tags={tags}/>}
                 <br />
                 <button class={loadApp?"hidden":"button"} id="Start-button" onClick={loadApplication}>
                     Run the application
@@ -822,14 +993,6 @@ function App() {
 
         console.log("GPX " + data);
 
-    }
-
-    async function getCategories(){
-        let data;
-        data = await RequestPoi.getAllCategories(getTokenSilently,loginWithRedirect);
-
-        setCategories(data);
-        return data;
     }
 }
 
