@@ -724,6 +724,7 @@ class MapComponent extends React.Component {
                         <button onClick={this.likeFunction}>Like</button>
                         <button onClick={this.dislikeFunction}>Dislike</button>
                         <button onClick={this.verifyFunction}>Verify</button>
+                        <button onClick={this.unverifyFunction}>Unverify</button>
 
                         <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
                     </Popup>
@@ -775,6 +776,7 @@ class MapComponent extends React.Component {
                                 <button onClick={this.likeFunction}>Like</button>
                                 <button onClick={this.dislikeFunction}>Dislike</button>
                                 <button onClick={this.verifyFunction}>Verify</button>
+                                <button onClick={this.unverifyFunction}>Unverify</button>
 
                                 {position.name === "Your position" ? <div></div> : <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>}
                             </Popup>
@@ -812,6 +814,7 @@ class MapComponent extends React.Component {
                             <button onClick={this.likeFunction}>Like</button>
                             <button onClick={this.dislikeFunction}>Dislike</button>
                             <button onClick={this.verifyFunction}>Verify</button>
+                            <button onClick={this.unverifyFunction}>Unverify</button>
 
                             {position.name === "Your position" ? <div></div> : <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>}
                         </Popup>
@@ -840,6 +843,9 @@ class MapComponent extends React.Component {
         return 1
     }
     verifyFunction(){
+
+    }
+    unverifyFunction(){
 
     }
 
