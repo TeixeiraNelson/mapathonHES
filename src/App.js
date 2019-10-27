@@ -715,12 +715,15 @@ class MapComponent extends React.Component {
                         <p>Status : {(typeof position.Status !== 'undefined' && position.Status!== null)?position.Status.name:'none'}</p>
                         {this.dateFormatFunction(position)}
                         <p>By group : {typeof position.Creator !== 'undefined' ? position.Creator.group : position.group}</p>
+                        <p>number of like : {this.countLikeFunction()}</p>
                         <img src={position.image} />
                         <p>{position.description}</p>
                         {(typeof position.Categories !== 'undefined' && position.Categories!== null)? this.displayCategories(position):<div>Categories : No categories.</div>}
                         {this.generateTags(position)}
 
-                        <button onClick={this.likeFunction}>Like/Dislike</button>
+                        <button onClick={this.likeFunction}>Like</button>
+                        <button onClick={this.dislikeFunction}>Dislike</button>
+
                         <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
                     </Popup>
 
@@ -763,11 +766,13 @@ class MapComponent extends React.Component {
                                 <p>Status : {(typeof position.Status !== 'undefined' && position.Status!== null)?position.Status.name:'none'}</p>
                                 <p>Created at : {position.createdAt}</p>
                                 <p>By group : {typeof position.Creator !== 'undefined' ? position.Creator.group : position.group}</p>
+                                <p>number of like : {this.countLikeFunction()}</p>
                                 <img src={position.image} />
                                 <p>{position.description}</p>
                                 {(typeof position.Categories !== 'undefined' && position.Categories!== null)? this.displayCategories(position):<div>Categories : No categories.</div>}
                                 {this.generateTags(position)}
-                                <button onClick={this.likeFunction}>Like/Dislike</button>
+                                <button onClick={this.likeFunction}>Like</button>
+                                <button onClick={this.dislikeFunction}>Dislike</button>
 
                                 {position.name === "Your position" ? <div></div> : <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>}
                             </Popup>
@@ -797,11 +802,13 @@ class MapComponent extends React.Component {
                             <p>Status : {(typeof position.Status !== 'undefined' && position.Status!== null)?position.Status.name:'none'}</p>
                             <p>Created at : {position.createdAt}</p>
                             <p>By group : {typeof position.Creator !== 'undefined' ? position.Creator.group : position.group}</p>
+                            <p>number of like : {this.countLikeFunction()}</p>
                             <img src={position.image} />
                             <p>{position.description}</p>
                             {(typeof position.Categories !== 'undefined' && position.Categories!== null)? this.displayCategories(position):<div>Categories : No categories.</div>}
                             {this.generateTags(position)}
-                            <button onClick={this.likeFunction}>Like/Dislike</button>
+                            <button onClick={this.likeFunction}>Like</button>
+                            <button onClick={this.dislikeFunction}>Dislike</button>
 
                             {position.name === "Your position" ? <div></div> : <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>}
                         </Popup>
@@ -822,6 +829,12 @@ class MapComponent extends React.Component {
 
     likeFunction() {
 
+    }
+    dislikeFunction() {
+
+    }
+    countLikeFunction(){
+        return 1
     }
 
     generateTags(position) {
