@@ -123,8 +123,9 @@
 .topDiv {
   border-radius: 0px;
   border-bottom: solid 1px white;
-  height: 8vh;
+  height: 10vh;
   display: block;
+    background-color: #404040;
 }
 
 
