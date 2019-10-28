@@ -834,13 +834,14 @@ class MapComponent extends React.Component {
 
 
     likeFunction(position) {
-        this.addTags(position);
+       // position.Tags.add('Like_test')
     }
     dislikeFunction(position) {
-        this.removeTags(position)
+        position.Tags.remove('Like_'+currentUser.name)
     }
     countLikeFunction(position){
         let nbLike=0;
+        if(position.Tags==null){return }
         for(var i=0;i<position.Tags.length;i++){
             if (position.Tags[i].name.includes('Like_')){
                 nbLike++;
@@ -868,12 +869,6 @@ class MapComponent extends React.Component {
                 </div>);
         }
         return <div>Tags : No Tags.</div>
-    }
-    addTags(position){
-
-    }
-    removeTags(position){
-
     }
 
 
