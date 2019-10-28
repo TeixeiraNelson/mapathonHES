@@ -840,9 +840,9 @@ class MapComponent extends React.Component {
         this.removeTags(position)
     }
     countLikeFunction(position){
-        let nbLike
+        let nbLike=0;
         for(var i=0;i<position.Tags.length;i++){
-            if (position.Tags(i).includes('like_')){
+            if (position.Tags[i].name.includes('Like_')){
                 nbLike++;
             }
         }
