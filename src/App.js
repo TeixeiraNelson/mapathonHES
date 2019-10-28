@@ -715,13 +715,13 @@ class MapComponent extends React.Component {
                         <p>Status : {(typeof position.Status !== 'undefined' && position.Status!== null)?position.Status.name:'none'}</p>
                         {this.dateFormatFunction(position)}
                         <p>By group : {typeof position.Creator !== 'undefined' ? position.Creator.group : position.group}</p>
-                        <p>number of like : {this.countLikeFunction()}</p>
+                        <p>number of like : {this.countLikeFunction(position)}</p>
                         <img src={position.image} />
                         <p>{position.description}</p>
                         {(typeof position.Categories !== 'undefined' && position.Categories!== null)? this.displayCategories(position):<div>Categories : No categories.</div>}
                         {this.generateTags(position)}
 
-                        <button onClick={this.likeFunction}>Like</button>
+                        <button onClick={this.likeFunction(position)}>Like</button>
                         <button onClick={this.dislikeFunction}>Dislike</button>
                         <button onClick={this.verifyFunction}>Verify</button>
                         <button onClick={this.unverifyFunction}>Unverify</button>
@@ -768,12 +768,12 @@ class MapComponent extends React.Component {
                                 <p>Status : {(typeof position.Status !== 'undefined' && position.Status!== null)?position.Status.name:'none'}</p>
                                 <p>Created at : {position.createdAt}</p>
                                 <p>By group : {typeof position.Creator !== 'undefined' ? position.Creator.group : position.group}</p>
-                                <p>number of like : {this.countLikeFunction()}</p>
+                                <p>number of like : {this.countLikeFunction(position)}</p>
                                 <img src={position.image} />
                                 <p>{position.description}</p>
                                 {(typeof position.Categories !== 'undefined' && position.Categories!== null)? this.displayCategories(position):<div>Categories : No categories.</div>}
                                 {this.generateTags(position)}
-                                <button onClick={this.likeFunction}>Like</button>
+                                <button onClick={this.likeFunction(position)}>Like</button>
                                 <button onClick={this.dislikeFunction}>Dislike</button>
                                 <button onClick={this.verifyFunction}>Verify</button>
                                 <button onClick={this.unverifyFunction}>Unverify</button>
@@ -806,12 +806,12 @@ class MapComponent extends React.Component {
                             <p>Status : {(typeof position.Status !== 'undefined' && position.Status!== null)?position.Status.name:'none'}</p>
                             <p>Created at : {position.createdAt}</p>
                             <p>By group : {typeof position.Creator !== 'undefined' ? position.Creator.group : position.group}</p>
-                            <p>number of like : {this.countLikeFunction()}</p>
+                            <p>number of like : {this.countLikeFunction(position)}</p>
                             <img src={position.image} />
                             <p>{position.description}</p>
                             {(typeof position.Categories !== 'undefined' && position.Categories!== null)? this.displayCategories(position):<div>Categories : No categories.</div>}
                             {this.generateTags(position)}
-                            <button onClick={this.likeFunction}>Like</button>
+                            <button onClick={this.likeFunction(position)}>Like</button>
                             <button onClick={this.dislikeFunction}>Dislike</button>
                             <button onClick={this.verifyFunction}>Verify</button>
                             <button onClick={this.unverifyFunction}>Unverify</button>
@@ -833,14 +833,20 @@ class MapComponent extends React.Component {
 
 
 
-    likeFunction() {
-
+    likeFunction(position) {
+        this.addTags(position);
     }
-    dislikeFunction() {
-
+    dislikeFunction(position) {
+        this.removeTags(position)
     }
-    countLikeFunction(){
-        return 1
+    countLikeFunction(position){
+        let nbLike
+        for(var i=0;i<position.Tags.length;i++){
+            if (position.Tags(i).includes('like_')){
+                nbLike++;
+            }
+        }
+        return nbLike
     }
     verifyFunction(){
 
@@ -862,6 +868,12 @@ class MapComponent extends React.Component {
                 </div>);
         }
         return <div>Tags : No Tags.</div>
+    }
+    addTags(position){
+
+    }
+    removeTags(position){
+
     }
 
 
