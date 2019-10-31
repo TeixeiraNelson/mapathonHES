@@ -16,7 +16,6 @@ import {Formik} from "formik";
 
 
 const { BaseLayer, Overlay } = LayersControl;
-let myMarkers = [];
 let loadApp = false;
 let currentUser;
 
@@ -436,7 +435,6 @@ class MapComponent extends React.Component {
                 marker.id = 0;
                 marker.createdAt = new Date().toLocaleDateString() + " - " + new Date().toLocaleTimeString();
                 markers.push(marker);
-                console.log(myMarkers);
 
                 this.setState({
                     latlng: {
@@ -447,6 +445,7 @@ class MapComponent extends React.Component {
 
                 this.setState({markers});
                 this.mapRef.leafletElement.flyTo(this.state.latlng, 18);
+
             }
         });
 
@@ -700,7 +699,6 @@ class MapComponent extends React.Component {
                 <Marker
                     icon={position.name === "Your position" ? posIcon : myIcon}
                     position={position}
-                    ref={n => myMarkers.push(n)}
                 >
                     {position.name !== "Your position" ?
                     <Popup
@@ -754,7 +752,6 @@ class MapComponent extends React.Component {
                         <Marker
                             icon={position.name === "Your position" ? posIcon : myIcon}
                             position={position}
-                            ref={n => myMarkers.push(n)}
                         >
                             <Popup
                                 ref={n =>
@@ -792,7 +789,6 @@ class MapComponent extends React.Component {
                     <Marker
                         icon={position.name === "Your position" ? posIcon : myIcon}
                         position={position}
-                        ref={n => myMarkers.push(n)}
                     >
                         <Popup
                             ref={n =>
