@@ -11,6 +11,7 @@ import "leaflet/dist/leaflet.css";
 
 let history = createBrowserHistory();
 
+
 const onRedirectCallback = appState => {
   history.push(
     appState && appState.targetUrl
