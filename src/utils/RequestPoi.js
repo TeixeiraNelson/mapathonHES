@@ -1,6 +1,7 @@
 export class requestPOI {
     //Create a new POI in the Database
-    static async setPOI(newPOI, getTokenSilently, loginWithRedirect) {
+    // Fetches its categories and tags as well...
+    static async addPOI(newPOI, getTokenSilently, loginWithRedirect) {
 
         try {
             let token = await getTokenSilently();
@@ -21,7 +22,7 @@ export class requestPOI {
             console.log(data);
 
             console.log("INSERTING POI Status");
-            console.log("Body:" + JSON.stringify(newPOI.Status))
+            console.log("Body:" + JSON.stringify(newPOI.Status));
 
             let response2 = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${data.id}/status`, {
                 method: "PATCH",
@@ -68,10 +69,11 @@ export class requestPOI {
 
         } catch (e) {
             console.error(e);
-
+            await loginWithRedirect();
             return null;
         }
     }
+
     //Update some Information for a POI
     static async updatePOI(id, updatePOI, getTokenSilently, loginWithRedirect) {
         try {
@@ -93,10 +95,11 @@ export class requestPOI {
             return data;
         } catch (e) {
             console.error(e);
-            //await loginWithRedirect();
+            await loginWithRedirect();
             return null;
         }
     }
+
     //Return all POIs from the Database
     static async getAllPOI(getTokenSilently, loginWithRedirect) {
         try {
@@ -117,6 +120,7 @@ export class requestPOI {
         }
     }
 
+    // Get all available categories from DB
     static async getAllCategories(getTokenSilently, loginWithRedirect) {
         try {
             let token = await getTokenSilently();
@@ -136,6 +140,7 @@ export class requestPOI {
         }
     }
 
+    // Getting GPX files, itineraries from db
     static async getGPXFiles(getTokenSilently, loginWithRedirect) {
         try {
             let token = await getTokenSilently();
@@ -156,7 +161,7 @@ export class requestPOI {
     }
 
 
-    //Get some Information from a POI with the Id as paratmeter
+    //Get Information from a POI with the Id as paratmeter
     static async getPOI(id, getTokenSilently, loginWithRedirect) {
         try {
             let token = await getTokenSilently();
@@ -178,6 +183,7 @@ export class requestPOI {
             await loginWithRedirect();
         }
     }
+
     //Delete a POI in the Database
     static async deletePOI(id, getTokenSilently, loginWithRedirect) {
         try {
@@ -202,4 +208,5 @@ export class requestPOI {
         }
     }
 }
+
 export default requestPOI;
