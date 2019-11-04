@@ -8,15 +8,23 @@ import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
-const useStyles = makeStyles(theme => ({formControl: {margin: theme.spacing(1), minWidth: 250, maxWidth: 250,}, chips: {display: 'flex', flexWrap: 'wrap',}, chip: {margin: 2,}, noLabel: {marginTop: theme.spacing(3),},}));
+
+const useStyles = makeStyles(theme => ({
+    formControl: {margin: theme.spacing(1), minWidth: 250, maxWidth: 250,},
+    chips: {display: 'flex', flexWrap: 'wrap',},
+    chip: {margin: 2,},
+    noLabel: {marginTop: theme.spacing(3),},
+}));
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {PaperProps: {style: {maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP, width: 250,},},};
 
-const MultipleSelect = ({array, setArray, name}) => {
+const MultipleSelect = ({array, setArray, name, actualSelectedValues}) => {
+    console.log("actual selected init")
+    console.log(actualSelectedValues);
     const classes = useStyles();
     const theme = useTheme();
-    const [categStr, setCategStr] = React.useState([]);
+    const [categStr, setCategStr] = React.useState(actualSelectedValues);
 
     const handleChange = event => {
         setCategStr(event.target.value);
@@ -33,14 +41,14 @@ const MultipleSelect = ({array, setArray, name}) => {
                     multiple
                     value={categStr}
                     onChange={handleChange}
-                    input={<Input />}
+                    input={<Input/>}
                     renderValue={selected => selected.join(', ')}
                     MenuProps={MenuProps}
                 >
                     {array.map(elem => (
                         <MenuItem key={elem.id} value={elem.name} name={elem.name}>
-                            <Checkbox checked={categStr.indexOf(elem.name) > -1} />
-                            <ListItemText primary={elem.name} />
+                            <Checkbox checked={categStr.indexOf(elem.name) > -1}/>
+                            <ListItemText primary={elem.name}/>
                         </MenuItem>
                     ))}
                 </Select>
@@ -61,13 +69,16 @@ class Form extends React.Component {
         this.lat = props.lat;
         this.lng = props.lng;
         this.newPoi = props.newPoi;
+        if(typeof this.props.currentPoi !== 'undefined'){
+            this.actualCats = this.props.currentPoi.Categories;
+            this.actualTags = this.props.currentPoi.Tags;
+        }
         this.requestToken = props.requestToken;
         this.useAuth = props.useAuth;
         this.InsertPoi = props.InsertPoi;
         this.Allcategories = props.categories;
         this.AllTags = props.tags;
         this.state = {
-            currentPoi: props.currentPoi,
             categories: [],
             categoriesString: "",
             status: props.status[1],
@@ -105,24 +116,27 @@ class Form extends React.Component {
         console.log(this.state.poi)
         console.log("curr : ");
         console.log(this.props.currentPoi)
-        if(this.state.currentPoi !== null && typeof this.state.currentPoi !== 'undefined'){
+        if (this.props.currentPoi !== null && typeof this.props.currentPoi !== 'undefined') {
             console.log("Setting state...")
             this.setState({
-                    name: this.props.currentPoi.name,
-                    description: this.props.currentPoi.description,
-                    lat: this.props.currentPoi.lat,
-                    lng: this.props.currentPoi.lng,
-                    image: this.props.currentPoi.image,
-                    url: this.props.currentPoi.url,
-                    group: 1,
-                    Status: this.props.currentPoi.Status,
-                    Tags: this.props.currentPoi.Tags,
-                    Categories: this.props.currentPoi.Categories
+                currentPoi: this.props.currentPoi,
+                name: this.props.currentPoi.name,
+                description: this.props.currentPoi.description,
+                lat: this.props.currentPoi.lat,
+                lng: this.props.currentPoi.lng,
+                image: this.props.currentPoi.image,
+                url: this.props.currentPoi.url,
+                group: 1,
+                Status: this.props.currentPoi.Status,
+                Tags: this.props.currentPoi.Tags,
+                Categories: this.props.currentPoi.Categories
             });
+
+            this.setCategoriesArray(this.props.currentPoi.Categories);
+            this.setTagsArray(this.props.currentPoi.Tags);
         }
 
-        this.setCategoriesArray(this.props.currentPoi.Categories);
-        this.setTagsArray(this.props.currentPoi.Tags);
+
     }
 
     /*
@@ -160,7 +174,7 @@ class Form extends React.Component {
      */
     submitAction = (e) => {
         e.preventDefault();
-        if(this.state.currentPoi === null){
+        if (this.state.currentPoi === null) {
             if (this.state.poi.name !== null && this.state.poi.name.length > 1) {
                 this.InsertPoi(this.state.poi);
                 this.closeMenu(false);
@@ -180,23 +194,27 @@ class Form extends React.Component {
     Saves them in the state
      */
     setCategoriesArray = (array) => {
-        let categoriesArray = [];
+        let categoriesArray=[];
+
+        if(typeof this.actualCats !== 'undefined')
+            categoriesArray = this.actualCats;
+
         let str = "";
 
         this.Allcategories.map(cat => {
-            array.map(element => {
-                if (cat.name === element) {
-                    console.log(cat);
-                    str += cat.name + "  ";
-                    categoriesArray.push(cat);
-                }
-            })
+                array.map(element => {
+                    if (cat.name === element) {
+                        console.log(cat);
+                        str += cat.name + "  ";
+                        categoriesArray.push(cat);
+                    }
+                })
 
             }
         );
 
         this.setState(prevState => ({
-            categories: categoriesArray,
+            categories: array,
             categoriesString: str
         }))
 
@@ -226,7 +244,13 @@ class Form extends React.Component {
     Saves them in the state
      */
     setTagsArray = (array) => {
+
+
         let arr = [];
+
+        if(typeof this.actualTags !== 'undefined')
+            arr = this.actualTags;
+
         let str = "";
 
         this.AllTags.map(cat => {
@@ -357,8 +381,10 @@ class Form extends React.Component {
                         value={'Group : 1'}
                     />
                     <br/>
-                    <MultipleSelect array={this.Allcategories} setArray={this.setCategoriesArray} name={"Categories"}/>
-                    <MultipleSelect array={this.AllTags} setArray={this.setTagsArray} name={"Tags"}/>
+                    <MultipleSelect array={this.Allcategories} setArray={this.setCategoriesArray} name={"Categories"}
+                                    actualSelectedValues={this.generateStringArray(this.actualCats)}/>
+                    <MultipleSelect array={this.AllTags} setArray={this.setTagsArray} name={"Tags"}
+                                    actualSelectedValues={this.generateStringArray(this.actualTags)}/>
                     <button className="button" id="submitButton" value={this.state.poi}
                             onClick={this.submitAction}>Submit
                     </button>
@@ -366,6 +392,19 @@ class Form extends React.Component {
             </Formik>
         )
     }
+
+    generateStringArray(array) {
+        let str = [];
+        if(typeof array === 'undefined' ||array === null)
+            return str;
+
+        array.map(elem => {
+            str.push(elem.name);
+        })
+        return str;
+    }
+
+
 }
 
 export default Form;
