@@ -218,11 +218,11 @@ class AppComponent extends React.Component {
                                 Close
                             </button>
                             {(this.state.addMarkerEnabled === true)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} lat={this.actualPointLat}
-                                                                                                               lng={this.actualPointLng} categories={this.state.categories} status={this.state.status}
-                                                                                                               tags={this.state.tags} closeMenu={this.onSetSidebarOpen}/>:<div></div>}
+                                                                          lng={this.actualPointLng} categories={this.state.categories} status={this.state.status}
+                                                                          tags={this.state.tags} closeMenu={this.onSetSidebarOpen}/>:<div></div>}
                             {(this.state.modifyingMarker === true && this.state.currentModifyingMarker)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} lat={this.state.currentModifyingMarker.lat}
-                                                                          lng={this.state.currentModifyingMarker.lng} categories={this.state.categories} status={this.state.status}
-                                                                          tags={this.state.tags} closeMenu={this.onSetSidebarOpen} currentPoi={this.state.currentModifyingMarker}/>:<div></div>}
+                                                                                                              lng={this.state.currentModifyingMarker.lng} categories={this.state.categories} status={this.state.status}
+                                                                                                              tags={this.state.tags} closeMenu={this.onSetSidebarOpen} currentPoi={this.state.currentModifyingMarker}/>:<div></div>}
                         </div>}
                         open={this.state.sidebarOpen}
                         styles={{
@@ -427,13 +427,18 @@ class AppComponent extends React.Component {
                             <div>Categories : No categories.</div>}
                         {this.generateTags(position)}
 
-                        <button onClick={this.likeFunction(position)}>Like</button>
-                        <button onClick={this.dislikeFunction}>Dislike</button>
-                        <button onClick={this.verifyFunction}>Verify</button>
-                        <button onClick={this.unverifyFunction}>Unverify</button>
-                        <br/>
-                        <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
-                        <button onClick={event => {event.preventDefault(); this.modifyPoi(position)}}>MODIFY</button>
+                        {(typeof position.Creator !== 'undefined' && position.Creator.id === this.state.currentUser.sub) ?
+                            <div>
+                                <button onClick={this.likeFunction(position)}>Like</button>
+                                <button onClick={this.dislikeFunction}>Dislike</button>
+                                <button onClick={this.verifyFunction}>Verify</button>
+                                <button onClick={this.unverifyFunction}>Unverify</button>
+                                <br/>
+                                <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
+                                <button onClick={event => {event.preventDefault(); this.modifyPoi(position)}}>MODIFY</button>
+                            </div>:<div/>
+                        }
+
                     </div>:<div/>}
 
 
