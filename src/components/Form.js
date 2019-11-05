@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Formik} from "formik";
 import {makeStyles, useTheme} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
@@ -22,14 +22,21 @@ const MenuProps = {PaperProps: {style: {maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADD
 const MultipleSelect = ({array, setArray, name, actualSelectedValues}) => {
     console.log("actual selected init")
     console.log(actualSelectedValues);
+    let count = 0;
     const classes = useStyles();
     const theme = useTheme();
     const [categStr, setCategStr] = React.useState(actualSelectedValues);
 
+
+
     const handleChange = event => {
-        setCategStr(event.target.value);
-        setArray(event.target.value);
+        setCategStr(event.target.value)
     };
+
+
+    useEffect(() => {
+        setArray(categStr);
+    }, [categStr]);
 
     return (
         <div>
@@ -68,17 +75,27 @@ class Form extends React.Component {
         this.closeMenu = props.closeMenu;
         this.lat = props.lat;
         this.lng = props.lng;
+        this.updatePoi= props.updatePoi;
         this.newPoi = props.newPoi;
         if(typeof this.props.currentPoi !== 'undefined'){
             this.actualCats = this.props.currentPoi.Categories;
             this.actualTags = this.props.currentPoi.Tags;
         }
+        this.insertCategory = props.InsertCategory;
+        this.insertTag = props.InsertTag;
         this.requestToken = props.requestToken;
         this.useAuth = props.useAuth;
         this.InsertPoi = props.InsertPoi;
         this.Allcategories = props.categories;
         this.AllTags = props.tags;
         this.state = {
+            tagNameValue:"",
+            tagImgValue:"",
+            tagColorValue:"",
+            addCatString : "New Category",
+            addTagString : "New Tag",
+            catNameValue:"",
+            catImgValue:"",
             categories: [],
             categoriesString: "",
             status: props.status[1],
@@ -91,8 +108,8 @@ class Form extends React.Component {
             image: '',
             url: '',
             group: 1,
-
-
+            toggleAddCategory : false,
+            toggleAddTag : false,
             poi: {
                 name: '',
                 description: '',
@@ -174,7 +191,7 @@ class Form extends React.Component {
      */
     submitAction = (e) => {
         e.preventDefault();
-        if (this.state.currentPoi === null) {
+        if (typeof this.props.currentPoi === 'undefined' || this.props.currentPoi===null) {
             if (this.state.poi.name !== null && this.state.poi.name.length > 1) {
                 this.InsertPoi(this.state.poi);
                 this.closeMenu(false);
@@ -183,6 +200,9 @@ class Form extends React.Component {
         } else {
             console.log("DO THE MODIFY POY MANOEUVER");
             console.log(this.state.poi);
+            this.updatePoi(this.state.poi, this.props.currentPoi.id);
+            this.closeMenu(false);
+
         }
 
     };
@@ -195,10 +215,6 @@ class Form extends React.Component {
      */
     setCategoriesArray = (array) => {
         let categoriesArray=[];
-
-        if(typeof this.actualCats !== 'undefined')
-            categoriesArray = this.actualCats;
-
         let str = "";
 
         this.Allcategories.map(cat => {
@@ -214,7 +230,7 @@ class Form extends React.Component {
         );
 
         this.setState(prevState => ({
-            categories: array,
+            categories: categoriesArray,
             categoriesString: str
         }))
 
@@ -229,12 +245,14 @@ class Form extends React.Component {
                     group: 1,
                     Status: this.state.status,
                     Tags: this.state.tags,
-                    Categories: this.state.categories
+                    Categories: categoriesArray
                 }
             }
         )
 
-        console.log(this.state.categories);
+        console.log("Categs passed")
+        this.actualCats = categoriesArray;
+        console.log(categoriesArray)
     };
 
     /*
@@ -244,13 +262,7 @@ class Form extends React.Component {
     Saves them in the state
      */
     setTagsArray = (array) => {
-
-
-        let arr = [];
-
-        if(typeof this.actualTags !== 'undefined')
-            arr = this.actualTags;
-
+        let tagsArray=[];
         let str = "";
 
         this.AllTags.map(cat => {
@@ -258,7 +270,7 @@ class Form extends React.Component {
                     if (cat.name === element) {
                         console.log(cat);
                         str += cat.name + "  ";
-                        arr.push(cat);
+                        tagsArray.push(cat);
                     }
                 })
 
@@ -266,7 +278,7 @@ class Form extends React.Component {
         );
 
         this.setState(prevState => ({
-            tags: arr,
+            tags: tagsArray,
             tagsString: str
         }))
 
@@ -280,11 +292,15 @@ class Form extends React.Component {
                     url: this.state.url,
                     group: 1,
                     Status: this.state.status,
-                    Tags: this.state.tags,
+                    Tags: tagsArray,
                     Categories: this.state.categories
                 }
             }
         )
+
+        console.log("tags passed")
+        this.actualTags = tagsArray;
+        console.log(tagsArray)
     };
 
 
@@ -298,7 +314,7 @@ class Form extends React.Component {
                     <input
                         type='text'
                         disabled
-                        value={'Informations Générales'}
+                        value={'General Information'}
                         style={{borderBottom: 0, textAlign: 'center', fontWeight: 'bold', fontSize: 19}}
                     />
                     <textarea
@@ -339,7 +355,7 @@ class Form extends React.Component {
                     <input
                         type='text'
                         disabled
-                        value={'Coordonnées GPS'}
+                        value={'GPS Coordinates'}
                         style={{borderBottom: 0, textAlign: 'center', fontWeight: 'bold', fontSize: 19}}
                     />
                     <input
@@ -383,8 +399,59 @@ class Form extends React.Component {
                     <br/>
                     <MultipleSelect array={this.Allcategories} setArray={this.setCategoriesArray} name={"Categories"}
                                     actualSelectedValues={this.generateStringArray(this.actualCats)}/>
+                    <button
+                            onClick={this.addCategory}>{this.state.addCatString}
+                    </button>
+                    {this.state.toggleAddCategory?
+                        <div>
+                            <input
+                                type='text'
+                                name='catNameValue'
+                                placeholder='Category Name'
+                                value={this.state.catNameValue}
+                                onChange={e => this.valueUpdateAction(e)}/>
+                            <br/>
+                            <input
+                                type='text'
+                                name='catImgValue'
+                                placeholder='Image URL (Optional)'
+                                value={this.state.catImgValue}
+                                onChange={e => this.valueUpdateAction(e)}/>
+                            <br/>
+                            <button onClick={this.createCategoryAction}>Create Category</button>
+                    </div>:<div></div>}
                     <MultipleSelect array={this.AllTags} setArray={this.setTagsArray} name={"Tags"}
                                     actualSelectedValues={this.generateStringArray(this.actualTags)}/>
+                    <button
+                            onClick={this.addTag}>{this.state.addTagString}
+                    </button>
+                    {this.state.toggleAddTag?
+                        <div>
+                            <form>
+                                <input
+                                    type='text'
+                                    name='tagNameValue'
+                                    placeholder='Tag Name'
+                                    value={this.state.tagNameValue}
+                                    onChange={e => this.valueUpdateAction(e)}/>
+                                <br/>
+                                <input
+                                    type='text'
+                                    name='tagImgValue'
+                                    placeholder='Image URL (Optional)'
+                                    value={this.state.tagImgValue}
+                                    onChange={e => this.valueUpdateAction(e)}/>
+                                <br/>
+                                <input
+                                    type='text'
+                                    name='tagColorValue'
+                                    placeholder='#Color (Optional)'
+                                    value={this.state.tagColorValue}
+                                    onChange={e => this.valueUpdateAction(e)}/>
+                                <br/>
+                                <button onClick={this.createTagAction}>Create Tag</button>
+                            </form>
+                        </div>:<div></div>}
                     <button className="button" id="submitButton" value={this.state.poi}
                             onClick={this.submitAction}>Submit
                     </button>
@@ -404,7 +471,72 @@ class Form extends React.Component {
         return str;
     }
 
+    addCategory = (e) => {
+        e.preventDefault();
+       this.toggleCategoryAdd()
+    }
 
+    toggleCategoryAdd() {
+        let isAddCategoryToggled = this.state.toggleAddCategory;
+        if(!isAddCategoryToggled){
+            this.state.addCatString = "Cancel"
+        } else {
+            this.state.addCatString = "New Category";
+        }
+        this.setState({toggleAddCategory: !isAddCategoryToggled});
+    }
+
+    addTag = (e) => {
+        e.preventDefault();
+        this.toggleTagAdd();
+    }
+
+    createCategoryAction = (e) => {
+        e.preventDefault();
+
+        if(this.state.catNameValue!== null && this.state.catNameValue.length>1){
+            let cat = {
+                name: this.state.catNameValue,
+                image: this.state.catImgValue,
+                group: 1
+            }
+            console.log("FOrm button create cat");
+            console.log(cat);
+            this.insertCategory(cat);
+            this.toggleCategoryAdd();
+        } else {
+            alert("Please insert a name to the category!");
+        }
+    }
+
+    createTagAction = (e) => {
+        e.preventDefault();
+
+        if(this.state.tagNameValue!== null && this.state.tagNameValue.length>1){
+            let tag = {
+                name: this.state.tagNameValue,
+                image: this.state.tagImgValue,
+                color: this.state.tagColorValue,
+                group: 1
+            }
+            console.log("FOrm button create TAG");
+            console.log(tag);
+            this.insertTag(tag);
+            this.toggleTagAdd();
+        } else {
+            alert("Please insert a name to the Tag!");
+        }
+    }
+
+    toggleTagAdd() {
+        let isAddTagToggled = this.state.toggleAddTag;
+        if(!isAddTagToggled){
+            this.state.addTagString = "Cancel"
+        } else {
+            this.state.addTagString = "New Tag";
+        }
+        this.setState({toggleAddTag: !isAddTagToggled});
+    }
 }
 
 export default Form;

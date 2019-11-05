@@ -85,8 +85,8 @@ function App() {
         <div className="App">
             <header className="App-header" id="AppHead">
                 {(pois && pois.length > 0 && categories && categories.length > 0 && status && status.length > 0 && tags && tags.length > 0) &&
-                <AppComponent user={user} pois={pois} InsertPoi={InsertPoi} deletePoi={deletePoi} logout={logout}
-                              categories={categories} status={status} tags={tags}/>}
+                <AppComponent user={user} pois={pois} InsertPoi={InsertPoi} deletePoi={deletePoi} updatePoi={updatePoi} logout={logout}
+                              categories={categories} status={status} tags={tags} insertCategory={InsertCategory} insertTag={InsertTag}/>}
                 <br/>
             </header>
         </div>
@@ -122,6 +122,48 @@ function App() {
             console.log("UPDATING MAP");
         }
 
+        return data;
+    }
+
+
+    /*
+        Updates an existing poi in the database.
+     */
+    async function updatePoi(poi, id, updateMarker){
+        console.log("Updating POI with id : " + id)
+        console.log(poi);
+        poi.id = id;
+
+        let data;
+        data = await RequestPoi.updatePOI(id,poi,getTokenSilently,loginWithRedirect);
+        console.log(data);
+
+        updateMarker(data, id);
+
+        return data;
+    }
+
+    async function InsertTag(tag, setTag){
+        console.log("Creating TAG APP JS")
+        console.log(tag);
+
+        let data;
+        data = await RequestPoi.insertTAg(tag,getTokenSilently,loginWithRedirect);
+        console.log(data);
+
+        setTag(data);
+        return data;
+    }
+
+    async function InsertCategory(category, setCategory){
+        console.log("Creating category APP JS")
+        console.log(category);
+
+        let data;
+        data = await RequestPoi.insertCategory(category,getTokenSilently,loginWithRedirect);
+        console.log(data);
+
+        setCategory(data);
         return data;
     }
 
