@@ -259,9 +259,9 @@ class AppComponent extends React.Component {
                             <button className={"button"} id="localisation-button" onClick={this.closeButtonAction}>
                                 Close
                             </button>
-                            {(this.state.addMarkerEnabled === true)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} InsertCategory={this.InsertCategory} InsertTag={this.InsertTag} lat={this.state.currentModifyingMarker.lat}
-                                                                          lng={this.state.currentModifyingMarker.lng} categories={this.state.categories} status={this.state.status}
-                                                                          tags={this.state.tags} closeMenu={this.onSetSidebarOpen} currentPoi={this.state.currentModifyingMarker} updatePoi={this.UpdatePoi}/>:<div></div>}
+                            {(this.state.addMarkerEnabled === true)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} InsertCategory={this.InsertCategory} InsertTag={this.InsertTag} lat={this.actualPointLat}
+                                                                          lng={this.actualPointLng} categories={this.state.categories} status={this.state.status}
+                                                                          tags={this.state.tags} closeMenu={this.onSetSidebarOpen}/>:<div></div>}
                             {(this.state.modifyingMarker === true && this.state.currentModifyingMarker)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} InsertCategory={this.InsertCategory} InsertTag={this.InsertTag} lat={this.state.currentModifyingMarker.lat}
                                                                                                               lng={this.state.currentModifyingMarker.lng} categories={this.state.categories} status={this.state.status}
                                                                                                               tags={this.state.tags} closeMenu={this.onSetSidebarOpen} currentPoi={this.state.currentModifyingMarker} updatePoi={this.UpdatePoi}/>:<div></div>}
