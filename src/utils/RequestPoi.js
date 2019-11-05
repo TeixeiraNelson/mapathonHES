@@ -75,24 +75,61 @@ export class requestPOI {
     }
 
     //Update some Information for a POI
-    static async updatePOI(id, updatePOI, getTokenSilently, loginWithRedirect) {
+    static async updatePOI(id, updatedPOI, getTokenSilently, loginWithRedirect) {
+        console.log("REQUEST ID " + id);
+        console.log(updatedPOI);
+        console.log("LAUNCHING REQUESTS");
         try {
             let token = await getTokenSilently();
-            console.log(JSON.stringify(updatePOI));
+            console.log(JSON.stringify(updatedPOI));
             let response = await fetch(
                 `${process.env.REACT_APP_SERVER_URL}/poi/` + id,
                 {
                     method: "PATCH",
-                    body: JSON.stringify(updatePOI),
+                    body: JSON.stringify(updatedPOI),
                     headers: {
                         Accept: "application/json",
+                        "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`
                     }
                 }
             );
 
             let data = await response.json();
-            return data;
+            console.log("UPDATED POI")
+            console.log(data);
+
+
+            let response3 = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${data.id}/category`, {
+                method: "PATCH",
+                body: JSON.stringify(updatedPOI.Categories),
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            console.log("INSERTING POI Categories");
+            let data3 = await response3.json();
+            console.log(data3);
+
+            let response4 = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${data.id}/tag`, {
+                method: "PATCH",
+                body: JSON.stringify(updatedPOI.Tags),
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            console.log("INSERTING POI Tags");
+            let data4 = await response4.json();
+            console.log(data4);
+            data4.Creator = data.Creator;
+
+            return data4;
         } catch (e) {
             console.error(e);
             await loginWithRedirect();
@@ -166,7 +203,7 @@ export class requestPOI {
         try {
             let token = await getTokenSilently();
             let response = await fetch(
-                `${process.env.REACT_APP_SERVER_URL}/poi/` + id,
+                `${process.env.REACT_APP_SERVER_URL}/poi/${id}`,
                 {
                     method: "GET",
                     headers: {
@@ -205,6 +242,63 @@ export class requestPOI {
         } catch (e) {
             console.error(e);
             await loginWithRedirect();
+        }
+    }
+
+    // Inserts a new category
+    static async insertCategory(category, getTokenSilently, loginWithRedirect) {
+        try {
+            let token = await getTokenSilently();
+            console.log(category);
+            console.log(JSON.stringify(category));
+
+            let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/category`, {
+                method: "POST",
+                body: JSON.stringify(category),
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            console.log("INSERTING Category");
+            let data = await response.json();
+            console.log(data);
+            return data;
+        } catch (e) {
+            console.error(e);
+            await loginWithRedirect();
+            return null;
+        }
+    }
+
+
+    // Inserts a new Tag
+    static async insertTAg(tag, getTokenSilently, loginWithRedirect) {
+        try {
+            let token = await getTokenSilently();
+            console.log(tag);
+            console.log(JSON.stringify(tag));
+
+            let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/tag`, {
+                method: "POST",
+                body: JSON.stringify(tag),
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            console.log("INSERTING Tag");
+            let data = await response.json();
+            console.log(data);
+            return data;
+        } catch (e) {
+            console.error(e);
+            await loginWithRedirect();
+            return null;
         }
     }
 }

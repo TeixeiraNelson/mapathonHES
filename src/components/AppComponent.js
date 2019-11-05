@@ -60,6 +60,9 @@ class AppComponent extends React.Component {
         this.insertPoi = props.InsertPoi;
         this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
         this.DeletePoi = props.deletePoi;
+        this.updatePoi = props.updatePoi;
+        this.insertCategory = props.insertCategory;
+        this.insertTag = props.insertTag;
     }
 
     /*
@@ -85,8 +88,10 @@ class AppComponent extends React.Component {
     will work only if the poi's creator is the same as the user logged in.
      */
     deletePoi = (pos) => {
-        let data = this.DeletePoi(pos.id, this.updateMap, pos);
-        return data;
+        if (window.confirm('Are you sure you wish to delete this item?')){
+            let data = this.DeletePoi(pos.id, this.updateMap, pos);
+            return data;
+        }
     };
 
     /*
@@ -102,6 +107,23 @@ class AppComponent extends React.Component {
         }
         this.setState({markers});
     };
+
+    UpdatePoi = (poi, id) => {
+        let data = this.updatePoi(poi, id, this.updateMarker)
+        return data;
+    }
+
+    updateMarker = (poi, id) => {
+        console.log("UPDATING MARKER WITH ID " + id)
+        console.log(poi);
+        let {markers} = this.state;
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i].id === id) {
+                markers[i] = poi;
+            }
+        }
+        this.setState({markers});
+    }
 
     /*
     Function that localises the user in the map and creates a marker at it's location.
@@ -220,9 +242,9 @@ class AppComponent extends React.Component {
                             {(this.state.addMarkerEnabled === true)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} lat={this.actualPointLat}
                                                                           lng={this.actualPointLng} categories={this.state.categories} status={this.state.status}
                                                                           tags={this.state.tags} closeMenu={this.onSetSidebarOpen}/>:<div></div>}
-                            {(this.state.modifyingMarker === true && this.state.currentModifyingMarker)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} lat={this.state.currentModifyingMarker.lat}
+                            {(this.state.modifyingMarker === true && this.state.currentModifyingMarker)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} InsertCategory={this.InsertCategory} InertTag={this.InsertTag} lat={this.state.currentModifyingMarker.lat}
                                                                                                               lng={this.state.currentModifyingMarker.lng} categories={this.state.categories} status={this.state.status}
-                                                                                                              tags={this.state.tags} closeMenu={this.onSetSidebarOpen} currentPoi={this.state.currentModifyingMarker}/>:<div></div>}
+                                                                                                              tags={this.state.tags} closeMenu={this.onSetSidebarOpen} currentPoi={this.state.currentModifyingMarker} updatePoi={this.UpdatePoi}/>:<div></div>}
                         </div>}
                         open={this.state.sidebarOpen}
                         styles={{
@@ -491,6 +513,27 @@ class AppComponent extends React.Component {
     unverifyFunction() {
 
     }
+
+    InsertCategory = (category) => {
+        this.insertCategory(category, this.setCategories);
+    }
+
+    setCategories = (createdCategory) => {
+        let array = this.state.categories;
+        array.push(createdCategory);
+        this.setState({categories:array});
+    }
+
+    InsertTag = (tag) => {
+        this.insertTag(tag,this.setTag);
+    }
+
+    setTag = (createdTag) => {
+        let array = this.state.tags;
+        array.push(createdTag);
+        this.setState({tags:array});
+    }
+
 
     /*
     Function that generates the tags of a P.O.I
