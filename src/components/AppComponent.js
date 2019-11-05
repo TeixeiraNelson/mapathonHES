@@ -458,6 +458,7 @@ class AppComponent extends React.Component {
                     <h1>{position.name}</h1>
                     <h3>Position : [{position.lat},{position.lng}]</h3>
                     {this.dateFormatFunction(position)}
+                    {console.log("push")}
 
                     {position.name !== "Your position" ?<div>
                         <p>Status : {(typeof position.Status !== 'undefined' && position.Status !== null) ? position.Status.name : 'none'}</p>
