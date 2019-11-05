@@ -204,6 +204,26 @@ class AppComponent extends React.Component {
         }
     };
 
+    InsertCategory = (category) => {
+        this.insertCategory(category, this.setCategories);
+    }
+
+    setCategories = (createdCategory) => {
+        let array = this.state.categories;
+        array.push(createdCategory);
+        this.setState({categories:array});
+    }
+
+    InsertTag = (tag) => {
+        this.insertTag(tag,this.setTag);
+    }
+
+    setTag = (createdTag) => {
+        let array = this.state.tags;
+        array.push(createdTag);
+        this.setState({tags:array});
+    }
+
     /*
     Function that inserts a completed P.O.I in the form in the database
      */
@@ -242,7 +262,7 @@ class AppComponent extends React.Component {
                             {(this.state.addMarkerEnabled === true)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} lat={this.actualPointLat}
                                                                           lng={this.actualPointLng} categories={this.state.categories} status={this.state.status}
                                                                           tags={this.state.tags} closeMenu={this.onSetSidebarOpen}/>:<div></div>}
-                            {(this.state.modifyingMarker === true && this.state.currentModifyingMarker)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} InsertCategory={this.InsertCategory} InertTag={this.InsertTag} lat={this.state.currentModifyingMarker.lat}
+                            {(this.state.modifyingMarker === true && this.state.currentModifyingMarker)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} InsertCategory={this.InsertCategory} InsertTag={this.InsertTag} lat={this.state.currentModifyingMarker.lat}
                                                                                                               lng={this.state.currentModifyingMarker.lng} categories={this.state.categories} status={this.state.status}
                                                                                                               tags={this.state.tags} closeMenu={this.onSetSidebarOpen} currentPoi={this.state.currentModifyingMarker} updatePoi={this.UpdatePoi}/>:<div></div>}
                         </div>}
@@ -449,10 +469,10 @@ class AppComponent extends React.Component {
                             <div>Categories : No categories.</div>}
                         {this.generateTags(position)}
 
+                        <button onClick={this.likeFunction(position)}>Like</button>
+                        <button onClick={this.dislikeFunction}>Dislike</button>
                         {(typeof position.Creator !== 'undefined' && position.Creator.id === this.state.currentUser.sub) ?
                             <div>
-                                <button onClick={this.likeFunction(position)}>Like</button>
-                                <button onClick={this.dislikeFunction}>Dislike</button>
                                 <button onClick={this.verifyFunction}>Verify</button>
                                 <button onClick={this.unverifyFunction}>Unverify</button>
                                 <br/>
@@ -512,26 +532,6 @@ class AppComponent extends React.Component {
 
     unverifyFunction() {
 
-    }
-
-    InsertCategory = (category) => {
-        this.insertCategory(category, this.setCategories);
-    }
-
-    setCategories = (createdCategory) => {
-        let array = this.state.categories;
-        array.push(createdCategory);
-        this.setState({categories:array});
-    }
-
-    InsertTag = (tag) => {
-        this.insertTag(tag,this.setTag);
-    }
-
-    setTag = (createdTag) => {
-        let array = this.state.tags;
-        array.push(createdTag);
-        this.setState({tags:array});
     }
 
 

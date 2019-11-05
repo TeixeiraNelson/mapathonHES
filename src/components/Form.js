@@ -191,7 +191,7 @@ class Form extends React.Component {
      */
     submitAction = (e) => {
         e.preventDefault();
-        if (this.state.currentPoi === null) {
+        if (typeof this.props.currentPoi === 'undefined' || this.props.currentPoi===null) {
             if (this.state.poi.name !== null && this.state.poi.name.length > 1) {
                 this.InsertPoi(this.state.poi);
                 this.closeMenu(false);
@@ -201,6 +201,7 @@ class Form extends React.Component {
             console.log("DO THE MODIFY POY MANOEUVER");
             console.log(this.state.poi);
             this.updatePoi(this.state.poi, this.props.currentPoi.id);
+            this.closeMenu(false);
 
         }
 
@@ -250,6 +251,7 @@ class Form extends React.Component {
         )
 
         console.log("Categs passed")
+        this.actualCats = categoriesArray;
         console.log(categoriesArray)
     };
 
@@ -260,7 +262,7 @@ class Form extends React.Component {
     Saves them in the state
      */
     setTagsArray = (array) => {
-        let categoriesArray=[];
+        let tagsArray=[];
         let str = "";
 
         this.AllTags.map(cat => {
@@ -268,7 +270,7 @@ class Form extends React.Component {
                     if (cat.name === element) {
                         console.log(cat);
                         str += cat.name + "  ";
-                        categoriesArray.push(cat);
+                        tagsArray.push(cat);
                     }
                 })
 
@@ -276,7 +278,7 @@ class Form extends React.Component {
         );
 
         this.setState(prevState => ({
-            tags: categoriesArray,
+            tags: tagsArray,
             tagsString: str
         }))
 
@@ -290,14 +292,15 @@ class Form extends React.Component {
                     url: this.state.url,
                     group: 1,
                     Status: this.state.status,
-                    Tags: this.state.tags,
-                    Categories: categoriesArray
+                    Tags: tagsArray,
+                    Categories: this.state.categories
                 }
             }
         )
 
-        console.log("Categs passed")
-        console.log(categoriesArray)
+        console.log("tags passed")
+        this.actualTags = tagsArray;
+        console.log(tagsArray)
     };
 
 
@@ -420,7 +423,7 @@ class Form extends React.Component {
                     <MultipleSelect array={this.AllTags} setArray={this.setTagsArray} name={"Tags"}
                                     actualSelectedValues={this.generateStringArray(this.actualTags)}/>
                     <button
-                            onClick={this.addTag}>New Tag
+                            onClick={this.addTag}>{this.state.addTagString}
                     </button>
                     {this.state.toggleAddTag?
                         <div>
@@ -485,13 +488,7 @@ class Form extends React.Component {
 
     addTag = (e) => {
         e.preventDefault();
-        let isAddTagToggled = this.state.toggleAddTag;
-        if(!isAddTagToggled){
-            this.state.addTagString = "Cancel"
-        } else {
-            this.state.addTagString = "New Tag";
-        }
-        this.setState({toggleAddTag: !isAddTagToggled});
+        this.toggleTagAdd();
     }
 
     createCategoryAction = (e) => {
@@ -538,7 +535,7 @@ class Form extends React.Component {
         } else {
             this.state.addTagString = "New Tag";
         }
-        this.setState({toggleAddCategory: !isAddTagToggled});
+        this.setState({toggleAddTag: !isAddTagToggled});
     }
 }
 

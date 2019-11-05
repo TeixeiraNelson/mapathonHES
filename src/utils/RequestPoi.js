@@ -100,7 +100,7 @@ export class requestPOI {
             console.log(data);
 
 
-            let response3 = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${data.id}/category`, {
+            let response3 = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${id}/category`, {
                 method: "PATCH",
                 body: JSON.stringify(updatedPOI.Categories),
                 headers: {
@@ -110,11 +110,12 @@ export class requestPOI {
                 }
             });
 
-            console.log("INSERTING POI Categories");
+            console.log("updating POI Categories");
+            console.log(updatedPOI.tags);
             let data3 = await response3.json();
             console.log(data3);
 
-            let response4 = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${data.id}/tag`, {
+            let response4 = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${id}/tag`, {
                 method: "PATCH",
                 body: JSON.stringify(updatedPOI.Tags),
                 headers: {
@@ -124,7 +125,7 @@ export class requestPOI {
                 }
             });
 
-            console.log("INSERTING POI Tags");
+            console.log("updating POI Tags");
             let data4 = await response4.json();
             console.log(data4);
             data4.Creator = data.Creator;
@@ -249,6 +250,7 @@ export class requestPOI {
     static async insertCategory(category, getTokenSilently, loginWithRedirect) {
         try {
             let token = await getTokenSilently();
+            console.log("REQUEST ADD CATEGORY");
             console.log(category);
             console.log(JSON.stringify(category));
 

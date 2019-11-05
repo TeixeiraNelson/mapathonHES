@@ -143,7 +143,7 @@ function App() {
         return data;
     }
 
-    async function InsertCategory(tag, setTag){
+    async function InsertTag(tag, setTag){
         console.log("Creating TAG APP JS")
         console.log(tag);
 
@@ -155,7 +155,7 @@ function App() {
         return data;
     }
 
-    async function InsertTag(category, setCategory){
+    async function InsertCategory(category, setCategory){
         console.log("Creating category APP JS")
         console.log(category);
 
