@@ -3,7 +3,7 @@ import Sidebar from "react-sidebar";
 import {LayerGroup, LayersControl, Map, Marker, Popup, TileLayer} from "react-leaflet";
 import Form from "./Form";
 import L from "leaflet";
-import css from "../App.css";
+import  "../App.css";
 
 /*
 Constant variables used in this part of the program, that's why they are global.
@@ -454,7 +454,7 @@ class AppComponent extends React.Component {
                     e.target.bindTooltip(position.name).openTooltip();
                 }}
             >
-                <Popup>
+                <Popup >
                     <h1>{position.name}</h1>
                     <h3>Position : [{position.lat},{position.lng}]</h3>
                     {this.dateFormatFunction(position)}
@@ -463,10 +463,10 @@ class AppComponent extends React.Component {
                         <p>Status : {(typeof position.Status !== 'undefined' && position.Status !== null) ? position.Status.name : 'none'}</p>
                         <p>By : {typeof position.Creator !== 'undefined' ? (position.Creator.name + ",  from group : " + position.Creator.group) : position.group}</p>
                         <p>number of like : {this.countLikeFunction(position)}</p>
-                        <img alt={"Displays the assigned img of the POI"} src={position.image}/>
+                        <img className={"ImagePopup"} alt={"Displays the assigned img of the POI"} src={position.image}/>
                         <p>{position.description}</p>
                         {(typeof position.Categories !== 'undefined' && position.Categories !== null) ? this.displayCategories(position) :
-                            <div>Categories : No categories.</div>}
+                            <div className={"TitreDesign"}>Categories : <div>No categories.</div></div>}
                         {this.generateTags(position)}
 
                         <button onClick={this.likeFunction(position)}>Like</button>
