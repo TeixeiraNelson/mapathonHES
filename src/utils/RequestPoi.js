@@ -306,23 +306,23 @@ export class requestPOI {
 
 
     static validURL(str) {
-        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+        var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+            '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
         return !!pattern.test(str);
+    }
 
-    static async likeFunction(id, getTockenSilently, loginWithRedirect) {
+    static async likeFunction(id, getTokenSilently, loginWithRedirect) {
         try {
-            let token = await getTockenSilently();
+            let token = await getTokenSilently();
             console.log(id);
             console.log(JSON.stringify(id));
             let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${id}/like`,
                 {
                     method: "PATCH",
-                    body: JSON.stringify(id),
                     headers: {
                         Accept: "application/json",
                         Authorization: `Bearer ${token}`
@@ -339,15 +339,14 @@ export class requestPOI {
         }
     }
 
-    static async dislikeFunction(id, getTockenSilently, loginWithRedirect) {
+    static async dislikeFunction(id, getTokenSilently, loginWithRedirect) {
         try {
-            let token = await getTockenSilently();
-            console.log(id);
+            let token = await getTokenSilently();
+            console.log("unlike");
             console.log(JSON.stringify(id));
-            let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${id}/dislike`,
+            let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${id}/unlike`,
                 {
                     method: "PATCH",
-                    body: JSON.stringify(id),
                     headers: {
                         Accept: "application/json",
                         Authorization: `Bearer ${token}`
@@ -364,9 +363,9 @@ export class requestPOI {
         }
     }
 
-    static async UpdateStatus(IdStatus, id, getTockenSilently, loginWithRedirect) {
+    static async UpdateStatus(IdStatus, id, getTokenSilently, loginWithRedirect) {
         try {
-            let token = await getTockenSilently();
+            let token = await getTokenSilently();
             console.log(IdStatus);
             console.log(JSON.stringify(IdStatus));
             let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/status/${id}`,
