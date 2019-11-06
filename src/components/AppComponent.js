@@ -549,8 +549,15 @@ class AppComponent extends React.Component {
                         {(typeof position.Creator !== 'undefined' && position.Creator.id !== this.state.currentUser.sub && position.Creator.group==1) ?
                             <div>
                                 <br/>
-                                <button onClick={this.changeStatus(1,position.id)}>Verify</button>
-                                <button onClick={this.changeStatus(3,position.id)}>Unverify</button>
+                                <button onClick={event => {
+                                    event.preventDefault();
+                                    position.Status.id=1
+                                    console.log(position.Status.name)
+                                }}>Verify</button>
+                                <button onClick={event => {
+                                    event.preventDefault();
+                                    position.Status.id=3
+                                }}>Unverify</button>
                             </div> : <div/>
 
                         }
@@ -639,7 +646,8 @@ class AppComponent extends React.Component {
     }
 
 
-    changeStatus() {
+    changeStatus(id,poiid) {
+
 
 
     }
