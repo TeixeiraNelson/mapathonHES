@@ -470,8 +470,8 @@ class AppComponent extends React.Component {
                             <div className={"TitreDesign"}>Categories : <div>No categories.</div></div>}
                         {this.generateTags(position)}
 
-                        <button onClick={this.likeFunction(position)}>Like</button>
-                        <button onClick={this.dislikeFunction}>Dislike</button>
+                        <button onClick={this.likeFunction()}>Like</button>
+                        <button onClick={this.dislikeFunction()}>Dislike</button>
                         {(typeof position.Creator !== 'undefined' && position.Creator.id === this.state.currentUser.sub) ?
                             <div>
                                 <button onClick={this.verifyFunction}>Verify</button>
@@ -503,15 +503,16 @@ class AppComponent extends React.Component {
     /*
     like function of the P.O.I
      */
-    likeFunction(position) {
-        // position.Tags.add('Like_test')
+   ;
+    likeFunction(){
+
     }
 
     /*
     dislike function of the P.O.I
      */
-    dislikeFunction(position) {
-        position.Tags.remove('Like_' + this.state.currentUser.name)
+    dislikeFunction() {
+
     }
 
     countLikeFunction(position) {

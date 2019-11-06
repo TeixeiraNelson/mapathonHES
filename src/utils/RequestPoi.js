@@ -303,6 +303,81 @@ export class requestPOI {
             return null;
         }
     }
+
+    static async likeFunction(like, id, getTockenSilently, loginWithRedirect) {
+        try {
+            let token = await getTockenSilently();
+            console.log(like);
+            console.log(JSON.stringify(like));
+            let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${id}/like`,
+                {
+                    method: "PATCH",
+                    body: JSON.stringify(like),
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+            console.log("POI Like");
+            let data = await response.json();
+            console.log(data);
+            return data;
+        } catch (e) {
+            console.error(e);
+            await loginWithRedirect();
+            return null;
+        }
+    }
+
+    static async dislikeFunction(dislike, id, getTockenSilently, loginWithRedirect) {
+        try {
+            let token = await getTockenSilently();
+            console.log(dislike);
+            console.log(JSON.stringify(dislike));
+            let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${id}/dislike`,
+                {
+                    method: "PATCH",
+                    body: JSON.stringify(dislike),
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+            console.log("POI Dislike");
+            let data = await response.json();
+            console.log(data);
+            return data;
+        } catch (e) {
+            console.error(e);
+            await loginWithRedirect();
+            return null;
+        }
+    }
+
+    static async UpdatteStatus(Status, id, getTockenSilently, loginWithRedirect) {
+        try {
+            let token = await getTockenSilently();
+            console.log(Status);
+            console.log(JSON.stringify(Status));
+            let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/status/${id}`,
+                {
+                    method: "PATCH",
+                    body: JSON.stringify(Status),
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+            console.log("POI Status change");
+            let data = await response.json();
+            console.log(data);
+            return data;
+        } catch (e) {
+            console.error(e);
+            await loginWithRedirect();
+            return null;
+        }
+    }
 }
 
 export default requestPOI;
