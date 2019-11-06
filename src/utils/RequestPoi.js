@@ -304,15 +304,15 @@ export class requestPOI {
         }
     }
 
-    static async likeFunction(like, id, getTockenSilently, loginWithRedirect) {
+    static async likeFunction(id, getTockenSilently, loginWithRedirect) {
         try {
             let token = await getTockenSilently();
-            console.log(like);
-            console.log(JSON.stringify(like));
+            console.log(id);
+            console.log(JSON.stringify(id));
             let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${id}/like`,
                 {
                     method: "PATCH",
-                    body: JSON.stringify(like),
+                    body: JSON.stringify(id),
                     headers: {
                         Accept: "application/json",
                         Authorization: `Bearer ${token}`
@@ -329,15 +329,15 @@ export class requestPOI {
         }
     }
 
-    static async dislikeFunction(dislike, id, getTockenSilently, loginWithRedirect) {
+    static async dislikeFunction(id, getTockenSilently, loginWithRedirect) {
         try {
             let token = await getTockenSilently();
-            console.log(dislike);
-            console.log(JSON.stringify(dislike));
+            console.log(id);
+            console.log(JSON.stringify(id));
             let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${id}/dislike`,
                 {
                     method: "PATCH",
-                    body: JSON.stringify(dislike),
+                    body: JSON.stringify(id),
                     headers: {
                         Accept: "application/json",
                         Authorization: `Bearer ${token}`
@@ -354,15 +354,15 @@ export class requestPOI {
         }
     }
 
-    static async UpdatteStatus(Status, id, getTockenSilently, loginWithRedirect) {
+    static async UpdateStatus(IdStatus, id, getTockenSilently, loginWithRedirect) {
         try {
             let token = await getTockenSilently();
-            console.log(Status);
-            console.log(JSON.stringify(Status));
+            console.log(IdStatus);
+            console.log(JSON.stringify(IdStatus));
             let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/status/${id}`,
                 {
                     method: "PATCH",
-                    body: JSON.stringify(Status),
+                    body: JSON.stringify(IdStatus),
                     headers: {
                         Accept: "application/json",
                         Authorization: `Bearer ${token}`
