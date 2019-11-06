@@ -5,6 +5,7 @@ import Form from "./Form";
 import L from "leaflet";
 import  "../App.css";
 import RequestPoi from "../utils/RequestPoi";
+import POI from "./POI";
 
 /*
 Constant variables used in this part of the program, that's why they are global.
@@ -534,12 +535,28 @@ class AppComponent extends React.Component {
                             <div className={"TitreDesign"}>Categories : <div>No categories.</div></div>}
                         {this.generateTags(position)}
 
-                        <button onClick={this.likeFunction(this.id)}>Like</button>
-                        <button onClick={this.dislikeFunction()}>Dislike</button>
+                        <button onClick={event => {
+                            event.preventDefault();
+                            this.likePOI(position.id)
+                            window.alert("POI "+position.name+" like")}}
+                            >Like</button>
+                        <button onClick={event => {
+                            event.preventDefault();
+                            this.dislikePOI(position.id)
+                            window.alert("POI "+position.name+" unlike")}}>
+                            Dislike</button>
+
+                        {(typeof position.Creator !== 'undefined' && position.Creator.id !== this.state.currentUser.sub && position.Creator.group==1) ?
+                            <div>
+                                <br/>
+                                <button onClick={this.changeStatus(1,position.id)}>Verify</button>
+                                <button onClick={this.changeStatus(3,position.id)}>Unverify</button>
+                            </div> : <div/>
+
+                        }
+
                         {(typeof position.Creator !== 'undefined' && position.Creator.id === this.state.currentUser.sub) ?
                             <div>
-                                <button onClick={this.changeStatus(1,this.id)}>Verify</button>
-                                <button onClick={this.changeStatus(3,this.id)}>Unverify</button>
                                 <br/>
                                 <button onClick={event => {
                                     event.preventDefault();
@@ -622,26 +639,7 @@ class AppComponent extends React.Component {
     }
 
 
-    /*
-    like function of the P.O.I
-     */
-   ;
-
-     likeFunction= (id)=>{
-
-     }
-
-
-
-    /*
-    dislike function of the P.O.I
-     */
-    dislikeFunction=(id)=>{
-    
-    }
-
-
-    verifyFunction() {
+    changeStatus() {
 
 
     }
