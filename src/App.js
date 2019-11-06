@@ -12,7 +12,7 @@ import AppComponent from "./components/AppComponent"
 */
 function App() {
     let [pois, setPois] = useState([]);
-    let [categories, setCategories] = useState([]);
+    let [categories, setCategories] = useState([]); 
     let [status, setStatus] = useState([]);
     let [tags, setTags] = useState([]);
     let {loading, loginWithRedirect, getTokenSilently, user, logout} = useAuth0();
