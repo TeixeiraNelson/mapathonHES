@@ -12,7 +12,7 @@ import AppComponent from "./components/AppComponent"
 */
 function App() {
     let [pois, setPois] = useState([]);
-    let [categories, setCategories] = useState([]); 
+    let [categories, setCategories] = useState([]);
     let [status, setStatus] = useState([]);
     let [tags, setTags] = useState([]);
     let {loading, loginWithRedirect, getTokenSilently, user, logout} = useAuth0();
@@ -86,7 +86,8 @@ function App() {
             <header className="App-header" id="AppHead">
                 {(pois && pois.length > 0 && categories && categories.length > 0 && status && status.length > 0 && tags && tags.length > 0) &&
                 <AppComponent user={user} pois={pois} InsertPoi={InsertPoi} deletePoi={deletePoi} updatePoi={updatePoi} logout={logout}
-                              categories={categories} status={status} tags={tags} insertCategory={InsertCategory} insertTag={InsertTag}/>}
+                              categories={categories} status={status} tags={tags} insertCategory={InsertCategory} insertTag={InsertTag}
+                              likePOI={LikePOI} dislikePOI={DisLikePOI} updatestatus={UpdateStatus}/>}
                 <br/>
             </header>
         </div>
@@ -176,6 +177,33 @@ function App() {
         data = await RequestPoi.getGPXFiles(getTokenSilently, loginWithRedirect);
 
         console.log("GPX " + data);
+        return data;
+    }
+    async function LikePOI(id){
+        console.log("Like POI")
+        console.log(id);
+
+        let data;
+        data = await RequestPoi.likeFunction(id,getTokenSilently,loginWithRedirect);
+        console.log(data);
+        return data;
+    }
+    async function DisLikePOI(id){
+        console.log("Dislike POI")
+        console.log(id);
+
+        let data;
+        data = await RequestPoi.dislikeFunction(id,getTokenSilently,loginWithRedirect);
+        console.log(data);
+        return data;
+    }
+    async function UpdateStatus(idStatus,id){
+        console.log("Status change")
+        console.log(id);
+
+        let data;
+        data = await RequestPoi.UpdateStatus(idStatus,id,getTokenSilently,loginWithRedirect);
+        console.log(data);
         return data;
     }
 }

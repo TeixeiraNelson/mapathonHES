@@ -4,6 +4,7 @@ import {LayerGroup, LayersControl, Map, Marker, Popup, TileLayer} from "react-le
 import Form from "./Form";
 import L from "leaflet";
 import  "../App.css";
+import RequestPoi from "../utils/RequestPoi";
 
 /*
 Constant variables used in this part of the program, that's why they are global.
@@ -504,8 +505,8 @@ class AppComponent extends React.Component {
     like function of the P.O.I
      */
    ;
-    likeFunction(){
 
+    async likeFunction(){
     }
 
     /*
@@ -589,5 +590,6 @@ class AppComponent extends React.Component {
         this.setState({currentModifyingMarker: position})
     }
 }
+
 
 export default AppComponent;
