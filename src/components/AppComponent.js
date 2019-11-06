@@ -3,7 +3,8 @@ import Sidebar from "react-sidebar";
 import {CircleMarker, LayerGroup, LayersControl, Map, Marker, Popup, TileLayer} from "react-leaflet";
 import Form from "./Form";
 import L from "leaflet";
-import  "../App.css";
+import "../App.css";
+import RequestPoi from "../utils/RequestPoi";
 
 /*
 Constant variables used in this part of the program, that's why they are global.
@@ -50,7 +51,7 @@ class AppComponent extends React.Component {
                 lat: 46.283,
                 lng: 7.536
             },
-            searchQuery :"",
+            searchQuery: "",
             markers: this.props.pois,
             addMarkerEnabled: false,
             modifyingMarker: false,
@@ -79,21 +80,30 @@ class AppComponent extends React.Component {
 
     generatePoiButtons() {
         return (<div>{this.state.markers.map(position => (
-            (typeof position !== 'undefined' && position !== null && position.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase()))?<div className={`sideButton sideButton5`} onClick={(e) => {
-                e.preventDefault(); console.log(position); let latLng = {lat: position.lat, lng:position.lng}; this.mapRef.leafletElement.flyTo(latLng, 19); this.onSetSidebarOpen(false);
-            }}>
-                <h1><span style={{backgroundColor: 'rgba(249, 223, 57, 0.5)'}}>{position.name.substring(0,this.state.searchQuery.length)}</span>{position.name.substring(this.state.searchQuery.length)}</h1>
-                <p>{position.description}</p>
-                <div>
-                    {typeof position.Categories !== 'undefined' && position.Categories!== null && position.Categories.length>0?<div>
-                        {position.Categories.map(elem => (
-                            <img src={elem.image}/>
-                        ))}
-                    </div>:<div></div>}
-                </div>
-            </div>:<div></div>
+            ((typeof position !== 'undefined' && position !== null) && (position.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase()))) ?
+                <div className={`sideButton sideButton5`} onClick={(e) => {
+                    e.preventDefault();
+                    console.log(position);
+                    let latLng = {lat: position.lat, lng: position.lng};
+                    this.mapRef.leafletElement.flyTo(latLng, 19);
+                    this.onSetSidebarOpen(false);
+                }}>
+                    <h1><span
+                        style={{backgroundColor: 'rgba(249, 223, 57, 0.5)'}}>{position.name.substring(0, this.state.searchQuery.length)}</span>{position.name.substring(this.state.searchQuery.length)}
+                    </h1>
+                    <p>{position.description}</p>
+                    <div>
+                        {typeof position.Categories !== 'undefined' && position.Categories !== null && position.Categories.length > 0 ?
+                            <div>
+                                {position.Categories.map(elem => (
+                                    <img src={elem.image}/>
+                                ))}
+                            </div> : <div></div>}
+                    </div>
+                </div> : <div></div>
         ))}</div>);
     }
+
 
     /*
     Function to allow the user to click on the map in order to make this point a P.O.I
@@ -111,7 +121,7 @@ class AppComponent extends React.Component {
     will work only if the poi's creator is the same as the user logged in.
      */
     deletePoi = (pos) => {
-        if (window.confirm('Are you sure you wish to delete this item?')){
+        if (window.confirm('Are you sure you wish to delete this item?')) {
             let data = this.DeletePoi(pos.id, this.updateMap, pos);
             return data;
         }
@@ -234,17 +244,17 @@ class AppComponent extends React.Component {
     setCategories = (createdCategory) => {
         let array = this.state.categories;
         array.push(createdCategory);
-        this.setState({categories:array});
+        this.setState({categories: array});
     }
 
     InsertTag = (tag) => {
-        this.insertTag(tag,this.setTag);
+        this.insertTag(tag, this.setTag);
     }
 
     setTag = (createdTag) => {
         let array = this.state.tags;
         array.push(createdTag);
-        this.setState({tags:array});
+        this.setState({tags: array});
     }
 
     /*
@@ -271,6 +281,7 @@ class AppComponent extends React.Component {
         });
 
     };
+
     render() {
         return (
             <div>
@@ -280,27 +291,37 @@ class AppComponent extends React.Component {
                             <button className={"button"} id="localisation-button" onClick={this.closeButtonAction}>
                                 Close
                             </button>
-                            {(this.state.addMarkerEnabled === true)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} InsertCategory={this.InsertCategory} InsertTag={this.InsertTag} lat={this.actualPointLat}
-                                                                          lng={this.actualPointLng} categories={this.state.categories} status={this.state.status}
-                                                                          tags={this.state.tags} closeMenu={this.onSetSidebarOpen}/>:<div></div>}
-                            {(this.state.modifyingMarker === true && this.state.currentModifyingMarker)?<Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi} InsertCategory={this.InsertCategory} InsertTag={this.InsertTag} lat={this.state.currentModifyingMarker.lat}
-                                                                                                              lng={this.state.currentModifyingMarker.lng} categories={this.state.categories} status={this.state.status}
-                                                                                                              tags={this.state.tags} closeMenu={this.onSetSidebarOpen} currentPoi={this.state.currentModifyingMarker} updatePoi={this.UpdatePoi}/>
-                                                                                                              :<div></div>}
-                                                                                                              <div>
-                                                                                                                  {this.state.addMarkerEnabled=== false && this.state.modifyingMarker===false?
-                                                                                                                      <textarea
-                                                                                                                          name='searchQuery'
-                                                                                                                          placeholder='Search...'
-                                                                                                                          value={this.state.searchQuery}
-                                                                                                                          onChange={e => this.inputChangeAction(e)}
-                                                                                                                          required={true}
-                                                                                                                      />:<div></div>}
-                                                                                                                  <div>
-                                                                                                                      {this.state.addMarkerEnabled=== false && this.state.modifyingMarker===false?
-                                                                                                                          this.generatePoiButtons():<div></div>}
-                                                                                                                  </div>
-                                                                                                              </div>
+                            {(this.state.addMarkerEnabled === true) ?
+                                <Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi}
+                                      InsertCategory={this.InsertCategory} InsertTag={this.InsertTag}
+                                      lat={this.actualPointLat}
+                                      lng={this.actualPointLng} categories={this.state.categories}
+                                      status={this.state.status}
+                                      tags={this.state.tags} closeMenu={this.onSetSidebarOpen}/> : <div></div>}
+                            {(this.state.modifyingMarker === true && this.state.currentModifyingMarker) ?
+                                <Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi}
+                                      InsertCategory={this.InsertCategory} InsertTag={this.InsertTag}
+                                      lat={this.state.currentModifyingMarker.lat}
+                                      lng={this.state.currentModifyingMarker.lng} categories={this.state.categories}
+                                      status={this.state.status}
+                                      tags={this.state.tags} closeMenu={this.onSetSidebarOpen}
+                                      currentPoi={this.state.currentModifyingMarker} updatePoi={this.UpdatePoi}/>
+                                : <div></div>}
+                            <div>
+                                {this.state.addMarkerEnabled === false && this.state.modifyingMarker === false ?
+                                    <div>
+                                                                                                                          <textarea
+                                                                                                                              name='searchQuery'
+                                                                                                                              placeholder='Search Tittle...'
+                                                                                                                              value={this.state.searchQuery}
+                                                                                                                              onChange={e => this.inputChangeAction(e)}
+                                                                                                                          />
+                                    </div> : <div></div>}
+                                <div>
+                                    {this.state.addMarkerEnabled === false && this.state.modifyingMarker === false ?
+                                        this.generatePoiButtons() : <div></div>}
+                                </div>
+                            </div>
                         </div>}
                         open={this.state.sidebarOpen}
                         styles={{
@@ -349,7 +370,9 @@ class AppComponent extends React.Component {
                                 zIndex: 1,
                                 position: "fixed",
                                 top: 0,
-                                bottom: 0}}}>
+                                bottom: 0
+                            }
+                        }}>
 
                         <div className={"topDivContainer"}>
                             <h2 className={"MainTitle"}> Mapathon </h2>
@@ -470,7 +493,6 @@ class AppComponent extends React.Component {
         let filteredMarkers = [];
 
 
-
         if (number === 0) {
             filteredMarkers = this.state.markers;
         } else if (number > 0) {
@@ -497,13 +519,13 @@ class AppComponent extends React.Component {
                     <h1>{position.name}</h1>
                     <h3>Position : [{position.lat},{position.lng}]</h3>
                     {this.dateFormatFunction(position)}
-                    {console.log("push")}
-
-                    {position.name !== "Your position" ?<div>
-                        <p>Status : {(typeof position.Status !== 'undefined' && position.Status !== null) ? position.Status.name : 'none'}</p>
-                        <p>By : {typeof position.Creator !== 'undefined' ? (position.Creator.name + ",  from group : " + position.Creator.group) : position.group}</p>
-                        <p>number of like : {this.countLikeFunction(position)}</p>
-                        <img className={"ImagePopup"} alt={"Displays the assigned img of the POI"} src={position.image}/>
+                    {position.name !== "Your position" ? <div>
+                        <p>Status
+                            : <span>{(typeof position.Status !== 'undefined' && position.Status !== null) ? position.Status.name : 'none'}</span>
+                        </p>
+                        <p>By
+                            : {typeof position.Creator !== 'undefined' ? (position.Creator.name + ",  from group : " + position.Creator.group) : position.group}</p>
+                        <img className={"ImagePopup"} src={position.image}/>
                         <p>{position.description}</p>
                         {(typeof position.Categories !== 'undefined' && position.Categories !== null) ? this.displayCategories(position) :
                             <div className={"TitreDesign"}>Categories : <div>No categories.</div></div>}
@@ -516,18 +538,27 @@ class AppComponent extends React.Component {
                                 <button onClick={this.verifyFunction}>Verify</button>
                                 <button onClick={this.unverifyFunction}>Unverify</button>
                                 <br/>
-                                <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
-                                <button onClick={event => {event.preventDefault(); this.modifyPoi(position)}}>MODIFY</button>
-                            </div>:<div/>
+                                <button onClick={event => {
+                                    event.preventDefault();
+                                    this.deletePoi(position)
+                                }}>DELETE
+                                </button>
+                                <button onClick={event => {
+                                    event.preventDefault();
+                                    this.modifyPoi(position)
+                                }}>MODIFY
+                                </button>
+                            </div> : <div/>
                         }
 
-                    </div>:<div/>}
+                    </div> : <div/>}
 
 
                 </Popup>
                 <CircleMarker
-                    center={{lat:position.lat, lng: position.lng}}
-                    fillColor="blue"
+                    center={{lat: position.lat, lng: position.lng}}
+                    fillColor={this.generateGroupColor(position)}
+                    color={this.generateGroupColor(position)}
                     radius={10}
                     onMouseOver={(e) => {
                         e.target.bindTooltip(position.name).openTooltip();
@@ -536,17 +567,38 @@ class AppComponent extends React.Component {
         ))}</div>);
     }
 
+    generateGroupColor(position) {
+        if (typeof position.Creator !== 'undefined' && position.Creator !== null) {
+            switch (position.Creator.group) {
+                case 1:
+                    return "blue";
+                case 2:
+                    return "red";
+                case 3:
+                    return "yellow";
+                case 4:
+                    return "green";
+            }
+        }
+        return "white";
+    }
+
     generateMarkerIcon(position) {
         if (position.name === "Your position")
             return posIcon;
 
-        if (position.Categories !== null && typeof position.Categories !== 'undefined' && position.Categories.length > 0){
-            let catImg = position.Categories[0].image;
-            console.log("CAtegory img");
-            console.log(catImg);
-
+        if (position.Categories !== null && typeof position.Categories !== 'undefined' && position.Categories.length > 0) {
+            let catImg
+            if (typeof position.Categories[0].image !== 'undefined' && position.Categories[0].image !== null && position.Categories[0].image.length > 1) {
+                if (RequestPoi.validURL(position.Categories[0].image))
+                    catImg = position.Categories[0].image;
+                else
+                    return myIcon;
+            } else {
+                return myIcon;
+            }
             const icon = L.icon({
-                iconUrl:catImg,
+                iconUrl: catImg,
                 iconSize: [25, 41],
                 iconAnchor: [10, 30],
                 popupAnchor: [0, -20]
@@ -581,19 +633,6 @@ class AppComponent extends React.Component {
         position.Tags.remove('Like_' + this.state.currentUser.name)
     }
 
-    countLikeFunction(position) {
-        let nbLike = 0;
-        if (position.Tags == null) {
-            return
-        }
-        for (var i = 0; i < position.Tags.length; i++) {
-            if (position.Tags[i].name.includes('Like_')) {
-                nbLike++;
-            }
-        }
-        return nbLike
-    }
-
     verifyFunction() {
 
     }
@@ -607,15 +646,15 @@ class AppComponent extends React.Component {
     Function that generates the tags of a P.O.I
      */
     generateTags(position) {
+        let tagArray = '';
+        let tag = '';
         if (typeof position.Tags !== 'undefined' && position.Tags.length !== 0) {
             return (
-                <div>
-                    <p> Tags : </p>
+                <div><p> Tags :
                     {position.Tags.map(Tag => (
-
-                        <p style={{color: 'blue'}}>{!Tag.name.includes('Like_') ? Tag.name : ''}</p>
-
+                        <span style={{color: "blue"}}>{'#' + Tag.name + ' '}</span>
                     ))}
+                </p>
                 </div>);
         }
         return <div>Tags : No Tags.</div>
@@ -639,10 +678,14 @@ class AppComponent extends React.Component {
             this.setState({markers});
         }
 
-        if (this.state.modifyingMarker===true){
-            this.setState({modifyingMarker:false});
-            this.setState({currentModifyingMarker:null});
+        if (this.state.modifyingMarker === true) {
+            this.setState({modifyingMarker: false});
+            this.setState({currentModifyingMarker: null});
         }
+
+        this.setState({
+            searchQuery: ""
+        })
 
     }
 
@@ -655,9 +698,9 @@ class AppComponent extends React.Component {
         this.setState({currentModifyingMarker: position})
     }
 
-    inputChangeAction=(e)=> {
+    inputChangeAction = (e) => {
         this.setState({
-            searchQuery: e.target.value
+            [e.target.name]: e.target.value
         });
     }
 }
