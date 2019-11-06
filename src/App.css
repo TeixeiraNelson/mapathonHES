@@ -291,3 +291,45 @@ html{
   background: #394D61;
 }
 
+.sideButton {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  min-width: 200px;
+  width: 16vw;
+  border-radius: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+  overflow: hidden;
+}
+.sideButton h1{
+  font-size: 3vh;
+}
+
+.sideButton p{
+  font-size: 1.5vh;
+}
+
+.sideButton img{
+  width: 30px;
+  height: 30px;
+}
+
+.sideButton5 {
+  background-color: white;
+  color: black;
+  border: 2px solid #555555;
+}
+
+.sideButton5:hover {
+  background-color: #555555;
+  color: white;
+}
+
