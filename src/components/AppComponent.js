@@ -64,6 +64,9 @@ class AppComponent extends React.Component {
         this.updatePoi = props.updatePoi;
         this.insertCategory = props.insertCategory;
         this.insertTag = props.insertTag;
+        this.likePOI= props.likePOI;
+        this.dislikePOI=props.dislikePOI;
+        this.updateStatus=props.updateStatus;
     }
 
     /*
@@ -471,12 +474,12 @@ class AppComponent extends React.Component {
                             <div className={"TitreDesign"}>Categories : <div>No categories.</div></div>}
                         {this.generateTags(position)}
 
-                        <button onClick={this.likeFunction()}>Like</button>
+                        <button onClick={this.likeFunction(this.id)}>Like</button>
                         <button onClick={this.dislikeFunction()}>Dislike</button>
                         {(typeof position.Creator !== 'undefined' && position.Creator.id === this.state.currentUser.sub) ?
                             <div>
-                                <button onClick={this.verifyFunction}>Verify</button>
-                                <button onClick={this.unverifyFunction}>Unverify</button>
+                                <button onClick={this.changeStatus(1,this.id)}>Verify</button>
+                                <button onClick={this.changeStatus(3,this.id)}>Unverify</button>
                                 <br/>
                                 <button onClick={event => {event.preventDefault(); this.deletePoi(position)}}>DELETE</button>
                                 <button onClick={event => {event.preventDefault(); this.modifyPoi(position)}}>MODIFY</button>
@@ -506,14 +509,17 @@ class AppComponent extends React.Component {
      */
    ;
 
-    async likeFunction(){
-    }
+     likeFunction= (id)=>{
+
+     }
+
+
 
     /*
     dislike function of the P.O.I
      */
-    dislikeFunction() {
-
+    dislikeFunction=(id)=>{
+    
     }
 
     countLikeFunction(position) {
@@ -529,14 +535,8 @@ class AppComponent extends React.Component {
         return nbLike
     }
 
-    verifyFunction() {
-
+    changeStatus(statusId,id) {
     }
-
-    unverifyFunction() {
-
-    }
-
 
     /*
     Function that generates the tags of a P.O.I
