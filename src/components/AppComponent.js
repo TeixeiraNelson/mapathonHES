@@ -646,10 +646,10 @@ class AppComponent extends React.Component {
     }
 
 
-    changeStatus(id,poiid) {
-
-
-
+    setStatus(Status) {
+        let status = this.state.status;
+        status.push(Status);
+        this.setState({status: status});
     }
 
     /*
