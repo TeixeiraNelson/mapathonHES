@@ -434,9 +434,9 @@ class Form extends React.Component {
     toggleCategoryAdd() {
         let isAddCategoryToggled = this.state.toggleAddCategory;
         if(!isAddCategoryToggled){
-            this.state.addCatString = "Cancel"
+            this.setState({addCatString : "Cancel"})
         } else {
-            this.state.addCatString = "New Category";
+            this.setState({addCatString : "New Category"});
         }
         this.setState({toggleAddCategory: !isAddCategoryToggled});
     }
@@ -486,9 +486,9 @@ class Form extends React.Component {
     toggleTagAdd() {
         let isAddTagToggled = this.state.toggleAddTag;
         if(!isAddTagToggled){
-            this.state.addTagString = "Cancel"
+            this.setState({addTagString : "Cancel"})
         } else {
-            this.state.addTagString = "New Tag";
+            this.setState({addTagString : "New Tag"})
         }
         this.setState({toggleAddTag: !isAddTagToggled});
     }
