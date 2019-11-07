@@ -77,6 +77,9 @@ class Form extends React.Component {
         this.lng = props.lng;
         this.updatePoi= props.updatePoi;
         this.newPoi = props.newPoi;
+        this.user = props.user;
+        console.log(props.user);
+        this.setAddMarkerOff = props.setAddMarkerOff;
         if(typeof this.props.currentPoi !== 'undefined'){
             this.actualCats = this.props.currentPoi.Categories;
             this.actualTags = this.props.currentPoi.Tags;
@@ -120,7 +123,12 @@ class Form extends React.Component {
                 group: 1,
                 Status: [],
                 Tags: [],
-                Categories: []
+                Categories: [],
+                Creator : {
+                    group: 1,
+                    name: this.props.user.name,
+                    id : this.props.user.sub
+                }
             }
         }
     }
@@ -164,7 +172,6 @@ class Form extends React.Component {
 
         this.setState({
             [e.target.name]: e.target.value
-
         });
 
         this.setState({
@@ -178,7 +185,12 @@ class Form extends React.Component {
                     group: 1,
                     Status: this.state.status,
                     Tags: this.state.tags,
-                    Categories: this.state.categories
+                    Categories: this.state.categories,
+                    Creator : {
+                        group: 1,
+                        name: this.props.user.name,
+                        id : this.props.user.sub
+                    }
                 }
             }
         )
@@ -191,6 +203,7 @@ class Form extends React.Component {
      */
     submitAction = (e) => {
         e.preventDefault();
+        this.setAddMarkerOff();
         if (typeof this.props.currentPoi === 'undefined' || this.props.currentPoi===null) {
             if (this.state.poi.name !== null && this.state.poi.name.length > 1) {
                 this.InsertPoi(this.state.poi);
@@ -245,7 +258,12 @@ class Form extends React.Component {
                     group: 1,
                     Status: this.state.status,
                     Tags: this.state.tags,
-                    Categories: categoriesArray
+                    Categories: categoriesArray,
+                    Creator : {
+                        group: 1,
+                        name: this.props.user.name,
+                        id : this.props.user.sub
+                    }
                 }
             }
         )
@@ -293,7 +311,11 @@ class Form extends React.Component {
                     group: 1,
                     Status: this.state.status,
                     Tags: tagsArray,
-                    Categories: this.state.categories
+                    Categories: this.state.categories,
+                    Creator : {
+                        group: 1,
+                        name: this.props.user.name
+                    }
                 }
             }
         )
@@ -427,7 +449,6 @@ class Form extends React.Component {
                     </button>
                     {this.state.toggleAddTag?
                         <div>
-                            <form>
                                 <input
                                     type='text'
                                     name='tagNameValue'
@@ -450,7 +471,6 @@ class Form extends React.Component {
                                     onChange={e => this.valueUpdateAction(e)}/>
                                 <br/>
                                 <button onClick={this.createTagAction}>Create Tag</button>
-                            </form>
                         </div>:<div></div>}
                     <button className="button" id="submitButton" value={this.state.poi}
                             onClick={this.submitAction}>Submit

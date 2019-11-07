@@ -126,7 +126,7 @@
 
 .App-header {
   background-color: #333333;
-  min-height: 100vh;
+  min-height: 90vh;
   color: white;
 }
 
@@ -330,6 +330,89 @@ html{
 
 .sideButton5:hover {
   background-color: #555555;
+  color: white;
+}
+
+.settingsTopDiv{
+  display:inline;
+}
+
+.MainTitle2{
+  border-radius: 0px;
+  width: 100vw;
+  background-color: #404040;
+  text-align: left;
+}
+
+.rightDiv{
+  float: right;
+  margin: 100px;
+  height: 50vh;
+  background-color: #333;
+}
+
+.leftDiv{
+  position: absolute;
+  bottom: 0;
+  left:0;
+  height: 88vh;
+  width: 80vw;
+  background-color: lightgray;
+}
+
+.LeftDivTittle{
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  font-weight: bold;
+  text-align: left;
+  color: black;
+  border-bottom: solid 1px black;
+}
+
+.LeftDivContent{
+  padding-bottom: 10px;
+  font-weight: bold;
+  text-align: left;
+  color: black;
+  border-bottom: solid 1px black;
+  background: gray;
+  height: 50vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.mostUsedCat{
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  width: 80vw;
+  background: #668ad8;/*ButtonColor*/
+  color: #FFF;
+  border-bottom: solid 4px #627295;
+  border-radius: 3px;
+}
+
+#table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#table td, #table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#table tr:nth-child(even){background-color: #f2f2f2;}
+
+#table tr:hover {background-color: #ddd;}
+
+#table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
   color: white;
 }
 
