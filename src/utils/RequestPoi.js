@@ -339,6 +339,63 @@ export class requestPOI {
         }
     }
 
+    static async updateCategory(newCategory, getTokenSilently, loginWithRedirect) {
+        try {
+            let token = await getTokenSilently();
+            console.log("updateCategory");
+            console.log(JSON.stringify(newCategory));
+            let response = await fetch(
+                `${process.env.REACT_APP_SERVER_URL}/category/` + newCategory.id,
+                {
+                    method: "PATCH",
+                    body: JSON.stringify(newCategory),
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            console.log("Category updated");
+            let data = await response.json();
+            console.log(data);
+            return data;
+        } catch (e) {
+            console.error(e);
+            await loginWithRedirect();
+            return null;
+        }
+    }
+
+    static async updateTag(newTag, getTokenSilently, loginWithRedirect) {
+        try {
+            let token = await getTokenSilently();
+            console.log("updateTag");
+            console.log(JSON.stringify(newTag));
+
+            let response = await fetch(
+                `${process.env.REACT_APP_SERVER_URL}/tag/` + newTag.id,
+                {
+                    method: "PATCH",
+                    body: JSON.stringify(newTag),
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            console.log("tag updated");
+            let data = await response.json();
+            console.log(data);
+            return data;
+        } catch (e) {
+            console.error(e);
+            await loginWithRedirect();
+            return null;
+        }
+    }
+
     static async dislikeFunction(id, getTokenSilently, loginWithRedirect) {
         try {
             let token = await getTokenSilently();

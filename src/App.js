@@ -91,13 +91,12 @@ function App() {
     return (
         <div className="App">
             <header className="App-header" id="AppHead">
-
                 <Router>
                     <div>
                         <Switch>
                             <Route path="/settings">
                                 {(pois && pois.length > 0 && categories && categories.length > 0 && tags && tags.length > 0 && user!==null)&&
-                                <SettingsComponent user={user} categories={categories} logout={logout} tags={tags}/>}
+                                <SettingsComponent user={user} categories={categories} logout={logout} tags={tags} updateCategory={UpdateCategory} updateTag={UpdateTag}/>}
                             </Route>
                             <Route path="/">
                                 {(pois && pois.length > 0 && categories && categories.length > 0 && status && status.length > 0 && tags && tags.length > 0) &&
@@ -107,8 +106,6 @@ function App() {
                         </Switch>
                     </div>
                 </Router>
-
-
                 <br/>
             </header>
         </div>
@@ -122,6 +119,24 @@ function App() {
         let data;
         data = await RequestPoi.addPOI(newPoi, getTokenSilently, loginWithRedirect);
 
+        console.log(data);
+    }
+
+    /*
+    Updates a category in the database
+     */
+    async function UpdateCategory(newCategory){
+        let data;
+        data = await RequestPoi.updateCategory(newCategory,getTokenSilently,loginWithRedirect);
+        console.log(data);
+    }
+
+    /*
+    Updates a tag in the database
+     */
+    async function UpdateTag(newTag){
+        let data;
+        data = await RequestPoi.updateTag(newTag,getTokenSilently,loginWithRedirect);
         console.log(data);
     }
 
@@ -200,6 +215,7 @@ function App() {
         console.log("GPX " + data);
         return data;
     }
+
     async function LikePOI(id, setMarker){
         console.log("Like POI")
         console.log(id);
@@ -213,6 +229,7 @@ function App() {
         setMarker(newMarker);
         return newMarker;
     }
+
     async function DisLikePOI(id,setMarker){
         console.log("Dislike POI")
         console.log(id);
@@ -225,6 +242,7 @@ function App() {
         setMarker(newMarker);
         return newMarker;
     }
+
     async function ChangeStatus(id,Status,setMarker){
         console.log("Status change")
         console.log(id);
