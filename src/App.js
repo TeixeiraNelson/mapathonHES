@@ -87,7 +87,7 @@ function App() {
                 {(pois && pois.length > 0 && categories && categories.length > 0 && status && status.length > 0 && tags && tags.length > 0) &&
                 <AppComponent user={user} pois={pois} InsertPoi={InsertPoi} deletePoi={deletePoi} updatePoi={updatePoi} logout={logout}
                               categories={categories} status={status} tags={tags} insertCategory={InsertCategory} insertTag={InsertTag}
-                              likePOI={LikePOI} dislikePOI={DisLikePOI} updatestatus={UpdateStatus}/>}
+                              likePOI={LikePOI} dislikePOI={DisLikePOI} changeStatus={ChangeStatus}/>}
                 <br/>
             </header>
         </div>
@@ -179,30 +179,37 @@ function App() {
         console.log("GPX " + data);
         return data;
     }
-    async function LikePOI(id){
+    async function LikePOI(id, setMarker){
         console.log("Like POI")
         console.log(id);
 
         let data;
         data = await RequestPoi.likeFunction(id,getTokenSilently,loginWithRedirect);
+        console.log("SERVER LIKE ANSWER")
         console.log(data);
-        return data;
+        let newMarker = await RequestPoi.getPOI(id,getTokenSilently,loginWithRedirect);
+        console.log(newMarker);
+        setMarker(newMarker);
+        return newMarker;
     }
-    async function DisLikePOI(id){
+    async function DisLikePOI(id,setMarker){
         console.log("Dislike POI")
         console.log(id);
 
         let data;
         data = await RequestPoi.dislikeFunction(id,getTokenSilently,loginWithRedirect);
         console.log(data);
-        return data;
+        let newMarker = await RequestPoi.getPOI(id,getTokenSilently,loginWithRedirect);
+        console.log(newMarker);
+        setMarker(newMarker);
+        return newMarker;
     }
-    async function UpdateStatus(idStatus,id){
+    async function ChangeStatus(id){
         console.log("Status change")
         console.log(id);
 
         let data;
-        data = await RequestPoi.UpdateStatus(idStatus,id,getTokenSilently,loginWithRedirect);
+        data = await RequestPoi.changeStatus(id,getTokenSilently,loginWithRedirect);
         console.log(data);
         return data;
     }
