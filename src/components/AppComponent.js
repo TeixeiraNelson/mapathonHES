@@ -88,15 +88,42 @@ class AppComponent extends React.Component {
 
     generatePoiButtons() {
         let array = this.state.markers;
+        let filteredArray = [];
+        let addPoint = false;
 
-        let filteredArray = []
         array.map(elem => {
-            if(elem.name.startsWith(this.state.searchTag))
-                filteredArray.push(elem);
+            if(elem.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase())){
+
+                if(elem.Categories.length == 0&& this.state.searchCategory==""){
+                    addPoint=true;
+                }
+                if(elem.Tags.length == 0&& this.state.searchTag==""){
+                    addPoint=true;
+                }
+
+                elem.Categories.map(cat =>{
+                    if(cat.name.toLowerCase().startsWith(this.state.searchCategory.toLowerCase())){
+                        elem.Tags.map(tag =>{
+                            if(tag.name.toLowerCase().startsWith(this.state.searchTag.toLowerCase())){
+                                addPoint=true
+                            }
+                        })
+                    }
+                })
+                if(addPoint){
+                    filteredArray.push(elem);
+                    addPoint=false;
+                }
+
+            }
         })
 
-        return (<div>{array.map(position => (
-            ((typeof position !== 'undefined' && position !== null) && (position.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase()))) ?
+
+        {console.log("FILTERED ARRAY")}
+        {console.log(filteredArray)}
+
+        return (<div><h3>{filteredArray.length} points found.</h3>{filteredArray.map(position => (
+            ((typeof position !== 'undefined' && position !== null )) ?
                 <div key={position.id} className={`sideButton sideButton5`} onClick={(e) => {
                     e.preventDefault();
                     console.log(position);
@@ -334,13 +361,13 @@ class AppComponent extends React.Component {
                                                                                                                           /><br/>
                                         <textarea
                                             name='searchTag'
-                                            placeholder='Search Tag'
+                                            placeholder='Search Tag...'
                                             value={this.state.searchTag}
                                             onChange={e => this.inputChangeAction(e)}
                                         /><br/>
                                         <textarea
                                             name='searchCategory'
-                                            placeholder='Search Category'
+                                            placeholder='Search Category...'
                                             value={this.state.searchCategory}
                                             onChange={e => this.inputChangeAction(e)}
                                         /><br/>
