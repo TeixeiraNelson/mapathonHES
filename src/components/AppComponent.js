@@ -5,6 +5,7 @@ import Form from "./Form";
 import L from "leaflet";
 import "../App.css";
 import RequestPoi from "../utils/RequestPoi";
+import {Link} from "react-router-dom";
 
 /*
 Constant variables used in this part of the program, that's why they are global.
@@ -81,7 +82,7 @@ class AppComponent extends React.Component {
     generatePoiButtons() {
         return (<div>{this.state.markers.map(position => (
             ((typeof position !== 'undefined' && position !== null) && (position.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase()))) ?
-                <div className={`sideButton sideButton5`} onClick={(e) => {
+                <div key={position.id} className={`sideButton sideButton5`} onClick={(e) => {
                     e.preventDefault();
                     console.log(position);
                     let latLng = {lat: position.lat, lng: position.lng};
@@ -96,7 +97,7 @@ class AppComponent extends React.Component {
                         {typeof position.Categories !== 'undefined' && position.Categories !== null && position.Categories.length > 0 ?
                             <div>
                                 {position.Categories.map(elem => (
-                                    <img src={elem.image}/>
+                                    <img key={elem.id} src={elem.image}/>
                                 ))}
                             </div> : <div></div>}
                     </div>
@@ -297,7 +298,7 @@ class AppComponent extends React.Component {
                                       lat={this.actualPointLat}
                                       lng={this.actualPointLng} categories={this.state.categories}
                                       status={this.state.status}
-                                      tags={this.state.tags} closeMenu={this.onSetSidebarOpen}/> : <div></div>}
+                                      tags={this.state.tags} closeMenu={this.onSetSidebarOpen} setAddMarkerOff={this.setAddMarkerOff} user={this.state.currentUser}/> : <div></div>}
                             {(this.state.modifyingMarker === true && this.state.currentModifyingMarker) ?
                                 <Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi}
                                       InsertCategory={this.InsertCategory} InsertTag={this.InsertTag}
@@ -305,7 +306,7 @@ class AppComponent extends React.Component {
                                       lng={this.state.currentModifyingMarker.lng} categories={this.state.categories}
                                       status={this.state.status}
                                       tags={this.state.tags} closeMenu={this.onSetSidebarOpen}
-                                      currentPoi={this.state.currentModifyingMarker} updatePoi={this.UpdatePoi}/>
+                                      currentPoi={this.state.currentModifyingMarker} updatePoi={this.UpdatePoi} setAddMarkerOff={this.setAddMarkerOff} user={this.state.currentUser}/>
                                 : <div></div>}
                             <div>
                                 {this.state.addMarkerEnabled === false && this.state.modifyingMarker === false ?
@@ -383,11 +384,8 @@ class AppComponent extends React.Component {
                                              src={this.state.currentUser.picture}/>
                                         <p>{this.state.currentUser.nickname}</p>
                                     </div> : <div/>}
-                                <br/>
-                                <br/>
-                                <br/>
+                                <br/><br/><br/>
                                 <button className={"button2"} onClick={this.logout}>logout</button>
-                                <br/>
                                 <br/>
                                 <br/>
                                 <button className={"button2"} id="add-poi-button" onClick={this.addMarkerToMap}>
@@ -395,14 +393,15 @@ class AppComponent extends React.Component {
                                 </button>
                                 <br/>
                                 <br/>
-                                <br/>
                                 <button className={"button2"} id="localisation-button"
                                         onClick={this.localiseUser}> Localisation
                                 </button>
                                 <br/>
                                 <br/>
-                                <br/>
                                 <button className={"button2"} onClick={() => this.onSetSidebarOpen(true)}> Menu</button>
+                                <br/>
+                                <br/>
+                                <Link to="/settings"><button className={"button2"}>Settings</button></Link>
                             </div>
                         </div>
                     </Sidebar>
@@ -477,7 +476,7 @@ class AppComponent extends React.Component {
                 <div><p>Categories :</p>
                     {position.Categories.map(categorie => (
 
-                        <p>{categorie.name}</p>
+                        <p key={categorie.id}>{categorie.name}</p>
 
                     ))}
                 </div>);
@@ -509,6 +508,7 @@ class AppComponent extends React.Component {
 
         return (<div>{filteredMarkers.map(position => (
             <Marker
+                key={position.id}
                 icon={this.generateMarkerIcon(position)}
                 position={position}
                 onMouseOver={(e) => {
@@ -652,7 +652,7 @@ class AppComponent extends React.Component {
             return (
                 <div><p> Tags :
                     {position.Tags.map(Tag => (
-                        <span style={{color: "blue"}}>{'#' + Tag.name + ' '}</span>
+                        <span key={Tag.id} style={{color: "blue"}}>{'#' + Tag.name + ' '}</span>
                     ))}
                 </p>
                 </div>);
@@ -661,8 +661,16 @@ class AppComponent extends React.Component {
     }
 
     /*
-    Action called by the close button in the left side bar.
+    Turn off the addMarker Enable
+     */
+    setAddMarkerOff= () => {
+        if (this.state.addMarkerEnabled === true) {
+            this.setState({addMarkerEnabled: false});
+        }
+    }
 
+    /*
+    Action called by the close button in the left side bar.
     Deletes the last appearing P.O.I if it hasn't been completed or sent to the database.
      */
     closeButtonAction = (e) => {

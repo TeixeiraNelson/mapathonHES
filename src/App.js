@@ -5,7 +5,14 @@ import endpoints from "./endpoints";
 import Loading from "./components/Loading";
 import RequestPoi from "./utils/RequestPoi"
 import css from "./App.css";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
 import AppComponent from "./components/AppComponent"
+import SettingsComponent from "./components/SettingsComponent";
 
 /*
     Main App wrapper, loads data and sends it to the AppComponent which basically handles the whole application.
@@ -84,9 +91,22 @@ function App() {
     return (
         <div className="App">
             <header className="App-header" id="AppHead">
-                {(pois && pois.length > 0 && categories && categories.length > 0 && status && status.length > 0 && tags && tags.length > 0) &&
-                <AppComponent user={user} pois={pois} InsertPoi={InsertPoi} deletePoi={deletePoi} updatePoi={updatePoi} logout={logout}
-                              categories={categories} status={status} tags={tags} insertCategory={InsertCategory} insertTag={InsertTag}/>}
+                <Router>
+                    <div>
+                        <Switch>
+                            <Route path="/settings">
+                                {(pois && pois.length > 0 && categories && categories.length > 0 && tags && tags.length > 0 && user!==null)&&
+                                <SettingsComponent user={user} categories={categories} logout={logout} tags={tags}/>}
+                            </Route>
+                            <Route path="/">
+                                {(pois && pois.length > 0 && categories && categories.length > 0 && status && status.length > 0 && tags && tags.length > 0) &&
+                                <AppComponent user={user} pois={pois} InsertPoi={InsertPoi} deletePoi={deletePoi} updatePoi={updatePoi} logout={logout}
+                                              categories={categories} status={status} tags={tags} insertCategory={InsertCategory} insertTag={InsertTag}/>}
+                            </Route>
+                        </Switch>
+                    </div>
+                </Router>
+
                 <br/>
             </header>
         </div>
