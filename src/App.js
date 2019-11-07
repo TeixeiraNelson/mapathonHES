@@ -204,14 +204,17 @@ function App() {
         setMarker(newMarker);
         return newMarker;
     }
-    async function ChangeStatus(id){
+    async function ChangeStatus(id,Status,setMarker){
         console.log("Status change")
         console.log(id);
 
         let data;
-        data = await RequestPoi.changeStatus(id,getTokenSilently,loginWithRedirect);
+        data = await RequestPoi.changeStatus(id,Status,getTokenSilently,loginWithRedirect);
         console.log(data);
-        return data;
+        let newMarker = await RequestPoi.getPOI(id,getTokenSilently,loginWithRedirect);
+        console.log(newMarker);
+        setMarker(newMarker);
+        return newMarker;
     }
 }
 
