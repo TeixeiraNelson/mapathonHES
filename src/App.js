@@ -198,6 +198,33 @@ function App() {
         console.log("GPX " + data);
         return data;
     }
+    async function LikePOI(id){
+        console.log("Like POI")
+        console.log(id);
+
+        let data;
+        data = await RequestPoi.likeFunction(id,getTokenSilently,loginWithRedirect);
+        console.log(data);
+        return data;
+    }
+    async function DisLikePOI(id){
+        console.log("Dislike POI")
+        console.log(id);
+
+        let data;
+        data = await RequestPoi.dislikeFunction(id,getTokenSilently,loginWithRedirect);
+        console.log(data);
+        return data;
+    }
+    async function UpdateStatus(idStatus,id){
+        console.log("Status change")
+        console.log(id);
+
+        let data;
+        data = await RequestPoi.UpdateStatus(idStatus,id,getTokenSilently,loginWithRedirect);
+        console.log(data);
+        return data;
+    }
 }
 
 export default App;

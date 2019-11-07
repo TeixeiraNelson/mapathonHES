@@ -3,7 +3,7 @@ import Sidebar from "react-sidebar";
 import {CircleMarker, LayerGroup, LayersControl, Map, Marker, Popup, TileLayer} from "react-leaflet";
 import Form from "./Form";
 import L from "leaflet";
-import "../App.css";
+import  "../App.css";
 import RequestPoi from "../utils/RequestPoi";
 import {Link} from "react-router-dom";
 
@@ -70,6 +70,9 @@ class AppComponent extends React.Component {
         this.updatePoi = props.updatePoi;
         this.insertCategory = props.insertCategory;
         this.insertTag = props.insertTag;
+        this.likePOI= props.likePOI;
+        this.dislikePOI=props.dislikePOI;
+        this.updateStatus=props.updateStatus;
     }
 
     /*
@@ -531,12 +534,12 @@ class AppComponent extends React.Component {
                             <div className={"TitreDesign"}>Categories : <div>No categories.</div></div>}
                         {this.generateTags(position)}
 
-                        <button onClick={this.likeFunction(position)}>Like</button>
-                        <button onClick={this.dislikeFunction}>Dislike</button>
+                        <button onClick={this.likeFunction(this.id)}>Like</button>
+                        <button onClick={this.dislikeFunction()}>Dislike</button>
                         {(typeof position.Creator !== 'undefined' && position.Creator.id === this.state.currentUser.sub) ?
                             <div>
-                                <button onClick={this.verifyFunction}>Verify</button>
-                                <button onClick={this.unverifyFunction}>Unverify</button>
+                                <button onClick={this.changeStatus(1,this.id)}>Verify</button>
+                                <button onClick={this.changeStatus(3,this.id)}>Unverify</button>
                                 <br/>
                                 <button onClick={event => {
                                     event.preventDefault();
@@ -622,25 +625,26 @@ class AppComponent extends React.Component {
     /*
     like function of the P.O.I
      */
-    likeFunction(position) {
-        // position.Tags.add('Like_test')
-    }
+   ;
+
+     likeFunction= (id)=>{
+
+     }
+
+
 
     /*
     dislike function of the P.O.I
      */
-    dislikeFunction(position) {
-        position.Tags.remove('Like_' + this.state.currentUser.name)
+    dislikeFunction=(id)=>{
+    
     }
+
 
     verifyFunction() {
 
-    }
-
-    unverifyFunction() {
 
     }
-
 
     /*
     Function that generates the tags of a P.O.I
@@ -712,5 +716,6 @@ class AppComponent extends React.Component {
         });
     }
 }
+
 
 export default AppComponent;
