@@ -354,18 +354,21 @@ class AppComponent extends React.Component {
                                 {this.state.addMarkerEnabled === false && this.state.modifyingMarker === false ?
                                     <div>
                                                                                                                           <textarea
+                                                                                                                              className={"menuInput"}
                                                                                                                               name='searchQuery'
                                                                                                                               placeholder='Search Tittle...'
                                                                                                                               value={this.state.searchQuery}
                                                                                                                               onChange={e => this.inputChangeAction(e)}
                                                                                                                           /><br/>
                                         <textarea
+                                            className={"menuInput"}
                                             name='searchTag'
                                             placeholder='Search Tag...'
                                             value={this.state.searchTag}
                                             onChange={e => this.inputChangeAction(e)}
                                         /><br/>
                                         <textarea
+                                            className={"menuInput"}
                                             name='searchCategory'
                                             placeholder='Search Category...'
                                             value={this.state.searchCategory}
