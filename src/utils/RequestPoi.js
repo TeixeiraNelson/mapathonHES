@@ -364,7 +364,7 @@ export class requestPOI {
     }
 
 
-static async changeStatus(id, getTokenSilently, loginWithRedirect) {
+static async changeStatus(id,status, getTokenSilently, loginWithRedirect) {
     try {
         let token = await getTokenSilently();
         console.log("changeStatus");
@@ -372,9 +372,10 @@ static async changeStatus(id, getTokenSilently, loginWithRedirect) {
         let response = await fetch(`${process.env.REACT_APP_SERVER_URL}/poi/${id}/status`,
             {
                 method: "PATCH",
-                body: JSON.stringify(id),
+                body:status,
                 headers: {
                     Accept: "application/json",
+                    "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`
                 }
             });
