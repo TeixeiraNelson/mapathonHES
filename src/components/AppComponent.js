@@ -535,22 +535,41 @@ class AppComponent extends React.Component {
                             <div className={"TitreDesign"}>Categories : <div>No categories.</div></div>}
                         {this.generateTags(position)}
 
+                        {(position.liked==false) ?
+                        <div>
                         <button onClick={event => {
                             event.preventDefault();
                             this.likePOI(position.id)
+                            console.log(position.liked)
+                            position.liked=true;
                             window.alert("POI "+position.name+" like")}}
                             >Like</button>
-                        <button onClick={event => {
-                            event.preventDefault();
-                            this.dislikePOI(position.id)
-                            window.alert("POI "+position.name+" unlike")}}>
-                            Dislike</button>
-
+                        </div> : <div/>
+                        }
+                        {(position.liked) ?
+                            <div>
+                            <button onClick={event => {
+                                event.preventDefault();
+                                this.dislikePOI(position.id)
+                                console.log(position.liked)
+                                position.liked = false;
+                                window.alert("POI " + position.name + " unlike")
+                            }}>
+                                Dislike</button>
+                            </div> : <div/>
+                        }
                         {(typeof position.Creator !== 'undefined' && position.Creator.id !== this.state.currentUser.sub && position.Creator.group==1) ?
                             <div>
                                 <br/>
-                                <button onClick={this.changeStatus(1,position.id)}>Verify</button>
-                                <button onClick={this.changeStatus(3,position.id)}>Unverify</button>
+                                <button onClick={event => {
+                                    event.preventDefault();
+                                    this.setStatus(1)
+                                    console.log(this.state.status)
+                                }}>Verify</button>
+                                <button onClick={event => {
+                                    event.preventDefault();
+                                    this.setStatus(3)
+                                }}>Unverify</button>
                             </div> : <div/>
 
                         }
@@ -638,10 +657,9 @@ class AppComponent extends React.Component {
         return (<p>Created at : {date}</p>);
     }
 
-
-    changeStatus() {
-
-
+    setStatus(Status) {
+        let status = this.state.status;
+        this.setState({status: status});
 
     }
 
