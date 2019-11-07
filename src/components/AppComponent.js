@@ -6,6 +6,8 @@ import L from "leaflet";
 import  "../App.css";
 import RequestPoi from "../utils/RequestPoi";
 import {Link} from "react-router-dom";
+import POI from "./POI";
+
 
 /*
 Constant variables used in this part of the program, that's why they are global.
@@ -72,7 +74,7 @@ class AppComponent extends React.Component {
         this.insertTag = props.insertTag;
         this.likePOI= props.likePOI;
         this.dislikePOI=props.dislikePOI;
-        this.updateStatus=props.updateStatus;
+        this.changeStatus=props.changeStatus;
     }
 
     /*
@@ -380,7 +382,7 @@ class AppComponent extends React.Component {
 
                         <div className={"topDivContainer"}>
                             <h2 className={"MainTitle"}> Mapathon </h2>
-                            <div style={{float: 'right', margin: '100px'}}>
+                            <div style={{float: 'right', margin: '50px'}}>
                                 {this.state.currentUser !== null && typeof this.state.currentUser !== 'undefined' ?
                                     <div>
                                         <img alt={"Displays the users profile img"} height={100} width={100}
@@ -526,6 +528,9 @@ class AppComponent extends React.Component {
                         <p>Status
                             : <span>{(typeof position.Status !== 'undefined' && position.Status !== null) ? position.Status.name : 'none'}</span>
                         </p>
+                        <p>Liked : <span>{(!position.liked) ? position.liked: 'like'}</span>
+                        <span>{(position.liked) ? position.liked: 'unlike'}</span></p>
+                        <p>Number of like : {position.likes}</p>
                         <p>By
                             : {typeof position.Creator !== 'undefined' ? (position.Creator.name + ",  from group : " + position.Creator.group) : position.group}</p>
                         <img className={"ImagePopup"} src={position.image}/>
@@ -533,13 +538,31 @@ class AppComponent extends React.Component {
                         {(typeof position.Categories !== 'undefined' && position.Categories !== null) ? this.displayCategories(position) :
                             <div className={"TitreDesign"}>Categories : <div>No categories.</div></div>}
                         {this.generateTags(position)}
+                        <div>
+                        {(position.liked==false) ?
 
-                        <button onClick={this.likeFunction(this.id)}>Like</button>
-                        <button onClick={this.dislikeFunction()}>Dislike</button>
+                        <button onClick={event => {
+                            event.preventDefault();
+                            this.LikePOI(position.id)
+                            console.log(position.liked)}}
+                            >Like</button>
+                         : <div/>
+                        }
+                        {(position.liked) ?
+
+                            <button onClick={event => {
+                                event.preventDefault();
+                                this.DislikePOI(position.id)
+                                console.log(position.liked)
+                            }}>
+                                Dislike</button>
+                             : <div/>
+                        }
+                        </div>
+
                         {(typeof position.Creator !== 'undefined' && position.Creator.id === this.state.currentUser.sub) ?
                             <div>
-                                <button onClick={this.changeStatus(1,this.id)}>Verify</button>
-                                <button onClick={this.changeStatus(3,this.id)}>Unverify</button>
+                                <div>
                                 <br/>
                                 <button onClick={event => {
                                     event.preventDefault();
@@ -551,6 +574,28 @@ class AppComponent extends React.Component {
                                     this.modifyPoi(position)
                                 }}>MODIFY
                                 </button>
+                                </div>
+
+                                <div>
+                                {(position.Status.id !== 3) ?
+
+                                    <button onClick={event => {
+                                        event.preventDefault();
+                                        this.ChangeStatus(position.id, 3)
+                                        console.log(position.Status.id)
+                                    }}>Verify</button>
+                                : <div/>
+                            }
+                                {(position.Status.id !== 1) ?
+
+                                        <button onClick={event => {
+                                            event.preventDefault();
+                                            this.ChangeStatus(position.id, 1)
+                                        }}>Unverify
+                                        </button>
+                                     : <div/>
+                                }
+                                </div>
                             </div> : <div/>
                         }
 
@@ -621,31 +666,6 @@ class AppComponent extends React.Component {
         return (<p>Created at : {date}</p>);
     }
 
-
-    /*
-    like function of the P.O.I
-     */
-   ;
-
-     likeFunction= (id)=>{
-
-     }
-
-
-
-    /*
-    dislike function of the P.O.I
-     */
-    dislikeFunction=(id)=>{
-    
-    }
-
-
-    verifyFunction() {
-
-
-    }
-
     /*
     Function that generates the tags of a P.O.I
      */
@@ -714,6 +734,28 @@ class AppComponent extends React.Component {
         this.setState({
             [e.target.name]: e.target.value
         });
+    }
+
+    LikePOI(id) {
+        this.likePOI(id,this.setMarker);
+    }
+    DislikePOI(id) {
+        this.dislikePOI(id,this.setMarker);
+    }
+    ChangeStatus(id,Status){
+        this.changeStatus(id,Status,this.setMarker)
+    }
+
+    setMarker=(newMarker)=>{
+        let array = this.state.markers;
+
+        for(let i = 0; i< this.state.markers.length; i++ ){
+            if(this.state.markers[i].id === newMarker.id){
+                array[i] = newMarker;
+            }
+        }
+
+        this.setState({markers:array});
     }
 }
 
