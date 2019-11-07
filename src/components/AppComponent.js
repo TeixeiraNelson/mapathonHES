@@ -380,7 +380,7 @@ class AppComponent extends React.Component {
 
                         <div className={"topDivContainer"}>
                             <h2 className={"MainTitle"}> Mapathon </h2>
-                            <div style={{float: 'right', margin: '100px'}}>
+                            <div style={{float: 'right', margin: '50px'}}>
                                 {this.state.currentUser !== null && typeof this.state.currentUser !== 'undefined' ?
                                     <div>
                                         <img alt={"Displays the users profile img"} height={100} width={100}
@@ -640,6 +640,7 @@ class AppComponent extends React.Component {
 
 
     changeStatus() {
+
 
 
     }
