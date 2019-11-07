@@ -7,6 +7,8 @@ export default class SettingsComponent extends React.Component {
         super(props);
         this.user = props.user;
         this.logout = props.logout;
+        this.updateTag=props.updateTag;
+        this.updateCategory=props.updateCategory;
         this.state = {
             categories :props.categories,
             tags : props.tags,
