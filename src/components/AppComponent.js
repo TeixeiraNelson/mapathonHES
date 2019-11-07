@@ -527,6 +527,8 @@ class AppComponent extends React.Component {
                         <p>Status
                             : <span>{(typeof position.Status !== 'undefined' && position.Status !== null) ? position.Status.name : 'none'}</span>
                         </p>
+                        <p>Liked : <span>{(!position.liked) ? position.liked: 'like'}</span>
+                        <span>{(position.liked) ? position.liked: 'unlike'}</span></p>
                         <p>By
                             : {typeof position.Creator !== 'undefined' ? (position.Creator.name + ",  from group : " + position.Creator.group) : position.group}</p>
                         <img className={"ImagePopup"} src={position.image}/>
