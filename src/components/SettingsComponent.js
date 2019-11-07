@@ -65,11 +65,11 @@ export default class SettingsComponent extends React.Component {
                         <SideMenuComponent logout={this.logout} user={this.user} isMainMenu={false}/>
                         <div className={"leftDiv"}>
                             <div className={"LeftDivTittle"} onClick={this.turnOnCategoriesAction}>Manage your
-                                categories <img style={{height: 13, width: 13}} src={arrow}/></div>
+                                categories <img alt={""} style={{height: 13, width: 13}} src={arrow}/></div>
                             {this.state.manageCategories === true && <div className={"LeftDivContent"}>
                                 {this.generateCategoryLines()}
                             </div>}
-                            <div className={"LeftDivTittle"} onClick={this.turnOnTagsAction}>Manage your Tags <img
+                            <div className={"LeftDivTittle"} onClick={this.turnOnTagsAction}>Manage your Tags <img alt={""}
                                 style={{height: 13, width: 13}} src={arrow}/></div>
                             {this.state.manageTags === true && <div className={"LeftDivContent"}>{this.generateTagLines()}</div>}
 
@@ -99,7 +99,7 @@ export default class SettingsComponent extends React.Component {
                     <tr key={cat.id}>
                         <td><input disabled={this.state.selectedCatElement.id !== cat.id} type={"text"} name={"nameCat"} value={this.state.selectedCatElement.id === cat.id?this.state.nameCat:cat.name} placeholder={cat.name} onChange={(e) =>{this.updateInput(e,cat)}}/></td>
                         <td><input disabled type={"text"} name={"imageCat"} value={this.state.selectedCatElement.id === cat.id?this.state.imageCat:cat.image} placeholder={cat.image.length < 1 ? "No image URL.": cat.image} size={50} onChange={(e) =>{this.updateInput(e,cat)}}/></td>
-                        <td><img src={cat.image} width={30} height={30}/></td>
+                        <td><img alt={""} src={cat.image} width={30} height={30}/></td>
                         <td style={{margin: "auto"}}>
                             <div className="actions button-container" style={{width:'250px'}}>
                                 <div className="button-group">
@@ -137,7 +137,7 @@ export default class SettingsComponent extends React.Component {
                     <tr key={tag.id}>
                         <td><input disabled={this.state.selectedTagElement.id !== tag.id} type={"text"} name={"nameTag"} value={this.state.selectedTagElement.id === tag.id?this.state.nameTag:tag.name} placeholder={tag.name} onChange={(e) =>{this.updateInput(e,tag)}} /></td>
                         <td><input type={"text"} disabled name={"imageTag"} value={this.state.selectedTagElement.id === tag.id?this.state.imageTag:tag.image} placeholder={tag.image.length < 1 ? "No image URL.": tag.image} size={50} onChange={(e) =>{this.updateInput(e,tag)}}/></td>
-                        <td><img src={tag.image} width={30} height={30}/></td>
+                        <td><img alt={""} src={tag.image} width={30} height={30}/></td>
                         <td><input disabled style={{color:tag.color}} type={"text"} value={this.state.selectedTagElement.id === tag.id?this.state.colorTag:tag.color} onChange={(e) =>{this.updateInput(e,tag)}}/></td>
                         <td style={{margin: "auto"}}>
                             <div className="actions button-container" style={{width:'250px'}}>

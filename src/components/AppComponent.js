@@ -94,13 +94,13 @@ class AppComponent extends React.Component {
         array.map(elem => {
             if (elem.name !== null && typeof elem.name !== 'undefined' && elem.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase())) {
 
-                if (elem.Categories.length == 0 && this.state.searchCategory == "" && elem.Tags.length == 0 && this.state.searchTag == "") {
+                if (elem.Categories.length === 0 && this.state.searchCategory === "" && elem.Tags.length === 0 && this.state.searchTag === "") {
                     addPoint = true;
                 }
 
                 elem.Categories.map(cat => {
                     if (cat.name.toLowerCase().startsWith(this.state.searchCategory.toLowerCase())) {
-                        if (elem.Tags.length == 0 && this.state.searchTag == "") {
+                        if (elem.Tags.length === 0 && this.state.searchTag === "") {
                             addPoint = true;
                         }
                         elem.Tags.map(tag => {
@@ -116,7 +116,7 @@ class AppComponent extends React.Component {
                 }
 
             }
-        })
+        });
 
 
         {
@@ -732,11 +732,10 @@ class AppComponent extends React.Component {
     displayTags(position) {
         let tagStr = '';
         if (typeof position.Tags !== 'undefined' && position.Tags.length !== 0) {
-            {
                 position.Tags.map(Tag => (
                     tagStr += "#" + Tag.name + " "
                 ))
-            }
+
             return tagStr;
         }
         return "No Tags."
