@@ -94,15 +94,15 @@ class AppComponent extends React.Component {
         array.map(elem => {
             if(elem.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase())){
 
-                if(elem.Categories.length == 0&& this.state.searchCategory==""){
-                    addPoint=true;
-                }
-                if(elem.Tags.length == 0&& this.state.searchTag==""){
+                if(elem.Categories.length == 0&& this.state.searchCategory==""&&elem.Tags.length == 0 && this.state.searchTag==""){
                     addPoint=true;
                 }
 
                 elem.Categories.map(cat =>{
                     if(cat.name.toLowerCase().startsWith(this.state.searchCategory.toLowerCase())){
+                        if(elem.Tags.length == 0&& this.state.searchTag==""){
+                            addPoint=true;
+                        }
                         elem.Tags.map(tag =>{
                             if(tag.name.toLowerCase().startsWith(this.state.searchTag.toLowerCase())){
                                 addPoint=true
