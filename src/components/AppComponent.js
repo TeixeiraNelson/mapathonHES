@@ -3,10 +3,10 @@ import Sidebar from "react-sidebar";
 import {CircleMarker, LayerGroup, LayersControl, Map, Marker, Popup, TileLayer} from "react-leaflet";
 import Form from "./Form";
 import L from "leaflet";
-import  "../App.css";
+import "../App.css";
 import RequestPoi from "../utils/RequestPoi";
-import {Link} from "react-router-dom";
-import POI from "./POI";
+import defaultImage from "../assets/defaultImage.jpg"
+import SideMenuComponent from "./SideMenuComponent";
 
 
 /*
@@ -55,8 +55,8 @@ class AppComponent extends React.Component {
                 lng: 7.536
             },
             searchQuery: "",
-            searchTag:"",
-            searchCategory:"",
+            searchTag: "",
+            searchCategory: "",
             markers: this.props.pois,
             addMarkerEnabled: false,
             modifyingMarker: false,
@@ -74,9 +74,9 @@ class AppComponent extends React.Component {
         this.updatePoi = props.updatePoi;
         this.insertCategory = props.insertCategory;
         this.insertTag = props.insertTag;
-        this.likePOI= props.likePOI;
-        this.dislikePOI=props.dislikePOI;
-        this.changeStatus=props.changeStatus;
+        this.likePOI = props.likePOI;
+        this.dislikePOI = props.dislikePOI;
+        this.changeStatus = props.changeStatus;
     }
 
     /*
@@ -92,38 +92,42 @@ class AppComponent extends React.Component {
         let addPoint = false;
 
         array.map(elem => {
-            if(elem.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase())){
+            if (elem.name !== null && typeof elem.name !== 'undefined' && elem.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase())) {
 
-                if(elem.Categories.length == 0&& this.state.searchCategory==""&&elem.Tags.length == 0 && this.state.searchTag==""){
-                    addPoint=true;
+                if (elem.Categories.length == 0 && this.state.searchCategory == "" && elem.Tags.length == 0 && this.state.searchTag == "") {
+                    addPoint = true;
                 }
 
-                elem.Categories.map(cat =>{
-                    if(cat.name.toLowerCase().startsWith(this.state.searchCategory.toLowerCase())){
-                        if(elem.Tags.length == 0&& this.state.searchTag==""){
-                            addPoint=true;
+                elem.Categories.map(cat => {
+                    if (cat.name.toLowerCase().startsWith(this.state.searchCategory.toLowerCase())) {
+                        if (elem.Tags.length == 0 && this.state.searchTag == "") {
+                            addPoint = true;
                         }
-                        elem.Tags.map(tag =>{
-                            if(tag.name.toLowerCase().startsWith(this.state.searchTag.toLowerCase())){
-                                addPoint=true
+                        elem.Tags.map(tag => {
+                            if (tag.name.toLowerCase().startsWith(this.state.searchTag.toLowerCase())) {
+                                addPoint = true
                             }
                         })
                     }
                 })
-                if(addPoint){
+                if (addPoint) {
                     filteredArray.push(elem);
-                    addPoint=false;
+                    addPoint = false;
                 }
 
             }
         })
 
 
-        {console.log("FILTERED ARRAY")}
-        {console.log(filteredArray)}
+        {
+            console.log("FILTERED ARRAY")
+        }
+        {
+            console.log(filteredArray)
+        }
 
         return (<div><h3>{filteredArray.length} points found.</h3>{filteredArray.map(position => (
-            ((typeof position !== 'undefined' && position !== null )) ?
+            ((typeof position !== 'undefined' && position !== null)) ?
                 <div key={position.id} className={`sideButton sideButton5`} onClick={(e) => {
                     e.preventDefault();
                     console.log(position);
@@ -269,7 +273,7 @@ class AppComponent extends React.Component {
                 markers.push(e.latlng);
             } else {
                 console.log("MARKER VALUE " + markers[markers.length - 1].name);
-                if (markers[markers.length - 1].name === "" || markers[markers.length - 1].name == null) {
+                if (markers[markers.length - 1].name === "" || markers[markers.length - 1].name === null) {
                     markers.pop();
                 }
                 markers.push(e.latlng);
@@ -304,13 +308,15 @@ class AppComponent extends React.Component {
     Function that inserts a completed P.O.I in the form in the database
      */
     InsertPoi = (poi) => {
-        this.insertPoi(poi);
+        this.insertPoi(poi, this.updateCreatedMarker);
+    };
+
+    updateCreatedMarker =(poi)=>{
         let {markers} = this.state;
         markers.pop();
         markers.push(poi);
         this.setState({markers});
-    };
-
+    }
     /*
     Updates the values on the state (fields)
      */
@@ -340,7 +346,9 @@ class AppComponent extends React.Component {
                                       lat={this.actualPointLat}
                                       lng={this.actualPointLng} categories={this.state.categories}
                                       status={this.state.status}
-                                      tags={this.state.tags} closeMenu={this.onSetSidebarOpen} setAddMarkerOff={this.setAddMarkerOff} user={this.state.currentUser}/> : <div></div>}
+                                      tags={this.state.tags} closeMenu={this.onSetSidebarOpen}
+                                      setAddMarkerOff={this.setAddMarkerOff} user={this.state.currentUser}/> :
+                                <div></div>}
                             {(this.state.modifyingMarker === true && this.state.currentModifyingMarker) ?
                                 <Form onChange={fields => this.onChange(fields)} InsertPoi={this.InsertPoi}
                                       InsertCategory={this.InsertCategory} InsertTag={this.InsertTag}
@@ -348,7 +356,8 @@ class AppComponent extends React.Component {
                                       lng={this.state.currentModifyingMarker.lng} categories={this.state.categories}
                                       status={this.state.status}
                                       tags={this.state.tags} closeMenu={this.onSetSidebarOpen}
-                                      currentPoi={this.state.currentModifyingMarker} updatePoi={this.UpdatePoi} setAddMarkerOff={this.setAddMarkerOff} user={this.state.currentUser}/>
+                                      currentPoi={this.state.currentModifyingMarker} updatePoi={this.UpdatePoi}
+                                      setAddMarkerOff={this.setAddMarkerOff} user={this.state.currentUser}/>
                                 : <div></div>}
                             <div>
                                 {this.state.addMarkerEnabled === false && this.state.modifyingMarker === false ?
@@ -432,34 +441,8 @@ class AppComponent extends React.Component {
                             }
                         }}>
 
-                        <div className={"topDivContainer"}>
-                            <h2 className={"MainTitle"}> Mapathon </h2>
-                            <div style={{float: 'right', margin: '50px'}}>
-                                {this.state.currentUser !== null && typeof this.state.currentUser !== 'undefined' ?
-                                    <div>
-                                        <img alt={"Displays the users profile img"} height={100} width={100}
-                                             src={this.state.currentUser.picture}/>
-                                        <p>{this.state.currentUser.nickname}</p>
-                                    </div> : <div/>}
-                                <br/><br/><br/>
-                                <button className={"button2"} onClick={this.logout}>logout</button>
-                                <br/>
-                                <br/>
-                                <button className={"button2"} id="add-poi-button" onClick={this.addMarkerToMap}>
-                                    Add Poi
-                                </button>
-                                <br/>
-                                <br/>
-                                <button className={"button2"} id="localisation-button"
-                                        onClick={this.localiseUser}> Localisation
-                                </button>
-                                <br/>
-                                <br/>
-                                <button className={"button2"} onClick={() => this.onSetSidebarOpen(true)}> Menu</button>
-                                <br/>
-                                <br/>
-                                <Link to="/settings"><button className={"button2"}>Settings</button></Link>
-                            </div>
+                        <div>
+                            <SideMenuComponent user={this.state.currentUser} localiseUser={this.localiseUser} addMarkerToMap={this.addMarkerToMap} logout={this.logout} isMainMenu={true} onSetSidebarOpen={this.onSetSidebarOpen}/>
                         </div>
                     </Sidebar>
                 </div>
@@ -528,17 +511,17 @@ class AppComponent extends React.Component {
     function that displays a P.O.I categories
      */
     displayCategories(position) {
+        let str = "";
         if (typeof position.Categories !== 'undefined' && position.Categories.length !== 0) {
-            return (
-                <div><p>Categories :</p>
-                    {position.Categories.map(categorie => (
 
-                        <p key={categorie.id}>{categorie.name}</p>
-
-                    ))}
-                </div>);
+            {
+                position.Categories.map(categorie => (
+                    str += categorie.name + " "
+                ))
+            }
+            return str;
         }
-        return <div>Categories : No Categories.</div>
+        return "No Categories.";
     }
 
 
@@ -573,94 +556,114 @@ class AppComponent extends React.Component {
                 }}
             >
                 <Popup>
-                    <h1 style={{textAlign: 'center'}}>{position.name}</h1>
-                    <h3 style={{textAlign: 'center'}}>[{position.lat},{position.lng}]</h3>
-                    {this.dateFormatFunction(position)}
-                    {position.name !== "Your position" ? <div>
-                        <p className={"pStatus " + this.generateStatusColor(position)}>Status
-                            : <span>{(typeof position.Status !== 'undefined' && position.Status !== null) ? position.Status.name : 'none'}</span>
-                        </p>
-
-                        <p>By
-                            : {typeof position.Creator !== 'undefined' ? (position.Creator.name + ",  from group : " + position.Creator.group) : position.group}</p>
-                        <img className={"ImagePopup"} src={position.image}/>
-                        <p>{position.description}</p>
-                        {(typeof position.Categories !== 'undefined' && position.Categories !== null) ? this.displayCategories(position) :
-                            <div className={"TitreDesign"}>Categories : <div>No categories.</div></div>}
-                        {this.generateTags(position)}
-                        <p>{position.likes} Likes</p>
-                        <div style={{textAlign: 'center'}}>
-
-
-                            {(position.liked==false) ?
-                                <div className={"buttonLike"} onClick={event => {
-                                    event.preventDefault();
-                                    this.LikePOI(position.id)
-                                    console.log(position.liked)}}><span className={"spanLike"}>LIKE</span>
-                                <div className={"divLike"}>
-                                    <i></i>
-                                <span>liked!</span>
-                                </div>
-                                </div>
-                         : <div/>
-                        }
-                        {(position.liked) ?
-                            <div className={"buttonLikeLiked"} onClick={event => {
-                            event.preventDefault();
-                            this.DislikePOI(position.id)
-                            console.log(position.liked)
-                            }}><span className={"spanLike"}>LIKED</span>
-                            <div className={"divLike press"}>
-                            <i className={"press"}></i>
-                            <span>liked!</span>
+                    <div>
+                        <h1 style={{textAlign: 'center'}}>{position.name}</h1>
+                        <h3 style={{textAlign: 'center'}}>[{position.lat},{position.lng}]</h3>
+                        {this.dateFormatFunction(position)}
+                        {position.name !== "Your position" ? <div>
+                            <p className={"pStatus " + this.generateStatusColor(position)}>Status
+                                : <span>{(typeof position.Status !== 'undefined' && position.Status !== null) ? position.Status.name : 'none'}</span>
+                            </p>
+                            <div><img className={"ImagePopup"}
+                                      src={(position.image !== null && typeof position.image !== 'undefined' && RequestPoi.validURL(position.image)) ? position.image : defaultImage}/>
                             </div>
-                            </div>
-                             : <div/>
-                        }
-                        </div>
-
-                        {(typeof position.Creator !== 'undefined' && position.Creator.id === this.state.currentUser.sub) ?
                             <div>
-                                <div>
-                                <br/>
-                                <button onClick={event => {
-                                    event.preventDefault();
-                                    this.deletePoi(position)
-                                }}>DELETE
-                                </button>
-                                <button onClick={event => {
-                                    event.preventDefault();
-                                    this.modifyPoi(position)
-                                }}>MODIFY
-                                </button>
-                                </div>
-
-                                <div>
-                                {(position.Status.id !== 3) ?
-
-                                    <button onClick={event => {
-                                        event.preventDefault();
-                                        this.ChangeStatus(position.id, 3)
-                                        console.log(position.Status.id)
-                                    }}>Verify</button>
-                                : <div/>
-                            }
-                                {(position.Status.id !== 1) ?
-
-                                        <button onClick={event => {
+                                <form>
+                                    <fieldset>
+                                        <legend style={{fontWeight: 'bold'}}>Creator (Group
+                                            : {typeof position.Creator !== 'undefined' ? (position.Creator.group) : "none."})
+                                        </legend>
+                                        <textarea disabled={true} style={{width:'250px'}} className={"Popupfieldset"}
+                                                  value={typeof position.Creator !== 'undefined' ? (position.Creator.name) : "No creator."}
+                                        ></textarea>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend style={{fontWeight: 'bold'}}>Description</legend>
+                                        <textarea disabled={true} className={"Popupfieldset"} style={{overflowY:'scroll', width:'250px'}}
+                                                  value={position.description!== null && typeof position.description !== 'undefined' && position.description.length > 1 ? position.description : "No description."}></textarea>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend style={{fontWeight: 'bold'}}>Categories</legend>
+                                        <textarea  disabled={true}  style={{overflowY:'scroll', width:'250px'}} className={"Popupfieldset"}
+                                                  value={this.displayCategories(position)} ></textarea>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend style={{fontWeight: 'bold'}}>Tags</legend>
+                                        <textarea disabled={true} style={{overflowY:'scroll', width:'250px'}} className={"Popupfieldset"}
+                                                  value={this.displayTags(position)}></textarea>
+                                    </fieldset>
+                                </form>
+                            </div>
+                            <div>
+                                <p style={{display: 'inline-block', width: '80px', textAlign:'center'}}>{position.likes} Likes</p>
+                                <div style={{textAlign: 'center', display: 'inline-block', float:'right'}}>
+                                    {(position.liked === false) &&
+                                        <div className={"buttonLike"} onClick={event => {
                                             event.preventDefault();
-                                            this.ChangeStatus(position.id, 1)
-                                        }}>Unverify
-                                        </button>
-                                     : <div/>
-                                }
+                                            this.LikePOI(position.id)
+                                            console.log(position.liked)
+                                        }}><span className={"spanLike"}>LIKE</span>
+                                            <div className={"divLike"}>
+                                                <i></i>
+                                                <span>liked!</span>
+                                            </div>
+                                        </div>
+                                    }
+                                    {(position.liked) &&
+                                        <div className={"buttonLikeLiked"} onClick={event => {
+                                            event.preventDefault();
+                                            this.DislikePOI(position.id)
+                                            console.log(position.liked)
+                                        }}><span className={"spanLike"}>LIKED</span>
+                                            <div className={"divLike press"}>
+                                                <i className={"press"}></i>
+                                                <span>liked!</span>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
-                            </div> : <div/>
-                        }
+                            </div>
+                            {(typeof position.Creator !== 'undefined' && position.Creator.id === this.state.currentUser.sub) &&
+                                <div>
+                                    <form>
+                                        <fieldset>
+                                            <legend style={{fontWeight: 'bold'}}>Manage</legend>
+                                            <div style={{display: 'inline-block', width: '275px'}}>
+                                                <button className={"myButton blue"} onClick={event => {
+                                                    event.preventDefault();
+                                                    this.modifyPoi(position)
+                                                }}>modify
+                                                </button>
+                                                <button className={"myButton"} style={{float:'right'}} onClick={event => {
+                                                    event.preventDefault();
+                                                    this.deletePoi(position)
+                                                }}>delete
+                                                </button>
+                                            </div>
 
-                    </div> : <div/>}
+                                            <div style={{display: 'inline-block', width: '275px', paddingTop: '5px'}}>
+                                                {(position.Status.id !== 3) &&
+                                                    <button className={"myButton green2"} onClick={event => {
+                                                        event.preventDefault();
+                                                        this.ChangeStatus(position.id, 3)
+                                                        console.log(position.Status.id)
+                                                    }}>verify</button>
+                                                }
+                                                {(position.Status.id !== 1) &&
+                                                    <button className={"myButton darkred"} style={{float:'right'}} onClick={event => {
+                                                        event.preventDefault();
+                                                        this.ChangeStatus(position.id, 1)
+                                                    }}>unverify
+                                                    </button>
+                                                }
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            }
+                        </div> : <div/>}
 
-
+                    </div>
                 </Popup>
                 <CircleMarker
                     center={{lat: position.lat, lng: position.lng}}
@@ -726,25 +729,23 @@ class AppComponent extends React.Component {
     /*
     Function that generates the tags of a P.O.I
      */
-    generateTags(position) {
-        let tagArray = '';
-        let tag = '';
+    displayTags(position) {
+        let tagStr = '';
         if (typeof position.Tags !== 'undefined' && position.Tags.length !== 0) {
-            return (
-                <div><p> Tags :
-                    {position.Tags.map(Tag => (
-                        <span key={Tag.id} style={{color: "blue"}}>{'#' + Tag.name + ' '}</span>
-                    ))}
-                </p>
-                </div>);
+            {
+                position.Tags.map(Tag => (
+                    tagStr += "#" + Tag.name + " "
+                ))
+            }
+            return tagStr;
         }
-        return <div>Tags : No Tags.</div>
+        return "No Tags."
     }
 
     /*
     Turn off the addMarker Enable
      */
-    setAddMarkerOff= () => {
+    setAddMarkerOff = () => {
         if (this.state.addMarkerEnabled === true) {
             this.setState({addMarkerEnabled: false});
         }
@@ -794,25 +795,27 @@ class AppComponent extends React.Component {
     }
 
     LikePOI(id) {
-        this.likePOI(id,this.setMarker);
-    }
-    DislikePOI(id) {
-        this.dislikePOI(id,this.setMarker);
-    }
-    ChangeStatus(id,Status){
-        this.changeStatus(id,Status,this.setMarker)
+        this.likePOI(id, this.setMarker);
     }
 
-    setMarker=(newMarker)=>{
+    DislikePOI(id) {
+        this.dislikePOI(id, this.setMarker);
+    }
+
+    ChangeStatus(id, Status) {
+        this.changeStatus(id, Status, this.setMarker)
+    }
+
+    setMarker = (newMarker) => {
         let array = this.state.markers;
 
-        for(let i = 0; i< this.state.markers.length; i++ ){
-            if(this.state.markers[i].id === newMarker.id){
+        for (let i = 0; i < this.state.markers.length; i++) {
+            if (this.state.markers[i].id === newMarker.id) {
                 array[i] = newMarker;
             }
         }
 
-        this.setState({markers:array});
+        this.setState({markers: array});
     }
 }
 

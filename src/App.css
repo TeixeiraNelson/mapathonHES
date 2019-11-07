@@ -9,10 +9,12 @@
 }
 
 .ImagePopup{
-
   border-radius: 8px;
-  max-width: 90%;
-
+  height: 150px;
+  width: inherit;
+  display: flex;
+  margin: 0 auto;
+  max-width: 80%;
 }
 
 .TitreDesign{
@@ -142,7 +144,6 @@
   border-bottom: solid 1px white;
   height: 10vh;
   display: block;
-    background-color: #404040;
 }
 
 
@@ -554,6 +555,11 @@ html{
   color:black;
 }
 
+.white{
+  background-color: gray;
+  color:white;
+}
+
 .green{
   background-color: green;
   color:white;
@@ -562,4 +568,226 @@ html{
 .red{
   background-color: red;
   color:white;
+}
+
+.Popupfieldset{
+  border: none;
+  background-color: white;
+  resize: none;
+}
+
+.buttonSettings {
+  position: relative;
+  overflow: visible;
+  display: inline-block;
+  padding: 0.5em 1em;
+  border: 1px solid #d4d4d4;
+  margin: 0;
+  text-decoration: none;
+  text-align: center;
+  text-shadow: 1px 1px 0 #fff;
+  font:11px/normal sans-serif;
+  color: #333;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  background-color: #ececec;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f4f4f4), to(#ececec));
+  background-image: -moz-linear-gradient(#f4f4f4, #ececec);
+  background-image: -ms-linear-gradient(#f4f4f4, #ececec);
+  background-image: -o-linear-gradient(#f4f4f4, #ececec);
+  background-image: linear-gradient(#f4f4f4, #ececec);
+  -moz-background-clip: padding; /* for Firefox 3.6 */
+  background-clip: padding-box;
+  border-radius: 0.2em;
+  /* IE hacks */
+  zoom: 1;
+  *display: inline;
+}
+
+.buttonSettings:hover,
+.buttonSettings:focus,
+.buttonSettings:active,
+.buttonSettings.active {
+  border-color: #3072b3;
+  border-bottom-color: #2a65a0;
+  text-decoration: none;
+  text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+  color: #fff;
+  background-color: #3c8dde;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#599bdc), to(#3072b3));
+  background-image: -moz-linear-gradient(#599bdc, #3072b3);
+  background-image: -o-linear-gradient(#599bdc, #3072b3);
+  background-image: linear-gradient(#599bdc, #3072b3);
+}
+
+.buttonSettings:active,
+.buttonSettings.active {
+  border-color: #2a65a0;
+  border-bottom-color: #3884cd;
+  background-color: #3072b3;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#3072b3), to(#599bdc));
+  background-image: -moz-linear-gradient(#3072b3, #599bdc);
+  background-image: -ms-linear-gradient(#3072b3, #599bdc);
+  background-image: -o-linear-gradient(#3072b3, #599bdc);
+  background-image: linear-gradient(#3072b3, #599bdc);
+}
+
+/* overrides extra padding on button elements in Firefox */
+.buttonSettings::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+.buttonSettings.primary {
+  font-weight: bold;
+}
+
+.buttonSettings.danger {
+  color: #900;
+}
+
+.buttonSettings.danger:hover,
+.buttonSettings.danger:focus,
+.buttonSettings.danger:active {
+  border-color: #b53f3a;
+  border-bottom-color: #a0302a;
+  color: #fff;
+  background-color: #dc5f59;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dc5f59), to(#b33630));
+  background-image: -moz-linear-gradient(#dc5f59, #b33630);
+  background-image: -ms-linear-gradient(#dc5f59, #b33630);
+  background-image: -o-linear-gradient(#dc5f59, #b33630);
+  background-image: linear-gradient(#dc5f59, #b33630);
+}
+
+.buttonSettings.danger:active,
+.buttonSettings.danger.active {
+  border-color: #a0302a;
+  border-bottom-color: #bf4843;
+  background-color: #b33630;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#b33630), to(#dc5f59));
+  background-image: -moz-linear-gradient(#b33630, #dc5f59);
+  background-image: -ms-linear-gradient(#b33630, #dc5f59);
+  background-image: -o-linear-gradient(#b33630, #dc5f59);
+  background-image: linear-gradient(#b33630, #dc5f59);
+}
+
+
+
+.button-group {
+  display: inline-block;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  /* IE hacks */
+  zoom: 1;
+  *display: inline;
+}
+
+.buttonSettings + .buttonSettings,
+.buttonSettings + .button-group,
+.button-group + .buttonSettings,
+.button-group + .button-group {
+  margin-left: 15px;
+}
+
+.button-group li {
+  float: left;
+  padding: 0;
+  margin: 0;
+}
+
+.button-group button:disabled,
+button[disabled] {
+background-color: dimgray;
+}
+
+.button-group .buttonSettings {
+  float: left;
+  margin-left: -1px;
+}
+
+.button-group > .buttonSettings:not(:first-child):not(:last-child),
+.button-group li:not(:first-child):not(:last-child) .buttonSettings {
+  border-radius: 0;
+}
+
+.button-group > .buttonSettings:first-child,
+.button-group li:first-child .buttonSettings {
+  margin-left: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.button-group > .buttonSettings:last-child,
+.button-group li:last-child > .buttonSettings {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* =============================================================================
+   Button container (mixing buttons and groups, e.g., nav bar)
+   ========================================================================== */
+
+.button-container .buttonSettings,
+.button-container .button-group {
+  vertical-align: top;
+}
+
+.myButton {
+  width: 130px;
+  background-color:transparent;
+  border-radius:28px;
+  border:1px solid #fc0808;
+  display:inline-block;
+  cursor:pointer;
+  color:#ff0000;
+  font-family:Arial;
+  font-size:17px;
+  padding:16px 31px;
+  text-decoration:none;
+  text-shadow:0px 1px 0px #000000;
+}
+.myButton:hover {
+  background-color:transparent;
+  color: white;
+  background-color: #fc0808;
+  border:1px solid white;
+}
+.myButton:active {
+  position:relative;
+  top:1px;
+}
+
+.blue{
+  border:1px solid cadetblue;
+  color: cadetblue;
+}
+
+.blue:hover{
+  color: white;
+  background-color: cadetblue;
+  border:1px solid white;
+}
+
+.green2{
+   border:1px solid forestgreen;
+   color: forestgreen;
+ }
+
+.green2:hover{
+  border:1px solid forestgreen;
+  color: white;
+  background-color: forestgreen;
+}
+
+.darkred{
+  border:1px solid darkred;
+  color: darkred;
+}
+
+.darkred:hover{
+  border:1px solid darkred;
+  color: white;
+  background-color: darkred;
 }

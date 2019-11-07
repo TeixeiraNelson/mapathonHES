@@ -1,69 +1,6 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Formik} from "formik";
-import {makeStyles, useTheme} from "@material-ui/core";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import Input from "@material-ui/core/Input";
-import MenuItem from "@material-ui/core/MenuItem";
-import Checkbox from "@material-ui/core/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText";
-
-const useStyles = makeStyles(theme => ({
-    formControl: {margin: theme.spacing(1), minWidth: 250, maxWidth: 250,},
-    chips: {display: 'flex', flexWrap: 'wrap',},
-    chip: {margin: 2,},
-    noLabel: {marginTop: theme.spacing(3),},
-}));
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {PaperProps: {style: {maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP, width: 250,},},};
-
-const MultipleSelect = ({array, setArray, name, actualSelectedValues}) => {
-    console.log("actual selected init")
-    console.log(actualSelectedValues);
-    let count = 0;
-    const classes = useStyles();
-    const theme = useTheme();
-    const [categStr, setCategStr] = React.useState(actualSelectedValues);
-
-
-
-    const handleChange = event => {
-        setCategStr(event.target.value)
-    };
-
-
-    useEffect(() => {
-        setArray(categStr);
-    }, [categStr]);
-
-    return (
-        <div>
-            <FormControl className={classes.formControl}>
-                <InputLabel id="demo-mutiple-checkbox-label">{name}</InputLabel>
-                <Select
-                    labelId="demo-mutiple-checkbox-label"
-                    id="demo-mutiple-checkbox"
-                    multiple
-                    value={categStr}
-                    onChange={handleChange}
-                    input={<Input/>}
-                    renderValue={selected => selected.join(', ')}
-                    MenuProps={MenuProps}
-                >
-                    {array.map(elem => (
-                        <MenuItem key={elem.id} value={elem.name} name={elem.name}>
-                            <Checkbox checked={categStr.indexOf(elem.name) > -1}/>
-                            <ListItemText primary={elem.name}/>
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-        </div>
-    );
-}
-
+import MultipleSelect from "./MultipleSelect";
 
 /*
 Form component : displays the form to add a new P.O.I
@@ -168,12 +105,21 @@ class Form extends React.Component {
     Function to update a state value depending on its input. Whenever a value changes, its state updates
      */
     valueUpdateAction = (e) => {
-        this.props.onChange({[e.target.name]: e.target.value});
-
         this.setState({
             [e.target.name]: e.target.value
         });
 
+
+
+    };
+
+    /*
+    Function to insert the new P.O.I when the submit button is clicked.
+    Also, verifies that the P.O.I has, at least, a name.
+     */
+    submitAction = (e) => {
+        e.preventDefault();
+        this.setAddMarkerOff();
         this.setState({
                 poi: {
                     name: this.state.name,
@@ -194,16 +140,6 @@ class Form extends React.Component {
                 }
             }
         )
-
-    };
-
-    /*
-    Function to insert the new P.O.I when the submit button is clicked.
-    Also, verifies that the P.O.I has, at least, a name.
-     */
-    submitAction = (e) => {
-        e.preventDefault();
-        this.setAddMarkerOff();
         if (typeof this.props.currentPoi === 'undefined' || this.props.currentPoi===null) {
             if (this.state.poi.name !== null && this.state.poi.name.length > 1) {
                 this.InsertPoi(this.state.poi);
@@ -271,6 +207,7 @@ class Form extends React.Component {
         console.log("Categs passed")
         this.actualCats = categoriesArray;
         console.log(categoriesArray)
+        return;
     };
 
     /*
@@ -319,10 +256,8 @@ class Form extends React.Component {
                 }
             }
         )
-
-        console.log("tags passed")
         this.actualTags = tagsArray;
-        console.log(tagsArray)
+        return;
     };
 
 

@@ -1,6 +1,6 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import arrow from "../assets/topArrow.png"
+import SideMenuComponent from "./SideMenuComponent";
 
 export default class SettingsComponent extends React.Component {
     constructor(props) {
@@ -62,21 +62,7 @@ export default class SettingsComponent extends React.Component {
             <div>
                 <div className={"topDiv"}>
                     <div className={"settingsTopDiv"}>
-                        <h2 className={"MainTitle2"}> Mapathon </h2>
-                        <div className={"rightDiv"}>
-                            <div>
-                                <img height={100} width={100}
-                                     src={this.user.picture}/>
-                                <p>{this.user.nickname}</p>
-                            </div>
-                            <br/><br/><br/>
-                            <button className={"button2"} onClick={this.logout}>logout</button>
-                            <br/>
-                            <br/>
-                            <Link to="/">
-                                <button className={"button2"}>Back to Home</button>
-                            </Link>
-                        </div>
+                        <SideMenuComponent logout={this.logout} user={this.user} isMainMenu={false}/>
                         <div className={"leftDiv"}>
                             <div className={"LeftDivTittle"} onClick={this.turnOnCategoriesAction}>Manage your
                                 categories <img style={{height: 13, width: 13}} src={arrow}/></div>
@@ -115,13 +101,17 @@ export default class SettingsComponent extends React.Component {
                         <td><input disabled type={"text"} name={"imageCat"} value={this.state.selectedCatElement.id === cat.id?this.state.imageCat:cat.image} placeholder={cat.image.length < 1 ? "No image URL.": cat.image} size={50} onChange={(e) =>{this.updateInput(e,cat)}}/></td>
                         <td><img src={cat.image} width={30} height={30}/></td>
                         <td style={{margin: "auto"}}>
-                            <button disabled={this.state.selectedCatElement.id !== cat.id} onClick={(e) => {e.preventDefault(); this.updateCategoryAction(e)}}>Update</button>
-                            <button disabled={this.state.selectedCatElement.id !== cat.id}>Delete</button>
-                            <button onClick={(e) => {e.preventDefault(); this.setState({selectedCatElement:{
-                                    id:cat.id,
-                                    name:cat.name,
-                                    image:cat.img
-                                }}); this.setState({nameCat:cat.name, imageCat:cat.image});}}>Edit</button>
+                            <div className="actions button-container" style={{width:'250px'}}>
+                                <div className="button-group">
+                                    <button className={"buttonSettings primary"} onClick={(e) => {e.preventDefault(); this.setState({selectedCatElement:{
+                                            id:cat.id,
+                                            name:cat.name,
+                                            image:cat.img
+                                        }}); this.setState({nameCat:cat.name, imageCat:cat.image});}}>Edit</button>
+                                    {this.state.selectedCatElement.id === cat.id && <button className={"buttonSettings"} onClick={(e) => {e.preventDefault(); this.updateCategoryAction(e)}}>Update</button>}
+                                    {this.state.selectedCatElement.id === cat.id &&<button className={"buttonSettings danger"} >Delete</button>}
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 ))}
@@ -150,14 +140,18 @@ export default class SettingsComponent extends React.Component {
                         <td><img src={tag.image} width={30} height={30}/></td>
                         <td><input disabled style={{color:tag.color}} type={"text"} value={this.state.selectedTagElement.id === tag.id?this.state.colorTag:tag.color} onChange={(e) =>{this.updateInput(e,tag)}}/></td>
                         <td style={{margin: "auto"}}>
-                            <button disabled={this.state.selectedTagElement.id !== tag.id} onClick={(e) => {e.preventDefault(); this.updateTagAction(e)}}>Update</button>
-                            <button disabled={this.state.selectedTagElement.id !== tag.id}>Delete</button>
-                            <button onClick={(e) => {e.preventDefault(); this.setState({selectedTagElement:{
-                                    id:tag.id,
-                                    name:tag.name,
-                                    image:tag.img,
-                                    color: tag.color
-                                }}); this.setState({nameTag:tag.name, imageTag:tag.image, colorTag:tag.color});}}>Edit</button>
+                            <div className="actions button-container" style={{width:'250px'}}>
+                                <div className="button-group">
+                                    <button className={"buttonSettings primary"} onClick={(e) => {e.preventDefault(); this.setState({selectedTagElement:{
+                                            id:tag.id,
+                                            name:tag.name,
+                                            image:tag.img,
+                                            color: tag.color
+                                        }}); this.setState({nameTag:tag.name, imageTag:tag.image, colorTag:tag.color});}}>Edit</button>
+                                    {this.state.selectedTagElement.id === tag.id && <button className={"buttonSettings"} onClick={(e) => {e.preventDefault(); this.updateTagAction(e)}}>Update</button>}
+                                    {this.state.selectedTagElement.id === tag.id &&<button className={"buttonSettings danger"} >Delete</button>}
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 ))}

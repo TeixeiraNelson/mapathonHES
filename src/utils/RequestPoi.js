@@ -66,7 +66,10 @@ export class requestPOI {
             console.log("INSERTING POI Tags");
             let data4 = await response4.json();
             console.log(data4);
-
+            data4.Creator = data.Creator;
+            data4.likes = 0;
+            data4.liked=false;
+            return data4;
         } catch (e) {
             console.error(e);
             await loginWithRedirect();
