@@ -416,3 +416,134 @@ html{
   color: white;
 }
 
+.divLike {
+  margin:0 auto;
+  position: relative;
+  display: inline;
+  padding-left: 10px;
+}
+
+.divLike i {
+  cursor:pointer;
+  padding:10px 12px 8px;
+  background:#fff;
+  border-radius:50%;
+  display:inline-block;
+  margin:0 0 15px;
+  color:#aaa;
+  transition:.2s;
+}
+
+.divLike i:hover {
+  color:#e23b3b;
+}
+
+.divLike i:before {
+  font-family:fontawesome;
+  content:'\f004';
+  font-style:normal;
+}
+
+.divLike span {
+  position: absolute;
+  bottom:70px;
+  left:0;
+  right:0;
+  visibility: hidden;
+  transition:.6s;
+  z-index:-2;
+  font-size:2px;
+  color:transparent;
+  font-weight:400;
+}
+
+.divLike i.press {
+  color:#e23b3b;
+}
+
+.divLike span.press {
+  bottom:120px;
+  font-size:14px;
+  visibility:visible;
+  animation: fade 1s;
+}
+
+@keyframes fade {
+  0% {color:rgba(0,0,0,0);}
+  50% {color:#e23b3b;}
+  100% {color:rgba(0,0,0,0);}
+}
+
+@keyframes size {
+  0% {padding:10px 12px 8px;}
+  50% {padding:14px 16px 12px;
+    margin-top:-4px;}
+  100% {padding:10px 12px 8px;}
+}
+
+.buttonLike {
+  width: 100px;
+  height: 37px;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  background-color: white;
+  color: #f44336;
+  border: 2px solid #f44336;
+}
+
+.buttonLikeLiked{
+  width: 100px;
+  height: 37px;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  background-color: #f44336;
+  color: white;
+  border: 2px solid #f44336;
+}
+
+.buttonLikeLiked:hover{
+  background-color: white;
+  color: #f44336;
+  border: 2px solid #f44336;
+}
+
+.buttonLike:hover {
+  background-color: #f44336;
+  color: white;
+  border: 2px solid #f44336;
+}
+.spanLike{
+  width: 47px;
+  display: inline-block;
+}
+
+.pStatus{
+  border-radius: 40px;
+  padding: 5px 5px;
+  font-weight: bold;
+}
+
+.yellow{
+  background-color: yellow;
+  color:black;
+}
+
+.green{
+  background-color: green;
+  color:white;
+}
+
+.red{
+  background-color: red;
+  color:white;
+}

@@ -570,16 +570,14 @@ class AppComponent extends React.Component {
                 }}
             >
                 <Popup>
-                    <h1>{position.name}</h1>
-                    <h3>Position : [{position.lat},{position.lng}]</h3>
+                    <h1 style={{textAlign: 'center'}}>{position.name}</h1>
+                    <h3 style={{textAlign: 'center'}}>[{position.lat},{position.lng}]</h3>
                     {this.dateFormatFunction(position)}
                     {position.name !== "Your position" ? <div>
-                        <p>Status
+                        <p className={"pStatus " + this.generateStatusColor(position)}>Status
                             : <span>{(typeof position.Status !== 'undefined' && position.Status !== null) ? position.Status.name : 'none'}</span>
                         </p>
-                        <p>Liked : <span>{(!position.liked) ? position.liked: 'like'}</span>
-                        <span>{(position.liked) ? position.liked: 'unlike'}</span></p>
-                        <p>Number of like : {position.likes}</p>
+
                         <p>By
                             : {typeof position.Creator !== 'undefined' ? (position.Creator.name + ",  from group : " + position.Creator.group) : position.group}</p>
                         <img className={"ImagePopup"} src={position.image}/>
@@ -587,24 +585,33 @@ class AppComponent extends React.Component {
                         {(typeof position.Categories !== 'undefined' && position.Categories !== null) ? this.displayCategories(position) :
                             <div className={"TitreDesign"}>Categories : <div>No categories.</div></div>}
                         {this.generateTags(position)}
-                        <div>
-                        {(position.liked==false) ?
+                        <p>{position.likes} Likes</p>
+                        <div style={{textAlign: 'center'}}>
 
-                        <button onClick={event => {
-                            event.preventDefault();
-                            this.LikePOI(position.id)
-                            console.log(position.liked)}}
-                            >Like</button>
+
+                            {(position.liked==false) ?
+                                <div className={"buttonLike"} onClick={event => {
+                                    event.preventDefault();
+                                    this.LikePOI(position.id)
+                                    console.log(position.liked)}}><span className={"spanLike"}>LIKE</span>
+                                <div className={"divLike"}>
+                                    <i></i>
+                                <span>liked!</span>
+                                </div>
+                                </div>
                          : <div/>
                         }
                         {(position.liked) ?
-
-                            <button onClick={event => {
-                                event.preventDefault();
-                                this.DislikePOI(position.id)
-                                console.log(position.liked)
-                            }}>
-                                Dislike</button>
+                            <div className={"buttonLikeLiked"} onClick={event => {
+                            event.preventDefault();
+                            this.DislikePOI(position.id)
+                            console.log(position.liked)
+                            }}><span className={"spanLike"}>LIKED</span>
+                            <div className={"divLike press"}>
+                            <i className={"press"}></i>
+                            <span>liked!</span>
+                            </div>
+                            </div>
                              : <div/>
                         }
                         </div>
@@ -654,8 +661,8 @@ class AppComponent extends React.Component {
                 </Popup>
                 <CircleMarker
                     center={{lat: position.lat, lng: position.lng}}
-                    fillColor={this.generateGroupColor(position)}
-                    color={this.generateGroupColor(position)}
+                    fillColor={this.generateStatusColor(position)}
+                    color={this.generateStatusColor(position)}
                     radius={10}
                     onMouseOver={(e) => {
                         e.target.bindTooltip(position.name).openTooltip();
@@ -664,16 +671,14 @@ class AppComponent extends React.Component {
         ))}</div>);
     }
 
-    generateGroupColor(position) {
-        if (typeof position.Creator !== 'undefined' && position.Creator !== null) {
-            switch (position.Creator.group) {
-                case 1:
-                    return "blue";
-                case 2:
+    generateStatusColor(position) {
+        if (typeof position.Status !== 'undefined' && position.Status !== null) {
+            switch (position.Status.name) {
+                case "Not Verified":
                     return "red";
-                case 3:
+                case "In Progress":
                     return "yellow";
-                case 4:
+                case "Verified":
                     return "green";
             }
         }
@@ -712,7 +717,7 @@ class AppComponent extends React.Component {
     dateFormatFunction(position) {
         let date = new Date(Date.parse(position.createdAt)).toLocaleDateString() + " - " + new Date(Date.parse(position.createdAt)).toLocaleTimeString();
 
-        return (<p>Created at : {date}</p>);
+        return (<p style={{textAlign: 'center'}}>{date}</p>);
     }
 
     /*
