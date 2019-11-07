@@ -529,6 +529,7 @@ class AppComponent extends React.Component {
                         </p>
                         <p>Liked : <span>{(!position.liked) ? position.liked: 'like'}</span>
                         <span>{(position.liked) ? position.liked: 'unlike'}</span></p>
+                        <p>Number of like : {position.likes}</p>
                         <p>By
                             : {typeof position.Creator !== 'undefined' ? (position.Creator.name + ",  from group : " + position.Creator.group) : position.group}</p>
                         <img className={"ImagePopup"} src={position.image}/>
@@ -541,10 +542,9 @@ class AppComponent extends React.Component {
                         <div>
                         <button onClick={event => {
                             event.preventDefault();
-                            this.likePOI(position.id)
+                            this.LikePOI(position.id)
                             console.log(position.liked)
-                            position.liked=true;
-                            window.alert("POI "+position.name+" like")}}
+                            position.liked=true;}}
                             >Like</button>
                         </div> : <div/>
                         }
@@ -552,10 +552,9 @@ class AppComponent extends React.Component {
                             <div>
                             <button onClick={event => {
                                 event.preventDefault();
-                                this.dislikePOI(position.id)
+                                this.DislikePOI(position.id)
                                 console.log(position.liked)
                                 position.liked = false;
-                                window.alert("POI " + position.name + " unlike")
                             }}>
                                 Dislike</button>
                             </div> : <div/>
@@ -565,12 +564,12 @@ class AppComponent extends React.Component {
                                 <br/>
                                 <button onClick={event => {
                                     event.preventDefault();
-                                    this.setStatus(1)
+                                    position.changeStatus(position.id)
                                     console.log(this.state.status)
                                 }}>Verify</button>
                                 <button onClick={event => {
                                     event.preventDefault();
-                                    this.setStatus(3)
+                                    position.changeStatus(position.id)
                                 }}>Unverify</button>
                             </div> : <div/>
 
@@ -725,6 +724,25 @@ class AppComponent extends React.Component {
         this.setState({
             [e.target.name]: e.target.value
         });
+    }
+
+    LikePOI(id) {
+        this.likePOI(id,this.setMarker);
+    }
+    DislikePOI(id) {
+        this.dislikePOI(id,this.setMarker);
+    }
+
+    setMarker=(newMarker)=>{
+        let array = this.state.markers;
+
+        for(let i = 0; i< this.state.markers.length; i++ ){
+            if(this.state.markers[i].id === newMarker.id){
+                array[i] = newMarker;
+            }
+        }
+
+        this.setState({markers:array});
     }
 }
 
