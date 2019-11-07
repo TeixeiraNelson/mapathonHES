@@ -55,6 +55,8 @@ class AppComponent extends React.Component {
                 lng: 7.536
             },
             searchQuery: "",
+            searchTag:"",
+            searchCategory:"",
             markers: this.props.pois,
             addMarkerEnabled: false,
             modifyingMarker: false,
@@ -85,7 +87,15 @@ class AppComponent extends React.Component {
     }
 
     generatePoiButtons() {
-        return (<div>{this.state.markers.map(position => (
+        let array = this.state.markers;
+
+        let filteredArray = []
+        array.map(elem => {
+            if(elem.name.startsWith(this.state.searchTag))
+                filteredArray.push(elem);
+        })
+
+        return (<div>{array.map(position => (
             ((typeof position !== 'undefined' && position !== null) && (position.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase()))) ?
                 <div key={position.id} className={`sideButton sideButton5`} onClick={(e) => {
                     e.preventDefault();
@@ -321,7 +331,19 @@ class AppComponent extends React.Component {
                                                                                                                               placeholder='Search Tittle...'
                                                                                                                               value={this.state.searchQuery}
                                                                                                                               onChange={e => this.inputChangeAction(e)}
-                                                                                                                          />
+                                                                                                                          /><br/>
+                                        <textarea
+                                            name='searchTag'
+                                            placeholder='Search Tag'
+                                            value={this.state.searchTag}
+                                            onChange={e => this.inputChangeAction(e)}
+                                        /><br/>
+                                        <textarea
+                                            name='searchCategory'
+                                            placeholder='Search Category'
+                                            value={this.state.searchCategory}
+                                            onChange={e => this.inputChangeAction(e)}
+                                        /><br/>
                                     </div> : <div></div>}
                                 <div>
                                     {this.state.addMarkerEnabled === false && this.state.modifyingMarker === false ?

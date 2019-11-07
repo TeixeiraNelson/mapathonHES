@@ -391,5 +391,4 @@ static async changeStatus(id,status, getTokenSilently, loginWithRedirect) {
 }
 }
 
-
 export default requestPOI;
