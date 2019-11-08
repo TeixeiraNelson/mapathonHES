@@ -694,14 +694,14 @@ class AppComponent extends React.Component {
                                         </div>
 
                                         <div style={{display: 'inline-block', width: '275px', paddingTop: '5px'}}>
-                                            {(position.Status.id !== 3) &&
+                                            {(position.Status !== null && typeof position.Status !== 'undefined' && position.Status.id !== 3) &&
                                             <button className={"myButton green2"} onClick={event => {
                                                 event.preventDefault();
                                                 this.ChangeStatus(position.id, 3)
                                                 console.log(position.Status.id)
                                             }}>verify</button>
                                             }
-                                            {(position.Status.id !== 1) &&
+                                            {(position.Status !== null && typeof position.Status !== 'undefined' && position.Status.id !== 1) &&
                                             <button className={"myButton darkred"} style={{float: 'right'}}
                                                     onClick={event => {
                                                         event.preventDefault();
