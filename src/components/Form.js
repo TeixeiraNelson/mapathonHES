@@ -149,9 +149,25 @@ class Form extends React.Component {
         } else {
             console.log("DO THE MODIFY POY MANOEUVER");
             console.log(this.state.poi);
-            this.updatePoi(this.state.poi, this.props.currentPoi.id);
+            let poi ={
+                name: this.state.name,
+                description: this.state.description,
+                lat: this.props.lat,
+                lng: this.props.lng,
+                image: this.state.image,
+                url: this.state.url,
+                group: 1,
+                Status: this.state.status,
+                Tags: this.state.tags,
+                Categories: this.state.categories,
+                Creator : {
+                    group: 1,
+                    name: this.props.user.name,
+                    id : this.props.user.sub
+            }}
+            console.log(poi);
+            this.updatePoi(poi, this.props.currentPoi.id);
             this.closeMenu(false);
-
         }
 
     };
