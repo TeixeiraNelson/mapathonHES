@@ -249,6 +249,54 @@ export class requestPOI {
         }
     }
 
+    //Delete a category in the Database
+    static async deleteCategory(cat, getTokenSilently, loginWithRedirect) {
+        try {
+            let token = await getTokenSilently();
+            let response = await fetch(
+                `${process.env.REACT_APP_SERVER_URL}/category/` + cat.id,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            let data = await response.json();
+            return data;
+        } catch (e) {
+            console.error(e);
+            await loginWithRedirect();
+        }
+    }
+
+    //Delete a tag in the Database
+    static async deleteTag(tag, getTokenSilently, loginWithRedirect) {
+        try {
+            let token = await getTokenSilently();
+            let response = await fetch(
+                `${process.env.REACT_APP_SERVER_URL}/tag/` + tag.id,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            let data = await response.json();
+            return data;
+        } catch (e) {
+            console.error(e);
+            await loginWithRedirect();
+        }
+    }
+
     // Inserts a new category
     static async insertCategory(category, getTokenSilently, loginWithRedirect) {
         try {
