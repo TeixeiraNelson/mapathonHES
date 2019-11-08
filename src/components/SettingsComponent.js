@@ -9,6 +9,8 @@ export default class SettingsComponent extends React.Component {
         this.logout = props.logout;
         this.updateTag=props.updateTag;
         this.updateCategory=props.updateCategory;
+        this.DeleteCategory=props.DeleteCategory;
+        this.DeleteTag=props.DeleteTag;
         this.state = {
             categories :props.categories,
             tags : props.tags,
@@ -109,7 +111,7 @@ export default class SettingsComponent extends React.Component {
                                             image:cat.img
                                         }}); this.setState({nameCat:cat.name, imageCat:cat.image});}}>Edit</button>
                                     {this.state.selectedCatElement.id === cat.id && <button className={"buttonSettings"} onClick={(e) => {e.preventDefault(); this.updateCategoryAction(e)}}>Update</button>}
-                                    {this.state.selectedCatElement.id === cat.id &&<button className={"buttonSettings danger"} >Delete</button>}
+                                    {this.state.selectedCatElement.id === cat.id &&<button className={"buttonSettings danger"} onClick={(e) => {e.preventDefault(); this.deleteCategory(e, cat)}}>Delete</button>}
                                 </div>
                             </div>
                         </td>
@@ -149,7 +151,7 @@ export default class SettingsComponent extends React.Component {
                                             color: tag.color
                                         }}); this.setState({nameTag:tag.name, imageTag:tag.image, colorTag:tag.color});}}>Edit</button>
                                     {this.state.selectedTagElement.id === tag.id && <button className={"buttonSettings"} onClick={(e) => {e.preventDefault(); this.updateTagAction(e)}}>Update</button>}
-                                    {this.state.selectedTagElement.id === tag.id &&<button className={"buttonSettings danger"} >Delete</button>}
+                                    {this.state.selectedTagElement.id === tag.id &&<button className={"buttonSettings danger"} onClick={(e) => {e.preventDefault(); this.deleteTag(e, tag)}}>Delete</button>}
                                 </div>
                             </div>
                         </td>
@@ -225,5 +227,35 @@ export default class SettingsComponent extends React.Component {
                 image:""
             }})
         this.updateTag(newTag);
+    }
+
+    deleteCategory =(e, cat) => {
+        e.preventDefault();
+        this.DeleteCategory(cat);
+
+        let Allarray = this.state.categories;
+        let array =[];
+        for(let i = 0 ; i< Allarray.length; i++){
+            if(Allarray[i].id !== cat.id){
+                array.push(Allarray[i]);
+            }
+        }
+
+        this.setState({categories:array});
+    }
+
+    deleteTag = (e, tag) => {
+        e.preventDefault();
+        this.DeleteTag(tag);
+
+        let Allarray = this.state.tags;
+        let array =[];
+        for(let i = 0 ; i< Allarray.length; i++){
+            if(Allarray[i].id !== tag.id){
+                array.push(Allarray[i]);
+            }
+        }
+
+        this.setState({tags:array});
     }
 }

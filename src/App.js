@@ -25,6 +25,7 @@ function App() {
     let [tags, setTags] = useState([]);
     let {loading, loginWithRedirect, getTokenSilently, user, logout} = useAuth0();
 
+
     /*
         Method that is called before the render(), loads the needed data and makes sure that a user is logged in.
         If no user is logged in he will be asked to do so, other whise it asks the server for the needed data.
@@ -38,6 +39,24 @@ function App() {
         fn();
     }, [loading, getTokenSilently, loginWithRedirect, user, logout]);
 
+
+    async function getCats() {
+        let cats = await request(`${process.env.REACT_APP_SERVER_URL}/category`, getTokenSilently, loginWithRedirect);
+        console.log(cats);
+
+        if (cats && cats.length > 0) {
+            setCategories(cats);
+        }
+    }
+
+    async function getTags() {
+        let tags = await request(`${process.env.REACT_APP_SERVER_URL}/tag`, getTokenSilently, loginWithRedirect);
+        console.log(tags);
+
+        if (tags && tags.length > 0) {
+            setTags(tags);
+        }
+    }
 
     /*
         Function that does some GET requests to the server for the needed data : POIS, categories, etc...
@@ -58,20 +77,10 @@ function App() {
         await getGPX();
 
         /* Loads Categories and sets it */
-        let cats = await request(`${process.env.REACT_APP_SERVER_URL}/category`, getTokenSilently, loginWithRedirect);
-        console.log(cats);
-
-        if (cats && cats.length > 0) {
-            setCategories(cats);
-        }
+        await getCats();
 
         /* Loads Tags and sets it */
-        let tags = await request(`${process.env.REACT_APP_SERVER_URL}/tag`, getTokenSilently, loginWithRedirect);
-        console.log(tags);
-
-        if (tags && tags.length > 0) {
-            setTags(tags);
-        }
+        await getTags();
 
         /* Loads status and sets it */
         let status = await request(`${process.env.REACT_APP_SERVER_URL}/status`, getTokenSilently, loginWithRedirect);
@@ -100,7 +109,7 @@ function App() {
                     <Switch>
                         <Route path="/settings">
                             {(pois && pois.length > 0 && categories && categories.length > 0 && tags && tags.length > 0 && user!==null)&&
-                            <SettingsComponent user={user} categories={categories} logout={logout} tags={tags} updateCategory={UpdateCategory} updateTag={UpdateTag}/>}
+                            <SettingsComponent user={user} categories={categories} logout={logout} tags={tags} updateCategory={UpdateCategory} updateTag={UpdateTag} DeleteCategory={DeleteCategory} DeleteTag={DeleteTag}/>}
                         </Route>
                         <Route path="/">
                             {(pois && pois.length > 0 && categories && categories.length > 0 && status && status.length > 0 && tags && tags.length > 0) &&
@@ -124,6 +133,28 @@ function App() {
 
         console.log(data);
         updateMarker(data);
+    }
+
+    /*
+    Deletes a category
+     */
+    async function DeleteCategory(category) {
+        console.log("DELETTING CATEGORY")
+        let data;
+        data = await RequestPoi.deleteCategory(category, getTokenSilently, loginWithRedirect);
+        await getCats();
+        console.log(data);
+    }
+
+    /*
+    Deletes a tag
+     */
+    async function DeleteTag(tag) {
+        console.log("DELETTING TAG")
+        let data;
+        data = await RequestPoi.deleteTag(tag, getTokenSilently, loginWithRedirect);
+        await getTags();
+        console.log(data);
     }
 
     /*

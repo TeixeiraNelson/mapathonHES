@@ -47,6 +47,7 @@ class AppComponent extends React.Component {
         this.mapRef = React.createRef();
         this.actualPointLat = 0;
         this.actualPointLng = 0;
+        this.mostLikedPoi = this.props.pois[0];
         this.logout = props.logout;
         this.state = {
             fields: {},
@@ -90,8 +91,10 @@ class AppComponent extends React.Component {
         let array = this.state.markers;
         let filteredArray = [];
         let addPoint = false;
-
         array.map(elem => {
+            if (elem.likes > this.mostLikedPoi.likes)
+                this.mostLikedPoi = elem;
+
             if (elem.name !== null && typeof elem.name !== 'undefined' && elem.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase())) {
 
                 if (elem.Categories.length === 0 && this.state.searchCategory === "" && elem.Tags.length === 0 && this.state.searchTag === "") {
@@ -126,29 +129,57 @@ class AppComponent extends React.Component {
             console.log(filteredArray)
         }
 
-        return (<div><h3>{filteredArray.length} points found.</h3>{filteredArray.map(position => (
-            ((typeof position !== 'undefined' && position !== null)) ?
-                <div key={position.id} className={`sideButton sideButton5`} onClick={(e) => {
-                    e.preventDefault();
-                    console.log(position);
-                    let latLng = {lat: position.lat, lng: position.lng};
-                    this.mapRef.leafletElement.flyTo(latLng, 19);
-                    this.onSetSidebarOpen(false);
-                }}>
-                    <h1><span
-                        style={{backgroundColor: 'rgba(249, 223, 57, 0.5)'}}>{position.name.substring(0, this.state.searchQuery.length)}</span>{position.name.substring(this.state.searchQuery.length)}
-                    </h1>
-                    <p>{position.description}</p>
-                    <div>
-                        {typeof position.Categories !== 'undefined' && position.Categories !== null && position.Categories.length > 0 ?
+        return (
+            <div>
+                <fieldset style={{margin: 'auto', width:'16vw'}}>
+                    <legend style={{fontWeight: 'bold', color: 'yellow'}}>Most Popular ({this.mostLikedPoi.likes} Likes)
+                    </legend>
+                    <div className={`sideButton sideButton5`} style={{minWidth: '160px',
+                        width: '13vw', backgroundColor: 'lightyellow', color: 'black'}} onClick={(e) => {
+                        e.preventDefault();
+                        console.log(this.mostLikedPoi);
+                        let latLng = {lat: this.mostLikedPoi.lat, lng: this.mostLikedPoi.lng};
+                        this.mapRef.leafletElement.flyTo(latLng, 19);
+                        this.onSetSidebarOpen(false);
+                    }}>
+                        <h1>{this.mostLikedPoi.name}
+                        </h1>
+                        <p>{this.mostLikedPoi.description}</p>
+                        <div>
+                            {(typeof this.mostLikedPoi.Categories !== 'undefined' && this.mostLikedPoi.Categories !== null && this.mostLikedPoi.Categories.length > 0) &&
+                            <div>
+                                {this.mostLikedPoi.Categories.map(elem => (
+                                    <img key={elem.id} src={elem.image}/>
+                                ))}
+                            </div>}
+                        </div>
+                    </div>
+                </fieldset>
+                <h3 style={{color: 'white'}}>{filteredArray.length} points found.</h3>
+                <div>{filteredArray.map(position => (
+                    ((typeof position !== 'undefined' && position !== null)) &&
+                    <div key={position.id} className={`sideButton sideButton5`} onClick={(e) => {
+                        e.preventDefault();
+                        console.log(position);
+                        let latLng = {lat: position.lat, lng: position.lng};
+                        this.mapRef.leafletElement.flyTo(latLng, 19);
+                        this.onSetSidebarOpen(false);
+                    }}>
+                        <h1><span
+                            style={{backgroundColor: 'rgba(249, 223, 57, 0.5)'}}>{position.name.substring(0, this.state.searchQuery.length)}</span>{position.name.substring(this.state.searchQuery.length)}
+                        </h1>
+                        <p>{position.description}</p>
+                        <div>
+                            {(typeof position.Categories !== 'undefined' && position.Categories !== null && position.Categories.length > 0) &&
                             <div>
                                 {position.Categories.map(elem => (
                                     <img key={elem.id} src={elem.image}/>
                                 ))}
-                            </div> : <div></div>}
+                            </div>}
+                        </div>
                     </div>
-                </div> : <div></div>
-        ))}</div>);
+                ))}</div>
+            </div>);
     }
 
 
@@ -311,7 +342,7 @@ class AppComponent extends React.Component {
         this.insertPoi(poi, this.updateCreatedMarker);
     };
 
-    updateCreatedMarker =(poi)=>{
+    updateCreatedMarker = (poi) => {
         let {markers} = this.state;
         markers.pop();
         markers.push(poi);
@@ -442,7 +473,9 @@ class AppComponent extends React.Component {
                         }}>
 
                         <div>
-                            <SideMenuComponent user={this.state.currentUser} localiseUser={this.localiseUser} addMarkerToMap={this.addMarkerToMap} logout={this.logout} isMainMenu={true} onSetSidebarOpen={this.onSetSidebarOpen}/>
+                            <SideMenuComponent user={this.state.currentUser} localiseUser={this.localiseUser}
+                                               addMarkerToMap={this.addMarkerToMap} logout={this.logout}
+                                               isMainMenu={true} onSetSidebarOpen={this.onSetSidebarOpen}/>
                         </div>
                     </Sidebar>
                 </div>
@@ -573,93 +606,101 @@ class AppComponent extends React.Component {
                                         <legend style={{fontWeight: 'bold'}}>Creator (Group
                                             : {typeof position.Creator !== 'undefined' ? (position.Creator.group) : "none."})
                                         </legend>
-                                        <textarea disabled={true} style={{width:'250px'}} className={"Popupfieldset"}
+                                        <textarea disabled={true} style={{width: '250px'}} className={"Popupfieldset"}
                                                   value={typeof position.Creator !== 'undefined' ? (position.Creator.name) : "No creator."}
                                         ></textarea>
                                     </fieldset>
                                     <fieldset>
                                         <legend style={{fontWeight: 'bold'}}>Description</legend>
-                                        <textarea disabled={true} className={"Popupfieldset"} style={{overflowY:'scroll', width:'250px'}}
-                                                  value={position.description!== null && typeof position.description !== 'undefined' && position.description.length > 1 ? position.description : "No description."}></textarea>
+                                        <textarea disabled={true} className={"Popupfieldset"}
+                                                  style={{overflowY: 'scroll', width: '250px'}}
+                                                  value={position.description !== null && typeof position.description !== 'undefined' && position.description.length > 1 ? position.description : "No description."}></textarea>
                                     </fieldset>
                                     <fieldset>
                                         <legend style={{fontWeight: 'bold'}}>Categories</legend>
-                                        <textarea  disabled={true}  style={{overflowY:'scroll', width:'250px'}} className={"Popupfieldset"}
-                                                  value={this.displayCategories(position)} ></textarea>
+                                        <textarea disabled={true} style={{overflowY: 'scroll', width: '250px'}}
+                                                  className={"Popupfieldset"}
+                                                  value={this.displayCategories(position)}></textarea>
                                     </fieldset>
                                     <fieldset>
                                         <legend style={{fontWeight: 'bold'}}>Tags</legend>
-                                        <textarea disabled={true} style={{overflowY:'scroll', width:'250px'}} className={"Popupfieldset"}
+                                        <textarea disabled={true} style={{overflowY: 'scroll', width: '250px'}}
+                                                  className={"Popupfieldset"}
                                                   value={this.displayTags(position)}></textarea>
                                     </fieldset>
                                 </form>
                             </div>
                             <div>
-                                <p style={{display: 'inline-block', width: '80px', textAlign:'center'}}>{position.likes} Likes</p>
-                                <div style={{textAlign: 'center', display: 'inline-block', float:'right'}}>
+                                <p style={{
+                                    display: 'inline-block',
+                                    width: '80px',
+                                    textAlign: 'center'
+                                }}>{position.likes} Likes</p>
+                                <div style={{textAlign: 'center', display: 'inline-block', float: 'right'}}>
                                     {(position.liked === false) &&
-                                        <div className={"buttonLike"} onClick={event => {
-                                            event.preventDefault();
-                                            this.LikePOI(position.id)
-                                            console.log(position.liked)
-                                        }}><span className={"spanLike"}>LIKE</span>
-                                            <div className={"divLike"}>
-                                                <i></i>
-                                                <span>liked!</span>
-                                            </div>
+                                    <div className={"buttonLike"} onClick={event => {
+                                        event.preventDefault();
+                                        this.LikePOI(position.id)
+                                        console.log(position.liked)
+                                    }}><span className={"spanLike"}>LIKE</span>
+                                        <div className={"divLike"}>
+                                            <i></i>
+                                            <span>liked!</span>
                                         </div>
+                                    </div>
                                     }
                                     {(position.liked) &&
-                                        <div className={"buttonLikeLiked"} onClick={event => {
-                                            event.preventDefault();
-                                            this.DislikePOI(position.id)
-                                            console.log(position.liked)
-                                        }}><span className={"spanLike"}>LIKED</span>
-                                            <div className={"divLike press"}>
-                                                <i className={"press"}></i>
-                                                <span>liked!</span>
-                                            </div>
+                                    <div className={"buttonLikeLiked"} onClick={event => {
+                                        event.preventDefault();
+                                        this.DislikePOI(position.id)
+                                        console.log(position.liked)
+                                    }}><span className={"spanLike"}>LIKED</span>
+                                        <div className={"divLike press"}>
+                                            <i className={"press"}></i>
+                                            <span>liked!</span>
                                         </div>
+                                    </div>
                                     }
                                 </div>
                             </div>
                             {(typeof position.Creator !== 'undefined' && position.Creator.id === this.state.currentUser.sub) &&
-                                <div>
-                                    <form>
-                                        <fieldset>
-                                            <legend style={{fontWeight: 'bold'}}>Manage</legend>
-                                            <div style={{display: 'inline-block', width: '275px'}}>
-                                                <button className={"myButton blue"} onClick={event => {
-                                                    event.preventDefault();
-                                                    this.modifyPoi(position)
-                                                }}>modify
-                                                </button>
-                                                <button className={"myButton"} style={{float:'right'}} onClick={event => {
-                                                    event.preventDefault();
-                                                    this.deletePoi(position)
-                                                }}>delete
-                                                </button>
-                                            </div>
+                            <div>
+                                <form>
+                                    <fieldset>
+                                        <legend style={{fontWeight: 'bold'}}>Manage</legend>
+                                        <div style={{display: 'inline-block', width: '275px'}}>
+                                            <button className={"myButton blue"} onClick={event => {
+                                                event.preventDefault();
+                                                this.modifyPoi(position)
+                                            }}>modify
+                                            </button>
+                                            <button className={"myButton"} style={{float: 'right'}} onClick={event => {
+                                                event.preventDefault();
+                                                this.deletePoi(position)
+                                            }}>delete
+                                            </button>
+                                        </div>
 
-                                            <div style={{display: 'inline-block', width: '275px', paddingTop: '5px'}}>
-                                                {(position.Status.id !== 3) &&
-                                                    <button className={"myButton green2"} onClick={event => {
-                                                        event.preventDefault();
-                                                        this.ChangeStatus(position.id, 3)
-                                                        console.log(position.Status.id)
-                                                    }}>verify</button>
-                                                }
-                                                {(position.Status.id !== 1) &&
-                                                    <button className={"myButton darkred"} style={{float:'right'}} onClick={event => {
+                                        <div style={{display: 'inline-block', width: '275px', paddingTop: '5px'}}>
+                                            {(position.Status.id !== 3) &&
+                                            <button className={"myButton green2"} onClick={event => {
+                                                event.preventDefault();
+                                                this.ChangeStatus(position.id, 3)
+                                                console.log(position.Status.id)
+                                            }}>verify</button>
+                                            }
+                                            {(position.Status.id !== 1) &&
+                                            <button className={"myButton darkred"} style={{float: 'right'}}
+                                                    onClick={event => {
                                                         event.preventDefault();
                                                         this.ChangeStatus(position.id, 1)
                                                     }}>unverify
-                                                    </button>
-                                                }
-                                            </div>
-                                        </fieldset>
-                                    </form>
-                                </div>
+                                            </button>
+                                            }
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
                             }
                         </div> : <div/>}
 
@@ -732,9 +773,9 @@ class AppComponent extends React.Component {
     displayTags(position) {
         let tagStr = '';
         if (typeof position.Tags !== 'undefined' && position.Tags.length !== 0) {
-                position.Tags.map(Tag => (
-                    tagStr += "#" + Tag.name + " "
-                ))
+            position.Tags.map(Tag => (
+                tagStr += "#" + Tag.name + " "
+            ))
 
             return tagStr;
         }
