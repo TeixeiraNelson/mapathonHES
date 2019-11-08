@@ -66,7 +66,8 @@ class AppComponent extends React.Component {
             status: this.props.status,
             tags: this.props.tags,
             currentUser: this.props.user,
-            currentModifyingMarker: null
+            currentModifyingMarker: null,
+            onlyMyPoints: false
         };
 
         this.insertPoi = props.InsertPoi;
@@ -89,6 +90,16 @@ class AppComponent extends React.Component {
 
     generatePoiButtons() {
         let array = this.state.markers;
+
+        let myPoints = []
+        if(this.state.onlyMyPoints === true){
+            array.map(elem =>{
+                if(elem.Creator!== null && typeof elem.Creator !== 'undefined' && elem.Creator.id===this.state.currentUser.sub){
+                    myPoints.push(elem);
+                }
+            })
+            array = myPoints;
+        }
         let filteredArray = [];
         let addPoint = false;
         array.map(elem => {
@@ -98,7 +109,7 @@ class AppComponent extends React.Component {
             if (elem.name !== null && typeof elem.name !== 'undefined' && elem.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase())) {
 
                 if (elem.Categories.length === 0 && this.state.searchCategory === "" && elem.Tags.length === 0 && this.state.searchTag === "") {
-                    addPoint = true;
+                            addPoint=true;
                 }
 
                 elem.Categories.map(cat => {
@@ -414,6 +425,7 @@ class AppComponent extends React.Component {
                                             value={this.state.searchCategory}
                                             onChange={e => this.inputChangeAction(e)}
                                         /><br/>
+                                        <label style={{color:'white'}}>Only my points : <input type={"checkbox"} name={"onlyMyPoints"} checked={this.state.onlyMyPoints} onChange={e => this.checkBoxChangeAction(e)}/></label>
                                     </div> : <div></div>}
                                 <div>
                                     {this.state.addMarkerEnabled === false && this.state.modifyingMarker === false ?
@@ -856,6 +868,11 @@ class AppComponent extends React.Component {
         }
 
         this.setState({markers: array});
+    }
+
+    checkBoxChangeAction(e) {
+        let bool = this.state.onlyMyPoints;
+        this.setState({onlyMyPoints : !bool});
     }
 }
 
