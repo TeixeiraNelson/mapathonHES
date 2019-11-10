@@ -12,12 +12,12 @@ class Form extends React.Component {
         this.closeMenu = props.closeMenu;
         this.lat = props.lat;
         this.lng = props.lng;
-        this.updatePoi= props.updatePoi;
+        this.updatePoi = props.updatePoi;
         this.newPoi = props.newPoi;
         this.user = props.user;
         console.log(props.user);
         this.setAddMarkerOff = props.setAddMarkerOff;
-        if(typeof this.props.currentPoi !== 'undefined'){
+        if (typeof this.props.currentPoi !== 'undefined') {
             this.actualCats = this.props.currentPoi.Categories;
             this.actualTags = this.props.currentPoi.Tags;
         }
@@ -29,13 +29,13 @@ class Form extends React.Component {
         this.Allcategories = props.categories;
         this.AllTags = props.tags;
         this.state = {
-            tagNameValue:"",
-            tagImgValue:"",
-            tagColorValue:"",
-            addCatString : "New Category",
-            addTagString : "New Tag",
-            catNameValue:"",
-            catImgValue:"",
+            tagNameValue: "",
+            tagImgValue: "",
+            tagColorValue: "",
+            addCatString: "New Category",
+            addTagString: "New Tag",
+            catNameValue: "",
+            catImgValue: "",
             categories: [],
             categoriesString: "",
             status: props.status[1],
@@ -48,8 +48,8 @@ class Form extends React.Component {
             image: '',
             url: '',
             group: 1,
-            toggleAddCategory : false,
-            toggleAddTag : false,
+            toggleAddCategory: false,
+            toggleAddTag: false,
             poi: {
                 name: '',
                 description: '',
@@ -61,19 +61,25 @@ class Form extends React.Component {
                 Status: [],
                 Tags: [],
                 Categories: [],
-                Creator : {
+                Creator: {
                     group: 1,
                     name: this.props.user.name,
-                    id : this.props.user.sub
+                    id: this.props.user.sub
                 }
             }
         }
     }
 
+    /*
+    Applys form value when the component mounted (used when form is used to modify a POI)
+     */
     componentDidMount(): void {
         this.applyForm();
     }
 
+    /*
+    Default values are applied (Needed because we had to manage if form was used to create a new poi or modify an existing one)
+     */
     applyForm() {
         console.log(this.state.poi)
         console.log("curr : ");
@@ -108,9 +114,6 @@ class Form extends React.Component {
         this.setState({
             [e.target.name]: e.target.value
         });
-
-
-
     };
 
     /*
@@ -119,52 +122,36 @@ class Form extends React.Component {
      */
     submitAction = (e) => {
         e.preventDefault();
-        this.setAddMarkerOff();
-        this.setState({
-                poi: {
-                    name: this.state.name,
-                    description: this.state.description,
-                    lat: this.props.lat,
-                    lng: this.props.lng,
-                    image: this.state.image,
-                    url: this.state.url,
-                    group: 1,
-                    Status: this.state.status,
-                    Tags: this.state.tags,
-                    Categories: this.state.categories,
-                    Creator : {
-                        group: 1,
-                        name: this.props.user.name,
-                        id : this.props.user.sub
-                    }
-                }
+        let poi = {
+            name: this.state.name,
+            description: this.state.description,
+            lat: this.props.lat,
+            lng: this.props.lng,
+            image: this.state.image,
+            url: this.state.url,
+            group: 1,
+            Status: this.state.status,
+            Tags: this.state.tags,
+            Categories: this.state.categories,
+            Creator: {
+                group: 1,
+                name: this.props.user.name,
+                id: this.props.user.sub
             }
-        )
-        if (typeof this.props.currentPoi === 'undefined' || this.props.currentPoi===null) {
-            if (this.state.poi.name !== null && this.state.poi.name.length > 1) {
-                this.InsertPoi(this.state.poi);
+        }
+        this.setAddMarkerOff();
+        if (typeof this.props.currentPoi === 'undefined' || this.props.currentPoi === null) {
+            if (poi.name !== null && poi.name.length > 1) {
+                this.InsertPoi(poi);
                 this.closeMenu(false);
-            } else
+            } else{
                 alert("A point cannot be added without a name at least")
+                console.log(poi);
+            }
         } else {
             console.log("DO THE MODIFY POY MANOEUVER");
             console.log(this.state.poi);
-            let poi ={
-                name: this.state.name,
-                description: this.state.description,
-                lat: this.props.lat,
-                lng: this.props.lng,
-                image: this.state.image,
-                url: this.state.url,
-                group: 1,
-                Status: this.state.status,
-                Tags: this.state.tags,
-                Categories: this.state.categories,
-                Creator : {
-                    group: 1,
-                    name: this.props.user.name,
-                    id : this.props.user.sub
-            }}
+
             console.log(poi);
             this.updatePoi(poi, this.props.currentPoi.id);
             this.closeMenu(false);
@@ -179,7 +166,7 @@ class Form extends React.Component {
     Saves them in the state
      */
     setCategoriesArray = (array) => {
-        let categoriesArray=[];
+        let categoriesArray = [];
         let str = "";
 
         this.Allcategories.map(cat => {
@@ -211,10 +198,10 @@ class Form extends React.Component {
                     Status: this.state.status,
                     Tags: this.state.tags,
                     Categories: categoriesArray,
-                    Creator : {
+                    Creator: {
                         group: 1,
                         name: this.props.user.name,
-                        id : this.props.user.sub
+                        id: this.props.user.sub
                     }
                 }
             }
@@ -233,7 +220,7 @@ class Form extends React.Component {
     Saves them in the state
      */
     setTagsArray = (array) => {
-        let tagsArray=[];
+        let tagsArray = [];
         let str = "";
 
         this.AllTags.map(cat => {
@@ -265,7 +252,7 @@ class Form extends React.Component {
                     Status: this.state.status,
                     Tags: tagsArray,
                     Categories: this.state.categories,
-                    Creator : {
+                    Creator: {
                         group: 1,
                         name: this.props.user.name
                     }
@@ -373,9 +360,9 @@ class Form extends React.Component {
                     <MultipleSelect array={this.Allcategories} setArray={this.setCategoriesArray} name={"Categories"}
                                     actualSelectedValues={this.generateStringArray(this.actualCats)}/>
                     <button
-                            onClick={this.addCategory}>{this.state.addCatString}
+                        onClick={this.addCategory}>{this.state.addCatString}
                     </button>
-                    {this.state.toggleAddCategory?
+                    {this.state.toggleAddCategory ?
                         <div>
                             <input
                                 type='text'
@@ -391,38 +378,38 @@ class Form extends React.Component {
                                 value={this.state.catImgValue}
                                 onChange={e => this.valueUpdateAction(e)}/>
                             <br/>
-                            <button onClick={this.createCategoryAction}>Create Category</button>
-                    </div>:<div></div>}
+                            <button onClick={this.submitCategory}>Create Category</button>
+                        </div> : <div></div>}
                     <MultipleSelect array={this.AllTags} setArray={this.setTagsArray} name={"Tags"}
                                     actualSelectedValues={this.generateStringArray(this.actualTags)}/>
                     <button
-                            onClick={this.addTag}>{this.state.addTagString}
+                        onClick={this.addTag}>{this.state.addTagString}
                     </button>
-                    {this.state.toggleAddTag?
+                    {this.state.toggleAddTag ?
                         <div>
-                                <input
-                                    type='text'
-                                    name='tagNameValue'
-                                    placeholder='Tag Name'
-                                    value={this.state.tagNameValue}
-                                    onChange={e => this.valueUpdateAction(e)}/>
-                                <br/>
-                                <input
-                                    type='text'
-                                    name='tagImgValue'
-                                    placeholder='Image URL (Optional)'
-                                    value={this.state.tagImgValue}
-                                    onChange={e => this.valueUpdateAction(e)}/>
-                                <br/>
-                                <input
-                                    type='text'
-                                    name='tagColorValue'
-                                    placeholder='#Color (Optional)'
-                                    value={this.state.tagColorValue}
-                                    onChange={e => this.valueUpdateAction(e)}/>
-                                <br/>
-                                <button onClick={this.createTagAction}>Create Tag</button>
-                        </div>:<div></div>}
+                            <input
+                                type='text'
+                                name='tagNameValue'
+                                placeholder='Tag Name'
+                                value={this.state.tagNameValue}
+                                onChange={e => this.valueUpdateAction(e)}/>
+                            <br/>
+                            <input
+                                type='text'
+                                name='tagImgValue'
+                                placeholder='Image URL (Optional)'
+                                value={this.state.tagImgValue}
+                                onChange={e => this.valueUpdateAction(e)}/>
+                            <br/>
+                            <input
+                                type='text'
+                                name='tagColorValue'
+                                placeholder='#Color (Optional)'
+                                value={this.state.tagColorValue}
+                                onChange={e => this.valueUpdateAction(e)}/>
+                            <br/>
+                            <button onClick={this.createTagAction}>Create Tag</button>
+                        </div> : <div></div>}
                     <button className="button" id="submitButton" value={this.state.poi}
                             onClick={this.submitAction}>Submit
                     </button>
@@ -433,7 +420,7 @@ class Form extends React.Component {
 
     generateStringArray(array) {
         let str = [];
-        if(typeof array === 'undefined' ||array === null)
+        if (typeof array === 'undefined' || array === null)
             return str;
 
         array.map(elem => {
@@ -442,30 +429,42 @@ class Form extends React.Component {
         return str;
     }
 
+    /*
+    Add category button action to display the little form that allows to add a category.
+     */
     addCategory = (e) => {
         e.preventDefault();
-       this.toggleCategoryAdd()
+        this.toggleCategoryAdd()
     }
 
+    /*
+    Sets the state of the addcategory form to make it available to the user
+     */
     toggleCategoryAdd() {
         let isAddCategoryToggled = this.state.toggleAddCategory;
-        if(!isAddCategoryToggled){
-            this.setState({addCatString : "Cancel"})
+        if (!isAddCategoryToggled) {
+            this.setState({addCatString: "Cancel"})
         } else {
-            this.setState({addCatString : "New Category"});
+            this.setState({addCatString: "New Category"});
         }
         this.setState({toggleAddCategory: !isAddCategoryToggled});
     }
 
+    /*
+   Add tag button action to display the little form that allows to add a category.
+    */
     addTag = (e) => {
         e.preventDefault();
         this.toggleTagAdd();
     }
 
-    createCategoryAction = (e) => {
+    /*
+    Submit button of the create category
+     */
+    submitCategory = (e) => {
         e.preventDefault();
 
-        if(this.state.catNameValue!== null && this.state.catNameValue.length>1){
+        if (this.state.catNameValue !== null && this.state.catNameValue.length > 1) {
             let cat = {
                 name: this.state.catNameValue,
                 image: this.state.catImgValue,
@@ -480,10 +479,13 @@ class Form extends React.Component {
         }
     }
 
+    /*
+    Submit button of the new created tag
+     */
     createTagAction = (e) => {
         e.preventDefault();
 
-        if(this.state.tagNameValue!== null && this.state.tagNameValue.length>1){
+        if (this.state.tagNameValue !== null && this.state.tagNameValue.length > 1) {
             let tag = {
                 name: this.state.tagNameValue,
                 image: this.state.tagImgValue,
@@ -499,12 +501,15 @@ class Form extends React.Component {
         }
     }
 
+    /*
+    Button action that allows the tag form to be displayed
+     */
     toggleTagAdd() {
         let isAddTagToggled = this.state.toggleAddTag;
-        if(!isAddTagToggled){
-            this.setState({addTagString : "Cancel"})
+        if (!isAddTagToggled) {
+            this.setState({addTagString: "Cancel"})
         } else {
-            this.setState({addTagString : "New Tag"})
+            this.setState({addTagString: "New Tag"})
         }
         this.setState({toggleAddTag: !isAddTagToggled});
     }

@@ -42,8 +42,10 @@ function App() {
 
     async function getCats() {
         let cats = await request(`${process.env.REACT_APP_SERVER_URL}/category`, getTokenSilently, loginWithRedirect);
-        console.log(cats);
 
+
+        console.log("Setting cattegories from serv!");
+        console.log(cats);
         if (cats && cats.length > 0) {
             setCategories(cats);
         }
@@ -164,6 +166,9 @@ function App() {
         let data;
         data = await RequestPoi.updateCategory(newCategory,getTokenSilently,loginWithRedirect);
         console.log(data);
+
+        console.log("Reloading cats");
+        await getCats();
     }
 
     /*
@@ -173,6 +178,9 @@ function App() {
         let data;
         data = await RequestPoi.updateTag(newTag,getTokenSilently,loginWithRedirect);
         console.log(data);
+
+        /* Loads Tags and sets it */
+        await getTags();
     }
 
     /*
@@ -210,9 +218,11 @@ function App() {
         data = await RequestPoi.updatePOI(id,poi,getTokenSilently,loginWithRedirect);
         console.log(data);
 
-        updateMarker(data, id);
+        let data2;
+        data2 = await RequestPoi.getPOI(id, getTokenSilently,loginWithRedirect);
+        updateMarker(data2, id);
 
-        return data;
+        return data2;
     }
 
     async function InsertTag(tag, setTag){

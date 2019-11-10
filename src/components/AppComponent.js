@@ -88,18 +88,22 @@ class AppComponent extends React.Component {
         this.setState({sidebarOpen: open});
     }
 
+    /*
+    This functions handles the display of the buttons representing the POIs on the side bar
+     */
     generatePoiButtons() {
         let array = this.state.markers;
-
         let myPoints = []
-        if(this.state.onlyMyPoints === true){
-            array.map(elem =>{
-                if(elem.Creator!== null && typeof elem.Creator !== 'undefined' && elem.Creator.id===this.state.currentUser.sub){
+
+        if (this.state.onlyMyPoints === true) {
+            array.map(elem => {
+                if (elem.Creator !== null && typeof elem.Creator !== 'undefined' && elem.Creator.id === this.state.currentUser.sub) {
                     myPoints.push(elem);
                 }
             })
             array = myPoints;
         }
+
         let filteredArray = [];
         let addPoint = false;
         array.map(elem => {
@@ -107,11 +111,9 @@ class AppComponent extends React.Component {
                 this.mostLikedPoi = elem;
 
             if (elem.name !== null && typeof elem.name !== 'undefined' && elem.name.toLowerCase().startsWith(this.state.searchQuery.toLowerCase())) {
-
                 if (elem.Categories.length === 0 && this.state.searchCategory === "" && elem.Tags.length === 0 && this.state.searchTag === "") {
-                            addPoint=true;
+                    addPoint = true;
                 }
-
                 elem.Categories.map(cat => {
                     if (cat.name.toLowerCase().startsWith(this.state.searchCategory.toLowerCase())) {
                         if (elem.Tags.length === 0 && this.state.searchTag === "") {
@@ -131,22 +133,15 @@ class AppComponent extends React.Component {
 
             }
         });
-
-
-        {
-            console.log("FILTERED ARRAY")
-        }
-        {
-            console.log(filteredArray)
-        }
-
         return (
             <div>
-                <fieldset style={{margin: 'auto', width:'16vw'}}>
+                <fieldset style={{margin: 'auto', width: '16vw'}}>
                     <legend style={{fontWeight: 'bold', color: 'yellow'}}>Most Popular ({this.mostLikedPoi.likes} Likes)
                     </legend>
-                    <div className={`sideButton sideButton5`} style={{minWidth: '160px',
-                        width: '13vw', backgroundColor: 'lightyellow', color: 'black'}} onClick={(e) => {
+                    <div className={`sideButton sideButton5`} style={{
+                        minWidth: '160px',
+                        width: '13vw', backgroundColor: 'lightyellow', color: 'black'
+                    }} onClick={(e) => {
                         e.preventDefault();
                         console.log(this.mostLikedPoi);
                         let latLng = {lat: this.mostLikedPoi.lat, lng: this.mostLikedPoi.lng};
@@ -230,11 +225,17 @@ class AppComponent extends React.Component {
         this.setState({markers});
     };
 
+    /*
+    Function that updates a POI in the database and then calls the method to update its value in the app based on database's object answer.
+     */
     UpdatePoi = (poi, id) => {
         let data = this.updatePoi(poi, id, this.updateMarker)
         return data;
     }
 
+    /*
+    Updates a marker on the map (Used when databases answers requests to apply changes)
+     */
     updateMarker = (poi, id) => {
         console.log("UPDATING MARKER WITH ID " + id)
         console.log(poi);
@@ -292,6 +293,9 @@ class AppComponent extends React.Component {
         }
     };
 
+    /*
+    Function to set the position in the state when the user is found.
+     */
     handleLocationFound = (e: Object) => {
         this.setState({
             latlng: e.latlng
@@ -326,20 +330,32 @@ class AppComponent extends React.Component {
         }
     };
 
+    /*
+    Insert category that calls the method to request DB and then update categories.
+     */
     InsertCategory = (category) => {
         this.insertCategory(category, this.setCategories);
     }
 
+    /*
+    updates app categories
+     */
     setCategories = (createdCategory) => {
         let array = this.state.categories;
         array.push(createdCategory);
         this.setState({categories: array});
     }
 
+    /*
+    Inserts Tag in the DB and then updates tags in the app.
+     */
     InsertTag = (tag) => {
         this.insertTag(tag, this.setTag);
     }
 
+    /*
+    Updates the tags value in the app.
+     */
     setTag = (createdTag) => {
         let array = this.state.tags;
         array.push(createdTag);
@@ -353,6 +369,9 @@ class AppComponent extends React.Component {
         this.insertPoi(poi, this.updateCreatedMarker);
     };
 
+    /*
+    Updates a just created marker (when we create a POI)
+     */
     updateCreatedMarker = (poi) => {
         let {markers} = this.state;
         markers.pop();
@@ -399,7 +418,7 @@ class AppComponent extends React.Component {
                                       status={this.state.status}
                                       tags={this.state.tags} closeMenu={this.onSetSidebarOpen}
                                       currentPoi={this.state.currentModifyingMarker} updatePoi={this.UpdatePoi}
-                                      setAddMarkerOff={this.setAddMarkerOff} user={this.state.currentUser}/>
+                                      setAddMarkerOff={this.setAddMarkerOff} user={this.state.currentUser} />
                                 : <div></div>}
                             <div>
                                 {this.state.addMarkerEnabled === false && this.state.modifyingMarker === false ?
@@ -425,7 +444,10 @@ class AppComponent extends React.Component {
                                             value={this.state.searchCategory}
                                             onChange={e => this.inputChangeAction(e)}
                                         /><br/>
-                                        <label style={{color:'white'}}>Only my points : <input type={"checkbox"} name={"onlyMyPoints"} checked={this.state.onlyMyPoints} onChange={e => this.checkBoxChangeAction(e)}/></label>
+                                        <label style={{color: 'white'}}>Only my points : <input type={"checkbox"}
+                                                                                                name={"onlyMyPoints"}
+                                                                                                checked={this.state.onlyMyPoints}
+                                                                                                onChange={e => this.checkBoxChangeAction(e)}/></label>
                                     </div> : <div></div>}
                                 <div>
                                     {this.state.addMarkerEnabled === false && this.state.modifyingMarker === false ?
@@ -730,6 +752,9 @@ class AppComponent extends React.Component {
         ))}</div>);
     }
 
+    /*
+    Generates a string based on status of a POI to display different colors.
+     */
     generateStatusColor(position) {
         if (typeof position.Status !== 'undefined' && position.Status !== null) {
             switch (position.Status.name) {
@@ -744,6 +769,9 @@ class AppComponent extends React.Component {
         return "white";
     }
 
+    /*
+    Generates Marker Icons based on POI's categories.
+     */
     generateMarkerIcon(position) {
         if (position.name === "Your position")
             return posIcon;
@@ -840,24 +868,39 @@ class AppComponent extends React.Component {
         this.setState({currentModifyingMarker: position})
     }
 
+    /*
+    updates state on input value
+     */
     inputChangeAction = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
 
+    /*
+    Function that likes a poi and updates the marker.
+     */
     LikePOI(id) {
         this.likePOI(id, this.setMarker);
     }
 
+    /*
+   Function that dislikes a poi and updates the marker.
+    */
     DislikePOI(id) {
         this.dislikePOI(id, this.setMarker);
     }
 
+    /*
+   Function that changes a poi's status and updates the marker.
+    */
     ChangeStatus(id, Status) {
         this.changeStatus(id, Status, this.setMarker)
     }
 
+    /*
+    Function to set a marker's value.
+     */
     setMarker = (newMarker) => {
         let array = this.state.markers;
 
@@ -870,9 +913,12 @@ class AppComponent extends React.Component {
         this.setState({markers: array});
     }
 
+    /*
+    Check box's action on the side menu, updates state.
+     */
     checkBoxChangeAction(e) {
         let bool = this.state.onlyMyPoints;
-        this.setState({onlyMyPoints : !bool});
+        this.setState({onlyMyPoints: !bool});
     }
 }
 

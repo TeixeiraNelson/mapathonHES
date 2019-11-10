@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 /*
 Function component that handles the drop down boxes and its values for the categories and tags, in the side menu form
  */
-export default function MultipleSelect ({array, setArray, name, actualSelectedValues}){
+export default function MultipleSelect({array, setArray, name, actualSelectedValues}) {
     const classes = useStyles();
     const theme = useTheme();
     const [categStr, setCategStr] = React.useState(actualSelectedValues);
